@@ -1,6 +1,6 @@
 # CIDOO RGB Studio — Keyboard Animations
 
-Язык / Language: **Русский** · [English](README.en.md)  
+Язык / Language: **Русский** · [English](README.en.md)<br>
 [Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.4.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip)
 
 На лендинге язык выбирается автоматически по языку браузера: русский для `ru-*`, английский для остальных.
