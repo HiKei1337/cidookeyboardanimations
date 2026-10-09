@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const names={flowers:{ru:'Цветы · распускаются',en:'Flowers · blooming'},aurora:{ru:'Северное сияние',en:'Northern lights'},comet:{ru:'Комета',en:'Comet'},fireflies:{ru:'Светлячки',en:'Fireflies'},wave:{ru:'Радужная волна',en:'Rainbow wave'},rain:{ru:'Неоновый дождь',en:'Neon rain'},sparkles:{ru:'Искры',en:'Sparkles'}};
+  const names={heartbeat:{ru:'Красное сердце',en:'Red heartbeat'},flowers:{ru:'Цветы · распускаются',en:'Flowers · blooming'},aurora:{ru:'Северное сияние',en:'Northern lights'},comet:{ru:'Комета',en:'Comet'},fireflies:{ru:'Светлячки',en:'Fireflies'},wave:{ru:'Радужная волна',en:'Rainbow wave'},rain:{ru:'Неоновый дождь',en:'Neon rain'},sparkles:{ru:'Искры',en:'Sparkles'}};
   const positions=CidooLayout.rows.flatMap((row,y)=>{let x=0;return row.map(key=>{const pos={index:key.index,x:x+key.width/2,y};x+=key.width;return pos;});});
   function cometColor(p,phase){
     const headX=-2+phase*23,headY=Math.round(2+Math.sin(phase*Math.PI*2)*.7),dx=headX-p.x;
@@ -14,7 +14,7 @@
   }
   function hsv(h,s=1,v=1){const i=Math.floor(h*6),f=h*6-i,p=v*(1-s),q=v*(1-f*s),t=v*(1-(1-f)*s);return [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i%6].map(x=>x*255);}
   function build(id,language='ru'){
-    if(!names[id])throw Error('Неизвестный шаблон.');
+    if(id==='heartbeat'){const project=CidooProject.demo();project.name=language==='en'?'Red heartbeat':'Красное сердце';return project;}if(!names[id])throw Error('Неизвестный шаблон.');
     const project=CidooProject.demo();project.name=names[id][language==='en'?'en':'ru'];project.effect='timeline';project.keys=positions.map(p=>p.index);project.frames=[];project.duration=0;project.interpolation='smooth';
     const add=(color,durationMs=150)=>{const colors=[...project.sourceColors];for(const pos of positions)colors.splice(pos.index*3,3,...color(pos).map(v=>Math.round(Math.max(0,Math.min(255,v)))));project.frames.push({durationMs,colors});};
     for(let frame=0;frame<32;frame++){
