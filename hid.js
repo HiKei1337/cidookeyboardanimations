@@ -16,7 +16,7 @@
     }
     enqueue(task){const result=this.queue.then(task);this.queue=result.catch(()=>{});return result;}
     cancel(){this.running=false;if(this.timer!==null)clearTimeout(this.timer);this.timer=null;}
-    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.5.1',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
+    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.5.2',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
     async select(identity){
       if(!Number.isInteger(identity?.vendorId)||!Number.isInteger(identity?.productId))throw Error('Не определена клавиатура. Подключите её к расширению.');
       const devices=(await this.hid.getDevices()).filter(d=>d.vendorId===identity.vendorId&&d.productId===identity.productId&&hasReport(d));
