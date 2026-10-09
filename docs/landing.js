@@ -15,7 +15,7 @@ function paint(){
   const t=(performance.now()-started)/1000;let amplitude;
   if(effect==='heartbeat'){const phase=t%1.45;amplitude=.16+.84*Math.max(Math.exp(-(((phase-.22)/.1)**2)),.7*Math.exp(-(((phase-.49)/.13)**2)))}else amplitude=.2+.8*(1-Math.cos(t*2.2))/2;
   const full=['flowers','aurora','comet','fireflies'].includes(effect);
-  if(!full)for(const{key}of allKeys){if(!key.classList.contains('heart')){key.style.background='';key.style.boxShadow=''}}
+  if(!full)for(const{key}of allKeys){if(!key.classList.contains('heart')){key.style.background='rgb(150,150,150)';key.style.boxShadow=''}}
   for(const{key,column,row}of full?allKeys:lights){
     let rgb;
     if(effect==='shimmer'){const hue=330+38*Math.sin(t*1.5+column*.35+row*.2);key.style.background=`hsl(${hue} 65% 35%)`;key.style.boxShadow=`inset 0 -3px #0003,0 0 12px hsl(${hue} 80% 60% / .25)`;continue;}
@@ -25,7 +25,7 @@ function paint(){
     }else if(effect==='aurora'){const a=(1+Math.sin(column*.45+row*.6+t*1.3))/2,b=(1+Math.cos(column*.3-t*1.3))/2;rgb=[15+65*b,15+175*a,50+155*(1-a)];}
     else if(effect==='comet'){const phase=(t%4.48)/4.48,headX=-2+phase*19,headY=Math.round(2+Math.sin(phase*Math.PI*2)*.7),dx=headX-column,width=Math.max(0,1-(Math.abs(row-headY)/1.5)**2),heat=Math.min(1,phase/.8),cold=[0,128,255],hot=[255,64,0],white=[255,255,255],a=heat<.5?cold:hot,b=heat<.5?hot:white,mix=heat<.5?heat*2:(heat-.5)*2,tail=dx<1.4?0:(dx-1.4)/5.6,level=dx<1.4?1:(1-tail)**1.5;rgb=dx<0||dx>7||!width?[0,0,0]:a.map((v,i)=>{const head=v+(b[i]-v)*mix;return(head+(cold[i]-head)*tail)*level*width;});}
     else if(effect==='fireflies'){const seed=((row*22+column)*37%97)/97,l=Math.max(0,Math.cos((t/5.76-seed)*Math.PI*2))**14;rgb=[4+180*l,7+248*l,8+35*l];}
-    else rgb=[50+175*amplitude,23+35*amplitude,35+59*amplitude];
+    else rgb=[255*amplitude,0,0];
     key.style.background=`rgb(${rgb.map(Math.round).join(' ')})`;key.style.boxShadow=`inset 0 -3px #0003,0 0 9px rgb(${rgb.map(Math.round).join(' ')} / .25)`;
   }
 }

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CIDOO Workshop — Admin</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="workshop.css?v=1.6.0"><link rel="stylesheet" href="admin.css?v=1.6.0">
+</head>
+<body>
+  <header class="nav wrap">
+    <a class="brand" href="workshop.html"><span class="brand-icon">✳</span> CIDOO<span class="brand-sub">WORKSHOP<br>ADMIN</span></a>
+    <nav><a href="workshop.html" data-i="back">Воркшоп</a><a href="https://supabase.com/dashboard/project/cdwdpdyvllcvanhjhwxa" target="_blank" rel="noopener" data-i="supabase">Supabase ↗</a></nav>
+    <div class="language-switch" role="group" aria-label="Language"><button data-language="ru" aria-pressed="true">RU</button><button data-language="en" aria-pressed="false">ENG</button></div>
+  </header>
+  <main class="wrap admin-main">
+    <section class="admin-hero"><span class="eyebrow"><span class="status-dot"></span><span data-i="kicker">MODERATION DESK</span></span><h1 data-i="title">Проверь новые анимации.</h1><p data-i="lead">Одобренные работы появятся в публичной коллекции. Черновики и отклонённые заявки остаются скрыты.</p></section>
+    <section id="login-panel" class="panel login-panel"><h2 data-i="loginTitle">Вход владельца</h2><p data-i="loginCopy">Используй аккаунт Supabase Auth, который добавлен в список администраторов.</p><form id="login-form"><label><span data-i="email">Email</span><input name="email" type="email" autocomplete="username" required></label><label><span data-i="password">Пароль</span><input name="password" type="password" autocomplete="current-password" required></label><button class="button primary" type="submit" data-i="login">Войти</button><p id="login-status" class="form-status" role="status"></p></form></section>
+    <section id="desk" class="desk" hidden><div class="desk-head"><div><span class="eyebrow" data-i="queueKicker">QUEUE</span><h2 data-i="queueTitle">Заявки на проверку</h2></div><button id="logout" class="button" data-i="logout">Выйти</button></div><p id="desk-status" class="form-status" role="status"></p><div id="submissions" class="submissions"></div></section>
+  </main>
+  <footer class="wrap"><span data-i="footer">CIDOO Workshop · панель модерации</span><a href="workshop.html" data-i="backToWorkshop">Открыть воркшоп ↗</a></footer>
+  <script src="supabase-config.js?v=1.6.0"></script><script type="module" src="admin.js?v=1.6.0"></script>
+</body>
+</html>
