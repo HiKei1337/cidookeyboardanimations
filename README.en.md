@@ -1,6 +1,6 @@
 # CIDOO RGB Studio — Keyboard Animations
 
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Русский README](README.md) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Русский README](README.md) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.4.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip)
 
 A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design from **Layer 1** and animates it on **Layer 2**, including when the CIDOO tab or Chrome window is minimised.
 
@@ -23,7 +23,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip) and extract it.
+1. [Download the v1.4.1 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.

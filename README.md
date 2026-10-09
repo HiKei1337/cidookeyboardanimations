@@ -1,6 +1,6 @@
 # CIDOO RGB Studio — Keyboard Animations
 
-[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [English README](README.en.md) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip)
+[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [English README](README.en.md) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.4.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip)
 
 Расширение Chrome для анимации RGB-подсветки **CIDOO**. Читает рисунок из **Layer 1**, анимирует его в **Layer 2**. Работает в фоне, когда вкладка или окно Chrome свёрнуты.
 
@@ -25,7 +25,7 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 Нужны CIDOO, USB-подключение и Chrome 117 или новее. Другие модели не проверены.
 
-1. [Скачай ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip) и распакуй его.
+1. [Скачай ZIP релиза v1.4.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip) и распакуй его.
 2. Открой `chrome://extensions`, включи **Режим разработчика**.
 3. Нажми **Загрузить распакованное расширение** и выбери папку с `manifest.json`.
 4. На [сайте CIDOO](https://cidoo.illumipc.com/#/) подключи клавиатуру, включи подсветку и выбери **Пользовательский → Layer 2**.
