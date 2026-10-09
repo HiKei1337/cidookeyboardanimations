@@ -1,6 +1,9 @@
 # CIDOO RGB Studio — Keyboard Animations
 
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Русский README](README.md) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.4.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip)
+Language / Язык: [Русский](README.md) · **English**  
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.4.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip)
+
+The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
 A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design from **Layer 1** and animates it on **Layer 2**, including when the CIDOO tab or Chrome window is minimised.
 

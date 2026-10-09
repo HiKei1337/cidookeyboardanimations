@@ -2,7 +2,9 @@ const en={flowers:'Flowers',aurora:'Aurora',comet:'Comet',fireflies:'Fireflies',
 const originals=new Map([...document.querySelectorAll('[data-i]')].map(el=>[el,el.innerHTML]));
 let language;
 try{language=localStorage.getItem('cidoo-landing-language')}catch{}
-if(!['ru','en'].includes(language))language=navigator.language.startsWith('ru')?'ru':'en';
+const requestedLanguage=new URLSearchParams(location.search).get('lang');
+if(['ru','en'].includes(requestedLanguage))language=requestedLanguage;
+if(!['ru','en'].includes(language))language=navigator.language?.toLowerCase().startsWith('ru')?'ru':'en';
 function setLanguage(lang){language=lang;document.documentElement.lang=lang;for(const[el,original]of originals)el.innerHTML=lang==='en'?en[el.dataset.i]:original;document.querySelectorAll('[data-language]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.language===lang)));document.querySelector('#editor-image').src=`studio-${lang}.jpg`;document.querySelector('#editor-image').alt=lang==='en'?'Animation editor with key selection, frames and colour controls':'Конструктор анимации: клавиши, кадры и настройки цвета';document.querySelector('#guide').href=`https://github.com/HiKei1337/cidookeyboardanimations/blob/main/docs/CUSTOM_ANIMATION${lang==='en'?'.en':''}.md`;document.querySelector('#keyboard').setAttribute('aria-label',lang==='en'?'Animated keyboard lighting preview':'Демонстрация анимации подсветки');updatePause();try{localStorage.setItem('cidoo-landing-language',lang)}catch{}}
 document.querySelectorAll('[data-language]').forEach(button=>button.addEventListener('click',()=>setLanguage(button.dataset.language)));
 const rows=[['Esc','F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12','Del'],['~','1','2','3','4','5','6','7','8','9','0','−','=','⌫'],['Tab','Q','W','E','R','T','Y','U','I','O','P','[',']','\\'],['Caps','A','S','D','F','G','H','J','K','L',';','\'','Enter'],['Shift','Z','X','C','V','B','N','M',',','.','/','↑','Shift'],['Ctrl','Win','Alt','Space','Alt','Fn','←','↓','→']];
