@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const en={
+  const en={'Скорость':'Speed','Красное сердце':'Red heartbeat',
     'Анимировать выбранные':'Animate selected','Анимировать все':'Animate all','Клик выбирает клавиши для редактирования кадра. По умолчанию новый проект анимирует всю клавиатуру. Для отдельного участка нажми «Анимировать выбранные».':'Click keys to edit the frame. New projects animate the whole keyboard by default. Use “Animate selected” to limit playback to a region.',
     'Выбери шаблон…':'Choose a preset…','Образец Layer 1 · считай слой, чтобы загрузить свой рисунок':'Sample Layer 1 · read the layer to load your design','На экране: предпросмотр анимации':'On screen: animation preview','На экране: пауза в текущей позиции':'On screen: paused at the current position','На экране: исходный рисунок Layer 1':'On screen: Layer 1 source design',
     'Яркость кадра':'Frame brightness','Взять цвета Layer 1':'Use Layer 1 colours','Новый пустой проект':'New blank project','Новый проект: один пустой кадр.':'New project: one blank frame.',

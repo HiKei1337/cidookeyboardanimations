@@ -1,12 +1,12 @@
 {
   "name": "cidoo-keyboard-animations",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "private": true,
   "description": "CIDOO RGB animation editor and Chrome WebHID background controller. Read Layer 1, animate Layer 2.",
   "author": "HiKei1337",
   "license": "PolyForm-Noncommercial-1.0.0",
   "scripts": {
-    "test": "node tests/hid.test.cjs && node tests/popup.test.cjs && node tests/project.test.cjs && node tests/connect.test.cjs && node tests/presets.test.cjs && node tests/studio.test.cjs"
+    "test": "node tests/hid.test.cjs && node tests/popup.test.cjs && node tests/project.test.cjs && node tests/connect.test.cjs && node tests/presets.test.cjs && node tests/studio.test.cjs && node tests/speed.test.cjs"
   },
   "engines": {
     "node": ">=18"

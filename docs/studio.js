@@ -24,10 +24,10 @@ function pausePreview(){
   if(!playing)return;
   previewElapsed=performance.now()-previewStarted;playing=false;pausedPreview=true;
   CidooHeartMath.paint(previewBytes,sourceBytes,previewElapsed/1000,project);
-  if(project.effect==='timeline')activeFrame=CidooHeartMath.timelinePosition(project.frames,previewElapsed/1000).index;
+  if(project.effect==='timeline')activeFrame=CidooHeartMath.timelinePosition(project.frames,previewElapsed/1000*(project.playbackSpeed||1)).index;
   if(previewHandle!==null)cancelAnimationFrame(previewHandle);previewHandle=null;
 }
-function frameStart(){return project.effect==='timeline'?project.frames.slice(0,activeFrame).reduce((ms,f)=>ms+f.durationMs,0):0;}
+function frameStart(){return project.effect==='timeline'?project.frames.slice(0,activeFrame).reduce((ms,f)=>ms+f.durationMs,0)/(project.playbackSpeed||1):0;}
 function resetPreview(){pausePreview();playing=false;pausedPreview=false;previewElapsed=frameStart();}
 function change(task){pausePreview();checkpoint();pausedPreview=false;task();previewElapsed=frameStart();saveDraft();render();}
 function selectFrame(index){resetPreview();activeFrame=index;previewElapsed=frameStart();render();saveDraft();}
@@ -35,13 +35,14 @@ function duration(){if($('autoOff').value==='never')return 0;const number=(id,ma
 function clock(seconds){const n=Math.max(0,Math.ceil(seconds));return `${Math.floor(n/3600).toString().padStart(2,'0')}:${Math.floor(n%3600/60).toString().padStart(2,'0')}:${(n%60).toString().padStart(2,'0')}`;}
 function applyForm(){
   project.name=$('projectName').value.trim()||'Моя анимация';project.effect=$('effect').value;
-  Object.assign(project,CidooHeartMath.options({...project,bpm:$('bpm').value,fps:$('fps').value,min:$('min').value,max:$('max').value,duration:duration(),restoreMode:$('restoreMode').value,interpolation:$('interpolation').value}));
+  Object.assign(project,CidooHeartMath.options({...project,playbackSpeed:$('playbackSpeed').value,bpm:$('bpm').value,fps:$('fps').value,min:$('min').value,max:$('max').value,duration:duration(),restoreMode:$('restoreMode').value,interpolation:$('interpolation').value}));
   if(project.effect==='timeline'&&!project.frames.length)project.frames.push({durationMs:400,colors:[...project.sourceColors]});
 }
 function form(){
   $('preset').value=Object.keys(CidooPresets.names).find(id=>Object.values(CidooPresets.names[id]).includes(project.name))||'';
-  $('projectName').value=project.name;for(const id of ['effect','bpm','fps','min','max','interpolation','restoreMode'])$(id).value=String(project[id]);
+  $('projectName').value=project.name;for(const id of ['effect','bpm','fps','min','max','interpolation','restoreMode','playbackSpeed'])$(id).value=String(project[id]);
   $('autoOff').value=project.duration===0?'never':'timer';
+  $('speedValue').textContent=(project.playbackSpeed||1)+'×';
   if(project.duration>0){$('hours').value=Math.floor(project.duration/3600);$('minutes').value=Math.floor(project.duration%3600/60);$('seconds').value=Math.floor(project.duration%60);}
   panels();
 }
@@ -142,3 +143,5 @@ document.addEventListener('visibilitychange',async()=>{if(!extension||document.h
   catch(error){notice(error.message,true);}
 })();
 setInterval(async()=>{if(!extension||busy||!live||document.hidden)return;try{state(await send('status'));}catch(error){notice(error.message,true);}},1000);
+
+$('playbackSpeed').addEventListener('input',()=>{change(()=>project.playbackSpeed=Number($('playbackSpeed').value));$('speedValue').textContent=project.playbackSpeed+'×';});

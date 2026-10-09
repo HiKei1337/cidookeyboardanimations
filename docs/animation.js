@@ -12,6 +12,7 @@
     return {
       effect: ['heartbeat','breathe','shimmer','heartbeat-shimmer','timeline'].includes(raw.effect) ? raw.effect : 'heartbeat',
       bpm: range(raw.bpm,35,140,65),
+      playbackSpeed: range(raw.playbackSpeed,.25,4,1),
       fps: range(raw.fps,4,20,8),
       min: range(raw.min,0,80,15),
       max: range(raw.max,20,100,100),
@@ -25,6 +26,7 @@
   }
   function frame(base,seconds,raw) {
     const opts = options(raw);
+    seconds *= opts.playbackSpeed;
     const phase = (seconds * opts.bpm / 60) % 1;
     const level = opts.effect === 'breathe' ? (1-Math.cos(phase*2*Math.PI))/2 : pulse(phase);
     const high = Math.max(opts.min,opts.max) / 100;
@@ -41,6 +43,7 @@
     });
   }
   function paint(target,base,seconds,opts) {
+    seconds *= Math.max(.25,Math.min(4,Number(opts.playbackSpeed)||1));
     target.set(base);
     if(opts.effect==='timeline'){
       if(!opts.frames?.length)return target;
