@@ -1,0 +1,7 @@
+{
+  "extensionName": {"message": "CIDOO RGB Studio — Layer 2"},
+  "extensionDescription": {"message": "Конструктор RGB-анимации CIDOO C80. Исходник Layer 1, фоновая анимация Layer 2, свои кадры и таймер по желанию."},
+  "extensionTitle": {"message": "CIDOO RGB Studio — Layer 2"},
+  "toggleDescription": {"message": "Запустить / остановить анимацию"},
+  "stopDescription": {"message": "Остановить и вернуть исходные цвета"}
+}

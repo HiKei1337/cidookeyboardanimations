@@ -1,0 +1,11 @@
+{
+  "name": "cidoo-keyboard-animations",
+  "version": "1.2.0",
+  "private": true,
+  "description": "CIDOO C80 RGB animation editor and Chrome WebHID background controller. Read Layer 1, animate Layer 2.",
+  "author": "HiKei1337",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "scripts": {"test": "node tests/hid.test.cjs && node tests/popup.test.cjs && node tests/project.test.cjs"},
+  "engines": {"node": ">=18"},
+  "repository": {"type": "git", "url": "https://github.com/HiKei1337/cidookeyboardanimations.git"}
+}

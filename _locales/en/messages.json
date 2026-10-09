@@ -1,0 +1,7 @@
+{
+  "extensionName": {"message": "CIDOO RGB Studio — Layer 2"},
+  "extensionDescription": {"message": "CIDOO C80 RGB animation editor. Read Layer 1, animate Layer 2 in the background with custom frames and an optional timer."},
+  "extensionTitle": {"message": "CIDOO RGB Studio — Layer 2"},
+  "toggleDescription": {"message": "Start / stop the animation"},
+  "stopDescription": {"message": "Stop and restore source colours"}
+}

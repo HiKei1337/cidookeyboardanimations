@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CIDOO Heart</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <header><div><span class="eyebrow">CIDOO C80 · LAYER 2</span><h1>Живое сердце</h1></div><span class="heart-mark" aria-hidden="true">♥</span></header>
+  <select id="language" aria-label="Language"><option value="ru">Русский</option><option value="en">English</option></select>
+  <canvas id="preview" width="360" height="155" aria-label="Предпросмотр анимации сердца"></canvas>
+  <p class="caption">Меняются цвета сердца. Фон и Caps Lock сохраняются.</p>
+  <label>Эффект<select id="effect"><option value="heartbeat">Биение · тук-тук</option><option value="breathe">Мягкое дыхание</option><option value="shimmer">Красно-розовое переливание</option><option value="heartbeat-shimmer">Биение + переливание</option></select></label>
+  <label>Темп <output id="bpm-value">65 уд/мин</output><input id="bpm" type="range" min="35" max="140" value="65"></label>
+  <div class="two"><label>Тусклый уровень, %<input id="min" type="number" min="0" max="80" value="15"></label><label>Пиковый уровень, %<input id="max" type="number" min="20" max="100" value="100"></label></div>
+  <div class="two"><label>Кадров в секунду<select id="fps"><option value="4">4 · экономно</option><option value="8" selected>8 · рекомендовано</option><option value="12">12 · плавнее</option><option value="20">20 · максимум</option></select></label><label>Автовыключение<select id="autoOff"><option value="never" selected>Никогда</option><option value="timer">По таймеру</option></select></label></div>
+  <div id="timerFields" class="timer-fields" hidden><label>Часы<input id="hours" type="number" min="0" value="0"></label><label>Минуты<input id="minutes" type="number" min="0" max="59" value="15"></label><label>Секунды<input id="seconds" type="number" min="0" max="59" value="0"></label></div>
+  <button id="connect" class="wide">Подключить фоновое управление</button>
+  <button id="studio" class="wide">Открыть конструктор анимации</button>
+  <div class="actions"><button id="start" class="primary">Запустить</button><button id="stop">Остановить</button></div>
+  <button id="copy" class="wide">Копировать Layer 1 → 2</button>
+  <p id="status" role="status" aria-live="polite">Проверяю подключение…</p>
+  <details><summary>Подключение и команды</summary><p>На сайте выберите «Пользовательский» → Layer 2. Нажмите «Подключить фоновое управление» и выберите C80 в окне Chrome.</p><p>Управление перейдёт расширению: сайт покажет отключение клавиатуры. Теперь вкладку можно свернуть или закрыть. Пока эффект работает, не подключайте устройство обратно к сайту.</p><p>Alt + Shift + H — запуск / остановка.<br>Alt + Shift + S — остановка.</p><p>«Никогда» — до ручной остановки. Таймер отсчитывается после запуска.</p><button id="open">Открыть сайт CIDOO</button><button id="restoreBackup">Вернуть резервную копию Layer 2</button></details>
+  <script src="i18n.js"></script><script src="animation.js"></script><script src="popup.js"></script>
+</body></html>
