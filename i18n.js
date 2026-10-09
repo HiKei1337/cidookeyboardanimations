@@ -1,6 +1,13 @@
 (() => {
   'use strict';
   const en={
+    'Анимировать выбранные':'Animate selected','Анимировать все':'Animate all','Клик выбирает клавиши для редактирования кадра. По умолчанию новый проект анимирует всю клавиатуру. Для отдельного участка нажми «Анимировать выбранные».':'Click keys to edit the frame. New projects animate the whole keyboard by default. Use “Animate selected” to limit playback to a region.',
+    'Выбери шаблон…':'Choose a preset…','Образец Layer 1 · считай слой, чтобы загрузить свой рисунок':'Sample Layer 1 · read the layer to load your design','На экране: предпросмотр анимации':'On screen: animation preview','На экране: пауза в текущей позиции':'On screen: paused at the current position','На экране: исходный рисунок Layer 1':'On screen: Layer 1 source design',
+    'Яркость кадра':'Frame brightness','Взять цвета Layer 1':'Use Layer 1 colours','Новый пустой проект':'New blank project','Новый проект: один пустой кадр.':'New project: one blank frame.',
+    'Выбор шаблона сразу открывает его. Все кадры можно редактировать.':'Selecting a preset opens it immediately. Every frame is editable.',
+    'После остановки':'When stopped','Оставить последний кадр':'Keep last frame','Вернуть подсветку до запуска':'Restore lighting before playback','Вернуть Layer 1':'Restore Layer 1',
+    'Проект из конструктора':'Project from editor','▶ Продолжить предпросмотр':'▶ Resume preview',
+    'Остановлено. Вернулась подсветка до запуска.':'Stopped. Lighting from before playback restored.','Остановлено. Последний кадр остался на клавиатуре.':'Stopped. The last frame stays on the keyboard.',
     'Использую сохранённое разрешение USB…':'Using the saved USB permission…',
     'Подключить клавиатуру':'Connect keyboard','▶ Запустить на клавиатуре':'▶ Run on keyboard','Предпросмотр меняет только экран. «Запустить на клавиатуре» включает клавиатуру.':'Preview changes the screen only. “Run on keyboard” controls the keyboard.',
     'Готовые анимации':'Ready-made animations','Флаг России · мигание':'Russian flag · blink','Цветы · распускаются':'Flowers · blooming','Северное сияние':'Northern lights','Комета':'Comet','Светлячки':'Fireflies','Открыть шаблон':'Open preset',
@@ -14,8 +21,8 @@
     'Устройство не выбрано. Нажми кнопку снова, выбери клавиатуру в списке и подтверди подключение.':'No device selected. Click again, select the keyboard in the list and confirm.',
     'Передаю управление расширению…':'Handing control to the extension…','Подключено. Вернись в конструктор и нажми «Считать Layer 1». Layer 1 не изменён.':'Connected. Return to the editor and click “Read Layer 1”. Layer 1 is unchanged.',
     'Chrome не разрешил выбор USB. Нажми кнопку снова в этой вкладке.':'Chrome did not allow the USB picker. Click the button again in this tab.',
-    'Конструктор подсветки · C80':'RGB animation editor · C80','Выбор клавиш CIDOO C80':'CIDOO C80 key selection','Кадры анимации':'Animation frames',
-    'Предпросмотр без клавиатуры':'Preview without a keyboard','Подключить C80':'Connect C80',
+    'Конструктор подсветки · все модели CIDOO':'RGB animation editor · all CIDOO models','Выбор клавиш CIDOO':'CIDOO key selection','Кадры анимации':'Animation frames',
+    'Предпросмотр без клавиатуры':'Preview without a keyboard','Подключить клавиатуру':'Connect keyboard',
     'Твой рисунок. Твоя анимация.':'Your design. Your animation.',
     'Выбери клавиши и эффект. Или нарисуй несколько кадров — редактор плавно соединит их.':'Select keys and an effect. Or draw your own frames and blend them into an animation.',
     'Как создать анимацию ↗':'Create your own animation ↗','Клавиатура':'Keyboard',
@@ -24,7 +31,7 @@
     'Сердце':'Heart','Все':'All keys','Снять выбор':'Clear selection','По цвету':'By colour',
     'Цвет для выбора клавиш':'Colour used to select keys','Считать Layer 1':'Read Layer 1',
     '▶ Предпросмотр':'▶ Preview','❚❚ Пауза предпросмотра':'❚❚ Pause preview',
-    'Предпросмотр меняет только экран. «Запустить на C80» включает клавиатуру.':'Preview changes the screen only. “Run on C80” controls the keyboard.',
+    'Предпросмотр меняет только экран. «Запустить на клавиатуре» включает клавиатуру.':'Preview changes the screen only. “Run on keyboard” controls the keyboard.',
     'Кадры':'Frames','+ Кадр':'+ Frame','Дублировать':'Duplicate','Удалить кадр':'Delete frame',
     'Цвет':'Colour','Залить выбранные':'Fill selected','Яркость исходника':'Source brightness',
     'Применить яркость':'Apply brightness','Вернуть исходные цвета':'Restore source colours','Время кадра, мс':'Frame duration, ms',
@@ -37,17 +44,17 @@
     'Переходы':'Transitions','Плавные':'Smooth','Без перехода':'Instant',
     'Частота кадров':'Frame rate','Кадров в секунду':'Frames per second','4 · экономно':'4 · low power','8 · рекомендовано':'8 · recommended','12 · плавнее':'12 · smoother','20 · максимум':'20 · maximum',
     'Автовыключение':'Auto stop','Никогда':'Never','По таймеру':'Timer','Часы':'Hours','Минуты':'Minutes','Секунды':'Seconds',
-    '▶ Запустить на C80':'▶ Run on C80','Запустить':'Start','Остановить':'Stop','Остановить и вернуть рисунок':'Stop and restore design',
+    '▶ Запустить на клавиатуре':'▶ Run on keyboard','Запустить':'Start','Остановить':'Stop','Остановить и вернуть рисунок':'Stop and restore design',
     'Сначала подключи клавиатуру. Предпросмотр доступен без подключения.':'Connect the keyboard first. Preview is available without a connection.',
     'Работает в фоне':'Runs in the background',
     'После запуска можно свернуть или закрыть редактор. Chrome должен оставаться запущенным.':'After starting, you can minimise or close the editor. Keep Chrome running.',
     'Подключение за 3 шага':'Connect in 3 steps','На':'On the','сайте CIDOO':'CIDOO website',
-    'подключи C80 и включи «Пользовательский → Layer 2».':'connect C80 and enable “Custom → Layer 2”.',
-    'Нажми «Подключить C80» и выбери устройство в окне Chrome.':'Click “Connect C80” and select the device in Chrome.',
+    'подключи клавиатуру и включи «Пользовательский → Layer 2».':'connect the keyboard and enable “Custom → Layer 2”.',
+    'Нажми «Подключить клавиатуру» и выбери устройство в окне Chrome.':'Click “Connect keyboard” and select the device in Chrome.',
     'Нажми «Считать Layer 1». Теперь редактор показывает твой исходник.':'Click “Read Layer 1” to load your source design.',
     'Управление перейдёт расширению; сайт покажет отключение. Пока анимация работает, не подключай клавиатуру обратно к сайту.':'Control moves to the extension; the website will show the device as disconnected. Do not reconnect the website while the animation is running.',
     '↶ Отменить последнее изменение':'↶ Undo last change',
-    'Только CIDOO C80 · исходник Layer 1 · запись Layer 2 · HiKei1337':'CIDOO C80 only · read Layer 1 · write Layer 2 · HiKei1337',
+    'CIDOO · исходник Layer 1 · запись Layer 2 · HiKei1337':'CIDOO · read Layer 1 · write Layer 2 · HiKei1337',
     'Живое сердце':'Living heart','Меняются цвета сердца. Фон и Caps Lock сохраняются.':'Only the heart animates. Background and Caps Lock stay unchanged.',
     'Подключить фоновое управление':'Connect background control','Открыть конструктор анимации':'Open animation editor',
     'Копировать Layer 1 → 2':'Copy Layer 1 → 2','Подключение и команды':'Connection and shortcuts',
@@ -77,7 +84,7 @@
     'Удалено из библиотеки. Экспортированный файл не изменён.':'Removed from the library. Exported files were not changed.',
     'JSON скачан. Его можно открыть в этом редакторе или поделиться файлом.':'JSON downloaded. Open it in this editor or share the file.',
     'Файл слишком большой: максимум 1 МБ.':'File too large: maximum 1 MB.',
-    'Режим предпросмотра: устройство не подключается. Для C80 загрузи расширение в Chrome.':'Preview mode: no device connection. Load the extension in Chrome to control C80.',
+    'Режим предпросмотра: устройство не подключается. Загрузи расширение в Chrome для управления клавиатурой.':'Preview mode: no device connection. Load the extension in Chrome to control the keyboard.',
     'Загрузи папку как расширение Chrome. В обычной вкладке доступен только конструктор и предпросмотр.':'Load this folder as a Chrome extension. A regular tab supports editing and preview only.',
     'Сохрани анимацию, чтобы вернуться к ней позже.':'Save an animation to return to it later.',
     'Подключите CIDOO C80 к новой версии сайта и выберите Пользовательский → Layer 2.':'Connect CIDOO C80 to the new website version and select Custom → Layer 2.',
@@ -106,7 +113,7 @@
   function translate(value){
     const clean=value.trim();let result=en[clean];
     if(!result){
-      result=clean.replace(/^Выбрано (\d+) клавиш(?:а)?$/,'$1 keys selected').replace(/^Клавиш выбрано: (\d+)$/,'$1 keys selected').replace(/^Кадр (\d+)$/,'Frame $1')
+      result=clean.replace(/^Выбрано (\d+) клавиш(?:а)?$/,'$1 keys selected').replace(/^Клавиш выбрано: (\d+)$/,'$1 keys selected').replace(/^Для редактирования: (\d+) · В анимации: (\d+)$/,'Editing: $1 · Animated: $2').replace(/^Кадр (\d+)$/,'Frame $1').replace(/^На экране: кадр (\d+) · /,'On screen: frame $1 · ')
         .replace(/^(\d+) уд\/мин$/,'$1 BPM').replace(/^Устройство найдено: (.+)\. Нажми «Выбрать USB-клавиатуру»\.$/, 'Device found: $1. Click “Select USB keyboard”.').replace(/^Сохранено: /,'Saved: ').replace(/^Открыто: /,'Opened: ')
         .replace(/^Анимация открыта: /,'Animation opened: ').replace(/^Удалить из библиотеки /,'Remove from library: ')
         .replace(/^(\d+) мс$/,'$1 ms').replace(/ · выбрать для анимации$/,' · select to animate').replace(/без таймера/g,'no timer')
@@ -134,14 +141,14 @@
   async function setLanguage(value,persist=true){
     language=value==='en'?'en':'ru';document.documentElement.lang=language;localize(document.body);
     if(document.querySelector('#keyboard'))document.title=language==='en'?'CIDOO RGB Studio — animation editor':'CIDOO RGB Studio — конструктор анимации';
-    const selector=document.getElementById('language');if(selector)selector.value=language;
+    for(const button of document.querySelectorAll('[data-lang]'))button.setAttribute('aria-pressed',String(button.dataset.lang===language));
     const help=document.querySelector('.help-link');if(help)help.href='https://github.com/HiKei1337/cidookeyboardanimations/blob/main/docs/'+(language==='en'?'CUSTOM_ANIMATION.en.md':'CUSTOM_ANIMATION.md');
     if(persist){if(globalThis.chrome?.runtime?.id)await chrome.storage.local.set({language});else localStorage.setItem('cidooStudio.language',language);}
   }
   async function init(){
     const saved=globalThis.chrome?.runtime?.id?(await chrome.storage.local.get('language')).language:localStorage.getItem('cidooStudio.language');
     await setLanguage(saved||(navigator.language?.toLowerCase().startsWith('ru')?'ru':'en'),false);
-    document.getElementById('language')?.addEventListener('change',event=>setLanguage(event.target.value));
+    for(const button of document.querySelectorAll('[data-lang]'))button.addEventListener('click',()=>setLanguage(button.dataset.lang));
     new MutationObserver(records=>{for(const record of records){if(record.type==='characterData')localize(record.target);else for(const node of record.addedNodes)localize(node);}}).observe(document.body,{subtree:true,childList:true,characterData:true});
   }
   globalThis.CidooI18n=Object.freeze({translate,setLanguage,get language(){return language;}});

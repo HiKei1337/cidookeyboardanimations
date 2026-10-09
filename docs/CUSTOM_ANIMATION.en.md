@@ -1,74 +1,134 @@
-# Create an animation without coding
+# Create your own animation — illustrated guide
 
-[Русский](CUSTOM_ANIMATION.md)
+[Русский](CUSTOM_ANIMATION.md) · [Back to README](../README.en.md)
 
-Your source design lives in the keyboard's **Layer 1**. The extension reads it and sends colours only to **Layer 2**. The editor cannot write to Layer 1.
+For **version 1.4 and newer**. Screenshots use preview mode: you can draw without a keyboard. Real lighting needs the installed extension, USB and a compatible device protocol.
 
-## Animate an existing design
+## 1. Know the editor
 
-1. Draw your design in Layer 1 on the [CIDOO website](https://cidoo.illumipc.com/#/). This step happens on the website, not in the extension.
-2. Select **Custom → Layer 2** on the website and enable lighting.
-3. Open the extension → **Open animation editor**.
-4. Click **Connect C80** and select your keyboard in Chrome. The website disconnects because control moves to the extension.
-5. Click **Read Layer 1** to load your actual colours.
-6. Click keys on the keyboard diagram. A purple outline means the key is animated. Other keys retain their source colours.
-7. Choose **Gentle breathing** or **Heartbeat** and adjust tempo and brightness.
-8. Click **Preview**, then **Run on C80** when you like the result.
+- **Left: keyboard.** It displays a frame or animation preview. The line below the heading tells you what is on screen.
+- **Below the keyboard:** key selection and preview controls.
+- **Frames:** each card shows a miniature of the whole keyboard and its duration.
+- **Right:** project, presets, transitions, timer and hardware playback.
+- **RU / ENG at the top right:** change language immediately. The active button is highlighted. Your project names remain as you wrote them.
 
-Use **Heart** for the included heart shape. For another design, click **Clear selection** and select your own keys. **By colour** selects keys with the exact RGB value in the adjacent colour field. Selecting red `#ff0000`, for example, leaves a green Caps Lock unchanged.
+**Layer 1** is the device design, which the extension only reads. **Layer 2** receives the animation. Projects and their frames are stored separately from the keyboard layers.
 
-The extension reads Layer 1 again before each real start. Stopping restores that design to Layer 2.
+## 2. Try a preset
 
-## Draw a sequence of frames
+1. Under **Ready-made animations**, select **Flowers**, **Northern lights**, **Comet** or **Fireflies**. Selecting one opens the project immediately.
+2. Click **Preview**. This changes the screen only.
+3. Click **Pause**: the exact current colours stay on screen. The button changes to **Resume preview**.
+4. Click a frame card to inspect or edit it. Its number appears below the keyboard heading.
 
-A frame is a set of colours shown briefly. Several frames make an animation.
+**Open preset** reloads the original version of the selected preset. Use it to discard edits to that preset. **Undo last change** recovers the previous editing step.
 
-Example: a dim red heart fades to bright pink and back.
+![Flowers preset, sixth frame and language switch](guide/01-preset-en.png)
 
-1. Select the heart keys and choose **Custom frames**. **Frame 1** appears with your source colours.
-2. Set **Source brightness** to **15%** and click **Apply brightness**. Only selected keys change.
-3. Set **Frame duration** to **600 ms**.
-4. Click **Duplicate** to open **Frame 2**.
-5. Set **Colour** to `#ff6689`, then click **Fill selected**.
-6. Set the second frame to **300 ms**.
-7. Select **Smooth** transitions and click **Preview**.
+The comet has a head and a fading tail. During its pass, the head changes from cold blue through orange to white. Every preset is an editable frame sequence.
 
-With smooth transitions, each frame fades into the next over its duration. The final frame fades back to the first, repeating the sequence. With **Instant** transitions, each frame holds its colours for its duration and then switches.
+## 3. Draw from scratch
 
-You can add up to 120 frames. Each lasts between 50 ms and one minute. **Duplicate** copies the selected frame's colours and duration. **+ Frame** creates a frame from the source design. **Undo last change** reverses the previous edit.
+We will make **W, A, S, D** blend from cyan to magenta, while the rest of the keyboard stays dark.
 
-**Source brightness** multiplies the original Layer 1 RGB values by the chosen percentage. Use **Colour** and **Fill selected** for an arbitrary colour. These edits change project frames only, never Layer 1.
+1. Under **My animations**, click **New blank project**. You get one black frame. Nothing on the device changes.
+2. Name the project, for example `WASD — cyan and magenta`.
+3. Click **Clear selection**, then click **W, A, S, D**. These four keys get a lilac outline.
 
-## Choose when to stop
+![Blank project with four selected keys](guide/02-selection-en.png)
 
-- **Never** — runs until you press **Stop**. There is no session time limit.
-- **Timer** — enter hours, minutes and seconds. The timer begins when the animation starts and restores the source design when it ends.
+### Painting selection and playback selection are separate
 
-The timer does not change the loop length. A one-second frame sequence can repeat for 30 minutes.
+In **Custom frames**, the line below the keyboard has two numbers:
 
-Keep **8 frames/s** for lower load. Try 12 for smoother transitions, or 4 to reduce updates further.
+- **Editing:** the keys the fill and brightness tools will change.
+- **Animated:** the keys that will receive frame colours on the device.
 
-## Save and share
+A new blank project animates the whole keyboard. Selecting four keys for painting does not bring back the Layer 1 heart on the other keys: they keep their black frame colours.
 
-- **Save to library** stores the project inside the extension. Saving the same name replaces that library entry.
-- **Download JSON** creates an animation file to share or add to the repository.
-- **Open JSON** loads that file into the editor.
+To animate only one part of a source design, select that region and click **Animate selected**. Other keys use Layer 1 during playback. **Animate all** applies the whole frame again.
 
-Drafts save automatically. Editing controls does not change an already running effect until you start it again. Uninstalling the extension deletes its library, so export important projects.
+In built-in **Heartbeat**, **Breathe** and **Shimmer** effects, outlines directly select animated keys. Those effects animate the Layer 1 design rather than painted frames.
 
-The file includes selected keys, frames, timing and a source snapshot for preview. On another keyboard, the extension reads that keyboard's actual Layer 1 before starting. Frame colours affect selected keys; the background comes from that keyboard's Layer 1.
+## 4. Paint and build frames
 
-## Troubleshooting
+1. Select **Frame 1**.
+2. Choose cyan `#00ffff` in **Colour**: **RGB 0, 255, 255**.
+3. Click **Fill selected**. W, A, S, D change; the other keys stay black.
+4. Enter `600` in **Frame duration, ms**, then press Tab or click outside the field.
+5. Click **Duplicate**. **Frame 2** opens with the same colours and duration.
+6. Choose magenta `#ff00ff`: **RGB 255, 0, 255**. Click **Fill selected**.
+7. Keep the second frame at `600` ms.
 
-- **No connection:** load the extension in Chrome and enable Custom → Layer 2 on the website first.
-- **Website shows disconnected:** expected after handing control to the extension.
-- **Keys do not animate:** make sure they have purple selection outlines.
-- **Preview works but the device does not:** preview controls the screen only. Connect the keyboard and click **Run on C80**.
-- **Colours differ from the file:** the keyboard's current Layer 1 is the source. Click **Read Layer 1** first.
-- **Wrong frame changed:** select the intended frame in the timeline before editing.
+![Two frames and colour tools](guide/03-frames-en.png)
 
-You can close the editor and CIDOO tab after starting. Keep Chrome running and the computer awake. USB disconnection or computer sleep interrupts the animation. Press **Stop** before quitting Chrome. Do not reconnect the website or another RGB controller while the extension is animating.
+**Duplicate** copies colours and duration. **+ Frame** copies the current colours and gives the new frame a 400 ms duration. Neither button inserts the Layer 1 design.
 
-## Ready-made full-keyboard animations
+**Frame brightness** changes the selected keys' current colours. Magenta 255/0/255 at 50% becomes 128/0/128. Moving back to 100% restores the colour from before the brightness adjustment. Black stays black: fill it first to add colour.
 
-Choose **Ready-made animations → Russian flag / Flowers / Northern lights / Comet / Fireflies → Open preset**. Press **Preview** to watch it on screen, then connect the keyboard and run. All frames are editable. The flag alternates between white-blue-red horizontal bands (800 ms) and lights off (500 ms). Adjust the two frame durations to change the blink rate.
+**Use Layer 1 colours** explicitly replaces selected frame colours with the source design. If Layer 1 contains a heart, this button brings those colours into the selected region.
+
+Click a card before editing its colours. **Delete frame** removes the selected card, but at least one frame remains. You can have up to 120 frames.
+
+## 5. Preview the motion
+
+Choose **Smooth** under **Transitions**, then click **Preview**.
+
+- Frame 1 blends into Frame 2 over 600 ms.
+- Frame 2 blends back into Frame 1 over 600 ms.
+- The full loop takes 1.2 seconds and repeats.
+
+With **Instant**, each frame holds its colour for 600 ms and switches immediately. This suits blinking and distinct drawings.
+
+![Preview paused between frames](guide/04-preview-en.png)
+
+Pausing preserves the exact colours between frames. Resuming continues from the same time. Clicking a frame card moves to that frame; the next preview starts there. Closing and reopening the editor preserves the selected frame and paused position.
+
+Changing the name, timer or stop behaviour does not restart the preview. Painting colours or selecting a different frame moves the editor to the frame you are editing.
+
+## 6. Run on the keyboard
+
+1. On the [CIDOO website](https://cidoo.illumipc.com/#/), connect over USB, enable lighting and choose **Custom → Layer 2**.
+2. In the extension, click **Connect keyboard**. A persistent connection tab opens.
+3. If the extension already has USB permission, it reuses it automatically. Otherwise, click **Select USB keyboard** and select the device in Chrome. The website and extension have separate permissions.
+4. Return to the editor. **Read Layer 1** updates the source for background colours and built-in effects. Painted frames and the selected card stay intact.
+5. Choose **When stopped** and set a timer if needed.
+6. Click **Run on keyboard**.
+
+![Stop behaviour and a thirty-minute timer](guide/05-playback-en.png)
+
+### What happens when playback stops
+
+| Mode | Result in Layer 2 |
+|---|---|
+| **Keep last frame** — default | Motion stops; the current lighting remains. |
+| **Restore lighting before playback** | Restores the Layer 2 snapshot taken before starting. |
+| **Restore Layer 1** | Copies the Layer 1 source design to Layer 2. |
+
+The same choice applies when the timer expires. **Never** has no session limit. **Timer** uses hours, minutes and seconds. The timer sets total playback time, not loop length.
+
+Start with **8 frames/s**. 12 updates more frequently; 20 increases load. Editing a project does not change an animation already running on the device. Click Run again to apply your edits.
+
+The website shows a disconnected device after handoff; this is expected. Do not reconnect it during extension playback. You can close the editor and website tab, but Chrome must stay running and the computer awake.
+
+## 7. Save and share
+
+Click **Save to library**. Your project appears as a button with its name. Saving with the same name updates that entry.
+
+![Saved project in the library](guide/06-save-en.png)
+
+- **Download JSON:** a separate project file for backup or sharing.
+- **Open JSON:** loads that file into the editor. Imported data is never executed as code.
+- The **draft** saves automatically with the current frame. The library holds multiple projects.
+- Removing the extension removes its local library. Export important projects first.
+
+## If a heart appears again
+
+1. Read **On screen**: is it a frame, source design or preview?
+2. Check the effect: painted colours need **Custom frames**, not **Heartbeat**.
+3. If it happens after stopping, choose **Keep last frame**.
+4. If it appears behind an animation, click **Animate all**. Partial playback uses Layer 1 for other keys.
+5. If an older project already contains incorrectly painted frames, reload the preset. Updates do not rewrite your saved artwork.
+6. Reload the extension on `chrome://extensions`, then reload the editor tab. An open editor uses its old code until refreshed.
+
+Physical compatibility depends on the device and protocol. Editor and HID simulator checks do not replace testing your keyboard. When reporting a problem in [GitHub Issues](https://github.com/HiKei1337/cidookeyboardanimations/issues), include extension version, model, message and reproduction steps.

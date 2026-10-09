@@ -2,6 +2,16 @@
   'use strict';
   const names={flag:{ru:'Флаг России · мигание',en:'Russian flag · blink'},flowers:{ru:'Цветы · распускаются',en:'Flowers · blooming'},aurora:{ru:'Северное сияние',en:'Northern lights'},comet:{ru:'Комета',en:'Comet'},fireflies:{ru:'Светлячки',en:'Fireflies'}};
   const positions=CidooLayout.rows.flatMap((row,y)=>{let x=0;return row.map(key=>{const pos={index:key.index,x:x+key.width/2,y};x+=key.width;return pos;});});
+  function cometColor(p,phase){
+    const headX=-2+phase*23,headY=Math.round(2+Math.sin(phase*Math.PI*2)*.7),dx=headX-p.x;
+    const width=Math.max(0,1-(Math.abs(p.y-headY)/1.5)**2);
+    if(dx<0||dx>7||!width)return [0,0,0];
+    const heat=Math.min(1,phase/.8),cold=[0,128,255],hot=[255,64,0],white=[255,255,255];
+    const a=heat<.5?cold:hot,b=heat<.5?hot:white,mix=heat<.5?heat*2:(heat-.5)*2;
+    const head=a.map((v,i)=>v+(b[i]-v)*mix);
+    const tail=dx<1.4?0:(dx-1.4)/5.6,level=dx<1.4?1:(1-tail)**1.5;
+    return head.map((v,i)=>(v+(cold[i]-v)*tail)*level*width);
+  }
   function build(id,language='ru'){
     if(!names[id])throw Error('Неизвестный шаблон.');
     const project=CidooProject.demo();project.name=names[id][language==='en'?'en':'ru'];project.effect='timeline';project.keys=positions.map(p=>p.index);project.frames=[];project.duration=0;project.interpolation=id==='flag'?'step':'smooth';
@@ -20,10 +30,10 @@
         }return result;
       },180);
       else if(id==='aurora')add(p=>{const a=(1+Math.sin(p.x*.45+p.y*.6+phase*Math.PI*2))/2,b=(1+Math.cos(p.x*.3-phase*Math.PI*2))/2;return [15+65*b,15+175*a,50+155*(1-a)];},130);
-      else if(id==='comet')add(p=>{const distance=(phase*19-p.x+19)%19,level=distance<5?(1-distance/5)**2:0;return [8+70*level,10+185*level,18+237*level];},120);
+      else if(id==='comet')add(p=>cometColor(p,phase),140);
       else add(p=>{const seed=((p.index*37)%97)/97,life=Math.max(0,Math.cos((phase-seed)*Math.PI*2))**14;return [4+180*life,7+248*life,8+35*life];},180);
     }
     return CidooProject.validate(project);
   }
-  globalThis.CidooPresets=Object.freeze({names,build});
+  globalThis.CidooPresets=Object.freeze({names,build,cometColor});
 })();

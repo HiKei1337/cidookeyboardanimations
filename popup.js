@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id);
-const fields=['effect','bpm','fps','min','max'];
+const fields=['effect','bpm','fps','min','max','restoreMode'];
 const buttons=['connect','start','stop','copy','restoreBackup'];
 let busy=false,previewConfig=CidooHeartMath.options(),live=false;
 function duration(){
@@ -8,7 +8,7 @@ function duration(){
   const integer=(id,max=Number.MAX_SAFE_INTEGER)=>Math.min(max,Math.max(0,Math.floor(Number($(id).value)||0)));
   return integer('hours')*3600+integer('minutes',59)*60+integer('seconds',59);
 }
-function settings(){return CidooHeartMath.options({...Object.fromEntries(fields.map(id=>[id,$(id).value])),duration:duration()});}
+function settings(){return CidooHeartMath.options({...previewConfig,...Object.fromEntries(fields.map(id=>[id,$(id).value])),duration:duration()});}
 function time(seconds){const value=Math.max(0,Math.ceil(seconds));return `${Math.floor(value/3600).toString().padStart(2,'0')}:${Math.floor(value%3600/60).toString().padStart(2,'0')}:${(value%60).toString().padStart(2,'0')}`;}
 function report(state){
   live=!!state.running;

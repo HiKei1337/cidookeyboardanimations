@@ -9,14 +9,14 @@
   class CidooHid {
     constructor(hid,storage){
       this.hid=hid;this.storage=storage;this.device=null;this.identity=null;
-      this.running=false;this.timer=null;this.queue=Promise.resolve();this.base=null;
+      this.running=false;this.timer=null;this.queue=Promise.resolve();this.base=null;this.previous=null;
       this.config=CidooHeartMath.options();this.frames=0;this.elapsed=0;this.writeMs=0;this.error='';
       this.bytes=new Uint8Array(SIZE);this.last=new Uint8Array(SIZE);this.hasLast=false;
       this.packets=Array.from({length:8},(_,page)=>{const p=new Uint8Array(63);p[0]=9;p[1]=LAYER;p[3]=page;p[4]=Math.min(54,SIZE-page*54);return p;});
     }
     enqueue(task){const result=this.queue.then(task);this.queue=result.catch(()=>{});return result;}
     cancel(){this.running=false;if(this.timer!==null)clearTimeout(this.timer);this.timer=null;}
-    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName}=this.config;return {version:'1.3.1',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO C80',config:{effect,bpm,fps,min,max,duration,interpolation,projectName},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
+    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.4.0',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO C80',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
     async select(identity){
       if(!Number.isInteger(identity?.vendorId)||!Number.isInteger(identity?.productId))throw Error('Не определена клавиатура. Подключите её к расширению.');
       const devices=(await this.hid.getDevices()).filter(d=>d.vendorId===identity.vendorId&&d.productId===identity.productId&&hasReport(d));
@@ -70,19 +70,20 @@
       finally{await this.close();}
     });}
     async stopInternal(){
-      this.cancel();const base=this.base;this.base=null;
-      try{if(base)await this.write(base);}finally{await this.close();}
+      this.cancel();const base=this.base,previous=this.previous;this.base=null;this.previous=null;
+      const restore=this.config.restoreMode==='previous'?previous:this.config.restoreMode==='source'?base:null;
+      try{if(restore)await this.write(restore);}finally{await this.close();}
       return this.state();
     }
     stop(){this.cancel();return this.enqueue(()=>this.stopInternal());}
     start(raw){return this.enqueue(async()=>{
       await this.stopInternal();this.error='';this.config=CidooHeartMath.options(raw);
       try{
-        await this.open();await this.checkConfig();const base=await this.read(0);
+        await this.open();await this.checkConfig();const base=await this.read(0),previous=await this.read(LAYER);
         if(this.config.effect==='timeline'){
           CidooProject.validate({format:'cidoo-rgb-studio',version:1,sourceLayer:1,targetLayer:2,name:this.config.projectName,...this.config,sourceColors:Array.from(base)});
         }
-        this.base=base;this.hasLast=false;this.frames=0;this.elapsed=0;this.started=performance.now();this.running=true;
+        this.base=base;this.previous=previous;this.hasLast=false;this.frames=0;this.elapsed=0;this.started=performance.now();this.running=true;
         await this.tick();return this.state();
       }catch(error){this.cancel();this.error=error.message;await this.close();throw error;}
     });}

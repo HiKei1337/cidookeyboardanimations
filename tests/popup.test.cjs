@@ -16,6 +16,8 @@ vm.runInContext(fs.readFileSync(path.join(dir,'animation.js'),'utf8'),context);v
   await elements.start.events.click();assert.equal(sent.at(-1).config.duration,3723);assert.ok(elements.status.textContent.includes('01:02:03'));
   elements.hours.value=elements.minutes.value=elements.seconds.value='0';const count=sent.length;await elements.start.events.click();assert.equal(sent.length,count);assert.match(elements.status.textContent,/больше нуля/);
   elements.autoOff.value='never';elements.autoOff.events.input();assert.equal(elements.timerFields.hidden,true);await elements.start.events.click();assert.equal(sent.at(-1).config.duration,0);
+  assert.ok(html.includes('value="timeline"'),'popup must offer the editor project instead of falling back to heartbeat');
+  vm.runInContext("previewConfig=CidooHeartMath.options({effect:'timeline',keys:[2],frames:[{durationMs:500,colors:new Array(396).fill(80)}]})",context);elements.effect.value='timeline';await elements.start.events.click();assert.equal(sent.at(-1).config.effect,'timeline');assert.equal(sent.at(-1).config.frames.length,1);assert.equal(sent.at(-1).config.keys[0],2);
   console.log('PASS: popup control IDs; v1 session migration to Never/8 fps; optional hours/minutes/seconds timer; countdown; zero timer validation; switching back to Never.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
 

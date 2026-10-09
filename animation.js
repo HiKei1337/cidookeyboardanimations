@@ -16,6 +16,7 @@
       min: range(raw.min,0,80,15),
       max: range(raw.max,20,100,100),
       duration: range(raw.duration,0,Number.MAX_SAFE_INTEGER,0),
+      restoreMode: ['hold','previous','source'].includes(raw.restoreMode)?raw.restoreMode:'hold',
       keys: Array.isArray(raw.keys)?[...new Set(raw.keys.filter(index=>Number.isInteger(index)&&index>=0&&index<132))]:heart,
       frames: raw.frames||[],
       interpolation: raw.interpolation==='step'?'step':'smooth',
@@ -43,9 +44,7 @@
     target.set(base);
     if(opts.effect==='timeline'){
       if(!opts.frames?.length)return target;
-      const total=opts.frames.reduce((sum,frame)=>sum+frame.durationMs,0);
-      let time=(seconds*1000)%total,frameIndex=0;
-      while(frameIndex<opts.frames.length-1&&time>=opts.frames[frameIndex].durationMs){time-=opts.frames[frameIndex].durationMs;frameIndex++;}
+      const {index:frameIndex,time}=timelinePosition(opts.frames,seconds);
       const current=opts.frames[frameIndex],next=opts.frames[(frameIndex+1)%opts.frames.length];
       const mix=opts.interpolation==='step'?0:time/current.durationMs;
       for(const index of opts.keys)for(let channel=0;channel<3;channel++){
@@ -70,5 +69,11 @@
     }
     return target;
   }
-  globalThis.CidooHeartMath=Object.freeze({heart,options,pulse,frame,paint});
+  function timelinePosition(frames,seconds){
+    const total=frames.reduce((sum,frame)=>sum+frame.durationMs,0);if(!total)return {index:0,time:0};
+    let time=((seconds*1000)%total+total)%total,index=0;
+    while(index<frames.length-1&&time>=frames[index].durationMs){time-=frames[index].durationMs;index++;}
+    return {index,time};
+  }
+  globalThis.CidooHeartMath=Object.freeze({heart,options,pulse,frame,paint,timelinePosition});
 })();

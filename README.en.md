@@ -14,8 +14,8 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 - Animation library, draft autosave, JSON import and export.
 - **Never** mode or an optional hours/minutes/seconds timer.
 - Background USB control: close the editor and CIDOO tab after starting.
-- English and Russian UI, selectable at the top of the editor or popup.
-- Stopping restores the Layer 1 source design to Layer 2.
+- English and Russian UI, with RU / ENG buttons at the top of the editor or popup.
+- Choose whether stopping keeps the last frame, restores prior Layer 2 lighting or copies the Layer 1 source.
 
 **The extension never writes colours to Layer 1. All colour writes target Layer 2.**
 
@@ -40,7 +40,7 @@ Apply a preset effect to any selected keys, or draw your own frame sequence.
 
 Example: **Custom frames → Frame 1 at 15% brightness → Duplicate → paint Frame 2 pink → Smooth transitions → Preview**.
 
-See the [no-code animation guide](docs/CUSTOM_ANIMATION.en.md). Ready-to-import JSON projects are in [examples](examples).
+See the illustrated step-by-step [no-code animation guide](docs/CUSTOM_ANIMATION.en.md). Ready-to-import JSON projects are in [examples](examples).
 
 **Preview** affects the screen only. **Run on keyboard** controls the device. The keyboard's real Layer 1 colours are read before each start; imported projects cannot overwrite Layer 1.
 
@@ -48,7 +48,7 @@ See the [no-code animation guide](docs/CUSTOM_ANIMATION.en.md). Ready-to-import 
 
 A Chrome extension service worker sends frames directly through WebHID. No page timers are used. The default is **8 frames/s**, with 4, 8, 12 and 20 available. Identical frames are skipped, buffers are reused, and no website rendering or settings writes happen on every frame.
 
-**Never** runs until you stop it, without a session time limit. The timer stops the effect and restores the source design when it expires.
+**Never** runs until you stop it, without a session time limit. The timer stops the effect using the selected stop behaviour.
 
 Keep Chrome running and the computer awake. Quitting Chrome, disconnecting USB or rebooting interrupts playback. Press **Stop** before quitting Chrome, otherwise the final frame may remain. Reconnect and copy Layer 1 → 2 to restore the source design if needed.
 
@@ -57,7 +57,7 @@ Keep Chrome running and the computer awake. Quitting Chrome, disconnecting USB o
 | Shortcut | Action |
 |---|---|
 | `Alt+Shift+H` | Start / stop the last selected animation |
-| `Alt+Shift+S` | Stop and restore the source design |
+| `Alt+Shift+S` | Stop using the selected behaviour |
 
 Change shortcuts on `chrome://extensions/shortcuts`.
 
@@ -69,7 +69,7 @@ Permissions: `storage` for local settings and projects; `scripting` and access t
 
 ## Status
 
-This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.3 has not yet passed a full physical-keyboard test in Chrome.
+This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.4 has not yet passed a full physical-keyboard test in Chrome.
 
 The manufacturer does not document whether each custom colour frame is stored in flash. Endurance under long continuous playback is unconfirmed.
 

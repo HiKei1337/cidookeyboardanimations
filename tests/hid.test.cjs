@@ -30,6 +30,8 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
   const context=vm.createContext({console,Uint8Array,Array,Map,Set,Number,Math,Promise,setTimeout,clearTimeout,performance:{now:()=>clock},navigator:{hid},globalThis:undefined});context.globalThis=context;
   for(const file of ['animation.js','project.js','hid.js'])vm.runInContext(fs.readFileSync(path.join(dir,file),'utf8'),context);
   const engine=new context.CidooHid(hid,storage);
+  // Keep earlier source-restoration tests explicit; new stop modes are checked separately below.
+  const start=engine.start.bind(engine);engine.start=raw=>start({restoreMode:'source',...raw});
   return {base,layer0,layer1,engine,device,identity,reports,listeners,context,hid,storage,saved,setClock(value){clock=value;},get maxActive(){return maxActive;}};
 }
 (async()=>{
@@ -50,6 +52,12 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
   await f.engine.stop();assert.deepEqual(f.layer1,f.base);assert.deepEqual(f.layer0,f.base);assert.equal(f.device.opened,false);
   f.setClock(0);await f.engine.start({duration:5,fps:8});f.engine.cancel();f.engine.running=true;f.setClock(5100);await f.engine.tick();assert.equal(f.engine.running,false);assert.deepEqual(f.layer1,f.base);
   assert.equal(f.maxActive,1,'HID transfers serialized');
+  assert.equal(f.context.CidooHeartMath.options().restoreMode,'hold');
+  for(const mode of ['hold','previous','source']){
+    const stopCase=fixture();await stopCase.engine.connect(stopCase.identity);stopCase.layer1.fill(17);const previousColors=new Uint8Array(stopCase.layer1);
+    await stopCase.engine.start({effect:'breathe',keys:[5],restoreMode:mode,duration:0});stopCase.engine.cancel();const lastFrame=new Uint8Array(stopCase.layer1);await stopCase.engine.stop();
+    assert.deepEqual(stopCase.layer1,mode==='hold'?lastFrame:mode==='previous'?previousColors:stopCase.layer0);assert.deepEqual(stopCase.layer0,stopCase.base);
+  }
   const padded=fixture({paddedLast:true});await padded.engine.connect(padded.identity);await padded.engine.copy();assert.deepEqual(padded.layer1,padded.base,'firmware may pad final read page');
   const bad=fixture({badPage:true});await bad.engine.select(bad.identity);await assert.rejects(bad.engine.copy(),/Неполная/);assert.ok(bad.reports.every(p=>!(p[0]===9&&p[1]===1)));assert.equal(bad.listeners.size,0);
   const missing=fixture({missingPage:true});await missing.engine.select(missing.identity);await assert.rejects(missing.engine.copy(),/2 секунды/);assert.equal(missing.listeners.size,0);assert.ok(missing.reports.every(p=>!(p[0]===9&&p[1]===1)));
@@ -65,19 +73,17 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
   assert.equal((await message('start',{duration:0,fps:8})).state.running,true);await pause(170);assert.equal((await message('status')).state.running,true);assert.equal((await message('stop')).state.running,false);assert.equal(siteCalls,oldSiteCalls);
   assert.equal((await message('copy')).ok,true);assert.deepEqual(workerFixture.layer0,workerFixture.base);
   const sourceState=await message('source');assert.deepEqual(sourceState.state.colors,Array.from(workerFixture.layer0));
-  const custom=workerFixture.context.CidooProject.demo();custom.effect='timeline';custom.keys=[5];custom.frames=[{durationMs:500,colors:Array.from(workerFixture.base)}];custom.frames[0].colors.splice(15,3,10,20,30);
+  const custom=workerFixture.context.CidooProject.demo();custom.effect='timeline';custom.restoreMode='source';custom.keys=[5];custom.frames=[{durationMs:500,colors:Array.from(workerFixture.base)}];custom.frames[0].colors.splice(15,3,10,20,30);
   assert.equal((await message('startProject',custom)).state.running,true);assert.deepEqual(Array.from(workerFixture.layer1.slice(15,18)),[10,20,30]);
   assert.equal((await message('stop')).state.running,false);assert.deepEqual(workerFixture.layer1,workerFixture.layer0);
   workerFixture.layer0.set([40,200,70],15);workerFixture.layer1.set([255,0,0],15);
-  assert.equal((await message('start',{effect:'breathe',keys:[5],duration:0})).state.running,true);
+  assert.equal((await message('start',{effect:'breathe',keys:[5],duration:0,restoreMode:'source'})).state.running,true);
   await message('stop');assert.deepEqual(Array.from(workerFixture.layer1.slice(15,18)),[40,200,70],'Layer 1 is actual source, not Layer 2 or a hardcoded red heart');
   assert.deepEqual(Array.from(workerFixture.layer0.slice(15,18)),[40,200,70]);workerFixture.layer0.set([255,0,0],15);
   await commandListener('toggle-heart');assert.equal((await message('status')).state.config.duration,0);await commandListener('stop-heart');
   assert.equal(messageListener({type:'cidoo-heart',action:'start'},{id:'other'},()=>{}),undefined);
   assert.equal((await message('invalid')).ok,false);
   for(const file of ['animation.js','hid.js','worker.js','bridge.js','popup.js'])new vm.Script(fs.readFileSync(path.join(dir,file),'utf8'),{filename:file});
-  const manifest=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json')));assert.equal(manifest.version,'1.3.1');assert.equal(manifest.background.service_worker,'worker.js');
+  const manifest=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json')));assert.equal(manifest.version,'1.4.0');assert.equal(manifest.background.service_worker,'worker.js');
   console.log('PASS: direct WebHID packet format; 8 reordered pages and duplicates; exact copy/backup; no Layer 1 writes; typed-buffer effect parity; never beyond 2 hours; optional timer restore; duplicate skipping; idle handle closes; incomplete/timeout guards; USB failure restore; serialized slow transport; background routing without ANY page calls after handoff; hotkeys; sender validation; manifest/syntax.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
-
-

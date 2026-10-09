@@ -10,6 +10,7 @@
   "min": 15,
   "max": 100,
   "duration": 0,
+  "restoreMode": "hold",
   "keys": [
     0,
     2,

@@ -2,3 +2,5 @@
 
 .demo-controls{flex-wrap:wrap}.demo-controls button{flex:1 0 21%}.demo-controls #pause{flex:0 0 32px}
 .key-row{height:clamp(20px,2.6vw,34px)}.key{aspect-ratio:auto}
+
+.landing-languages{display:flex;gap:3px;border:1px solid var(--line);border-radius:7px;padding:3px}.landing-languages button{background:transparent;color:var(--muted);border:0;border-radius:4px;padding:7px 9px;font:11px Consolas,monospace}.landing-languages button[aria-pressed=true]{background:var(--lime);color:#111416}@media(max-width:640px){.nav{gap:9px}.nav nav .github{font-size:11px}.landing-languages button{padding:6px}}
