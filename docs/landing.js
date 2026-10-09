@@ -15,7 +15,7 @@ function paint(){
   const t=(performance.now()-started)/1000;let amplitude;
   if(effect==='heartbeat'){const phase=t%1.45;amplitude=.16+.84*Math.max(Math.exp(-(((phase-.22)/.1)**2)),.7*Math.exp(-(((phase-.49)/.13)**2)))}else amplitude=.2+.8*(1-Math.cos(t*2.2))/2;
   const full=['flowers','aurora','comet','fireflies'].includes(effect);
-  if(!full)for(const{key}of allKeys){if(!key.classList.contains('heart')){key.style.background='rgb(150,150,150)';key.style.boxShadow=''}}
+  if(!full)for(const{key}of allKeys){if(!key.classList.contains('heart')){key.style.background='';key.style.boxShadow=''}}
   for(const{key,column,row}of full?allKeys:lights){
     let rgb;
     if(effect==='shimmer'){const hue=330+38*Math.sin(t*1.5+column*.35+row*.2);key.style.background=`hsl(${hue} 65% 35%)`;key.style.boxShadow=`inset 0 -3px #0003,0 0 12px hsl(${hue} 80% 60% / .25)`;continue;}
