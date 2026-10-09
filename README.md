@@ -1,4 +1,4 @@
-# CIDOO RGB Studio — C80 Keyboard Animations
+# CIDOO RGB Studio — Keyboard Animations
 
 [English README](README.en.md) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip)
 
