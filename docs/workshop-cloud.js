@@ -16,6 +16,9 @@ if (config.url && config.publishableKey) {
       invalid: 'Нужен корректный JSON с массивом frames.',
       tooLarge: 'Файл слишком большой: максимум 512 КБ.',
       error: 'Не получилось отправить. Попробуй ещё раз.'
+      ,fields: 'Название и ник — минимум 2 символа. Описание не должно быть пустым.',
+      invalidData: 'Проверь поля и JSON: файл должен быть экспортирован из конструктора CIDOO.',
+      unavailable: 'Сервис отправки сейчас недоступен. Данные сохранены в форме — попробуй позже.'
     },
     en: {
       sending: 'Sending…',
@@ -24,6 +27,9 @@ if (config.url && config.publishableKey) {
       invalid: 'The JSON must contain a valid frames array.',
       tooLarge: 'The file is too large: 512 KB maximum.',
       error: 'Could not send it. Please try again.'
+      ,fields: 'Name and author must contain at least 2 characters. Description cannot be empty.',
+      invalidData: 'Check the fields and JSON: export your file from the CIDOO editor.',
+      unavailable: 'The submission service is unavailable. Your form is preserved — try again later.'
     }
   };
 
@@ -64,6 +70,8 @@ if (config.url && config.publishableKey) {
   form?.addEventListener('submit', async event => {
     event.preventDefault();
     const button = form.querySelector('button[type="submit"]');
+    const name=form.elements.name.value.trim(),author=form.elements.author.value.trim(),description=form.elements.description.value.trim();
+    if(name.length<2||author.length<2||!description.length)return showStatus(say('fields'),true);
     const file = form.elements.animation.files[0];
     if (!file) return showStatus(say('missing'), true);
     if (file.size > 524288) return showStatus(say('tooLarge'), true);
@@ -83,16 +91,16 @@ if (config.url && config.publishableKey) {
     if (animation.effect === 'static') tags.splice(0, 1, 'calm');
     if (animation.effect === 'rainbow' || animation.effect === 'wave') tags.push('bright');
     const { error } = await supabase.from('workshop_submissions').insert({
-      name: form.elements.name.value.trim(),
-      author: form.elements.author.value.trim(),
-      description: form.elements.description.value.trim(),
+      name,
+      author,
+      description,
       tags: [...new Set(tags)].slice(0, 4),
       animation
     });
     button.disabled = false;
     if (error) {
       console.error('[CIDOO Workshop] Submission failed', error);
-      return showStatus(say('error'), true);
+      return showStatus(say(error.code==='23514'||error.code==='P0001'?'invalidData':error.code==='42501'?'unavailable':'error'), true);
     }
     form.reset();
     showStatus(say('success'));
