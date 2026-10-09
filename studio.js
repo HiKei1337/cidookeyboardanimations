@@ -38,7 +38,7 @@ function buildKeyboard(){
     $('keyboard').append(holder);
   }
 }
-function showColors(colors){for(const [index,button]of keyButtons){const offset=index*3;button.style.backgroundColor=`rgb(${colors[offset]},${colors[offset+1]},${colors[offset+2]})`;button.setAttribute('aria-pressed',String(project.keys.includes(index)));}}
+function showColors(colors){for(const [index,button]of keyButtons){const offset=index*3;button.style.backgroundColor=`rgb(${colors[offset]},${colors[offset+1]},${colors[offset+2]})`;button.style.color=colors[offset]*.2126+colors[offset+1]*.7152+colors[offset+2]*.0722>150?'#17121e':'#ffffff';button.setAttribute('aria-pressed',String(project.keys.includes(index)));}}
 function renderTimeline(){
   $('timeline').replaceChildren();activeFrame=Math.min(activeFrame,Math.max(0,project.frames.length-1));
   project.frames.forEach((frame,index)=>{const button=document.createElement('button');button.className='frame-card'+(index===activeFrame?' active':'');button.setAttribute('aria-label',`Кадр ${index+1}`);
