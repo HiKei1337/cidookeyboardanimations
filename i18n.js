@@ -1,6 +1,19 @@
 (() => {
   'use strict';
   const en={
+    'Использую сохранённое разрешение USB…':'Using the saved USB permission…',
+    'Подключить клавиатуру':'Connect keyboard','▶ Запустить на клавиатуре':'▶ Run on keyboard','Предпросмотр меняет только экран. «Запустить на клавиатуре» включает клавиатуру.':'Preview changes the screen only. “Run on keyboard” controls the keyboard.',
+    'Готовые анимации':'Ready-made animations','Флаг России · мигание':'Russian flag · blink','Цветы · распускаются':'Flowers · blooming','Северное сияние':'Northern lights','Комета':'Comet','Светлячки':'Fireflies','Открыть шаблон':'Open preset',
+    'Шаблон выбирает всю клавиатуру. Можно менять его кадры и цвета.':'The preset selects the whole keyboard. You can edit its frames and colours.',
+    'Подключение открыто в отдельной вкладке. Вернись сюда после подключения.':'Connection opened in a separate tab. Return here after connecting.',
+    'Подключение клавиатуры':'Keyboard connection','Эта вкладка остаётся открытой во время выбора USB-устройства.':'This tab stays open while you select the USB device.',
+    'На сайте CIDOO подключи клавиатуру и выбери Пользовательский → Layer 2.':'Connect your keyboard on the CIDOO website and select Custom → Layer 2.',
+    'Нажми кнопку ниже. В окне Chrome выбери клавиатуру и подтверди подключение.':'Click the button below. Select the keyboard in Chrome’s picker and confirm.',
+    'Вернись в конструктор и нажми «Считать Layer 1».':'Return to the editor and click “Read Layer 1”.',
+    'Определяю устройство на сайте…':'Identifying the device on the website…','Выбрать USB-клавиатуру':'Select USB keyboard','Проверить сайт снова':'Check website again',
+    'Устройство не выбрано. Нажми кнопку снова, выбери клавиатуру в списке и подтверди подключение.':'No device selected. Click again, select the keyboard in the list and confirm.',
+    'Передаю управление расширению…':'Handing control to the extension…','Подключено. Вернись в конструктор и нажми «Считать Layer 1». Layer 1 не изменён.':'Connected. Return to the editor and click “Read Layer 1”. Layer 1 is unchanged.',
+    'Chrome не разрешил выбор USB. Нажми кнопку снова в этой вкладке.':'Chrome did not allow the USB picker. Click the button again in this tab.',
     'Конструктор подсветки · C80':'RGB animation editor · C80','Выбор клавиш CIDOO C80':'CIDOO C80 key selection','Кадры анимации':'Animation frames',
     'Предпросмотр без клавиатуры':'Preview without a keyboard','Подключить C80':'Connect C80',
     'Твой рисунок. Твоя анимация.':'Your design. Your animation.',
@@ -94,7 +107,7 @@
     const clean=value.trim();let result=en[clean];
     if(!result){
       result=clean.replace(/^Выбрано (\d+) клавиш(?:а)?$/,'$1 keys selected').replace(/^Клавиш выбрано: (\d+)$/,'$1 keys selected').replace(/^Кадр (\d+)$/,'Frame $1')
-        .replace(/^(\d+) уд\/мин$/,'$1 BPM').replace(/^Сохранено: /,'Saved: ').replace(/^Открыто: /,'Opened: ')
+        .replace(/^(\d+) уд\/мин$/,'$1 BPM').replace(/^Устройство найдено: (.+)\. Нажми «Выбрать USB-клавиатуру»\.$/, 'Device found: $1. Click “Select USB keyboard”.').replace(/^Сохранено: /,'Saved: ').replace(/^Открыто: /,'Opened: ')
         .replace(/^Анимация открыта: /,'Animation opened: ').replace(/^Удалить из библиотеки /,'Remove from library: ')
         .replace(/^(\d+) мс$/,'$1 ms').replace(/ · выбрать для анимации$/,' · select to animate').replace(/без таймера/g,'no timer')
         .replace(/осталось /g,'remaining ').replace(/Работает в фоне/g,'Running in background').replace(/уд\/мин/g,'BPM').replace(/Анимация/g,'Animation').replace(/Возврат цветов не подтверждён: /g,'Colour restoration was not confirmed: ');

@@ -1,15 +1,16 @@
-# CIDOO RGB Studio — C80 Keyboard Animations
+# CIDOO RGB Studio — Keyboard Animations
 
-[Русский README](README.md) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Русский README](README.md) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip)
 
-A Chrome extension for **CIDOO C80 RGB keyboard animations**. It reads your design from **Layer 1** and animates it on **Layer 2**, including when the CIDOO tab or Chrome window is minimised.
+A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design from **Layer 1** and animates it on **Layer 2**, including when the CIDOO tab or Chrome window is minimised.
 
 ![Animation editor](docs/studio-en.jpg)
 
 ## Features
 
 - Heartbeat, breathing, colour shimmer and combined effects.
-- C80 keyboard editor with key selection, colour editing, custom frames and smooth or instant transitions.
+- Full-keyboard presets: blinking Russian flag, blooming flowers, northern lights, comet and fireflies.
+- Visual keyboard editor with key selection, colour editing, custom frames and smooth or instant transitions.
 - Animation library, draft autosave, JSON import and export.
 - **Never** mode or an optional hours/minutes/seconds timer.
 - Background USB control: close the editor and CIDOO tab after starting.
@@ -20,14 +21,14 @@ A Chrome extension for **CIDOO C80 RGB keyboard animations**. It reads your desi
 
 ## Installation
 
-Requirements: CIDOO C80, a USB connection and Chrome 117 or newer. Other models are untested.
+Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
 1. [Download ZIP](https://github.com/HiKei1337/cidookeyboardanimations/archive/refs/heads/main.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
-5. Open the extension → **Open animation editor** → **Connect C80**. Select the keyboard in Chrome's device picker.
-6. Click **Read Layer 1**, choose keys and an effect, then **Run on C80**.
+5. Open the extension → **Open animation editor** → **Connect keyboard**. In the separate connection tab, click **Select USB keyboard**, select the device in Chrome and confirm. Return to the editor.
+6. Click **Read Layer 1**, choose keys and an effect, then **Run on keyboard**.
 
 The website will show the device as disconnected after step 5. This is expected: the extension takes over USB control. Do not reconnect the website or another RGB controller while an animation is running.
 
@@ -41,7 +42,7 @@ Example: **Custom frames → Frame 1 at 15% brightness → Duplicate → paint F
 
 See the [no-code animation guide](docs/CUSTOM_ANIMATION.en.md). Ready-to-import JSON projects are in [examples](examples).
 
-**Preview** affects the screen only. **Run on C80** controls the device. The keyboard's real Layer 1 colours are read before each start; imported projects cannot overwrite Layer 1.
+**Preview** affects the screen only. **Run on keyboard** controls the device. The keyboard's real Layer 1 colours are read before each start; imported projects cannot overwrite Layer 1.
 
 ## Background operation and load
 
@@ -68,7 +69,7 @@ Permissions: `storage` for local settings and projects; `scripting` and access t
 
 ## Status
 
-This is an experimental, independent project, not an official CIDOO product. It supports the C80 matrix from the examined driver. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.2 has not yet passed a full physical-keyboard test in Chrome.
+This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.3 has not yet passed a full physical-keyboard test in Chrome.
 
 The manufacturer does not document whether each custom colour frame is stored in flash. Endurance under long continuous playback is unconfirmed.
 
@@ -89,3 +90,7 @@ See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for file roles and the project fo
 Original author: [HiKei1337](https://github.com/HiKei1337).
 
 [PolyForm Noncommercial 1.0.0](LICENSE) permits use and modifications for noncommercial purposes under its terms. Redistributed copies, including modified versions, must retain the licence and the `Required Notice:` lines in [NOTICE](NOTICE), including attribution to the original author. Commercial use requires separate permission from the author.
+
+## GitHub Pages
+
+The landing page is `docs/index.html`. Open repository **Settings → Pages → Deploy from a branch → main → /docs → Save**. Once published, the site will be available [here](https://hikei1337.github.io/cidookeyboardanimations/).

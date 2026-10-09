@@ -73,3 +73,7 @@ GitHub topics help people find related repositories. Public search-engine indexi
 ## Licence
 
 Keep `LICENSE` and `NOTICE` with distributions and forks. The project is source-available for noncommercial use under PolyForm Noncommercial 1.0.0, not an unrestricted commercial-use licence.
+
+## Подключение и шаблоны (1.3)
+
+`connect.html` / `connect.js` выполняют выбор WebHID в постоянной вкладке. Устройство определяется до нажатия кнопки, `requestDevice` вызывается прямо внутри пользовательского клика. `presets.js` создаёт редактируемые проекты без внешних запросов. Совместимость физического протокола и раскладки проверяется отдельно для каждой модели.

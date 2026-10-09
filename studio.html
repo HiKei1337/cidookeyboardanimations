@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="CIDOO C80 RGB animation editor for Chrome. Animate Layer 2 from a read-only Layer 1 drawing."><title>CIDOO RGB Studio — конструктор анимации</title><link rel="stylesheet" href="studio.css"></head>
 <body>
-<header class="topbar"><a class="brand" href="studio.html"><span class="logo">C</span><span>CIDOO <b>RGB Studio</b><small>Конструктор подсветки · C80</small></span></a><div class="connection"><span id="connectionDot" class="dot"></span><span id="connectionText">Предпросмотр без клавиатуры</span><button id="connect">Подключить C80</button><select id="language" aria-label="Language"><option value="ru">Русский</option><option value="en">English</option></select></div></header>
+<header class="topbar"><a class="brand" href="studio.html"><span class="logo">C</span><span>CIDOO <b>RGB Studio</b><small>Конструктор подсветки · C80</small></span></a><div class="connection"><span id="connectionDot" class="dot"></span><span id="connectionText">Предпросмотр без клавиатуры</span><button id="connect">Подключить клавиатуру</button><select id="language" aria-label="Language"><option value="ru">Русский</option><option value="en">English</option></select></div></header>
 <main>
   <div class="intro"><div><p class="eyebrow">LAYER 1 → LAYER 2</p><h1>Твой рисунок. Твоя анимация.</h1><p>Выбери клавиши и эффект. Или нарисуй несколько кадров — редактор плавно соединит их.</p></div><a href="https://github.com/HiKei1337/cidookeyboardanimations/blob/main/docs/CUSTOM_ANIMATION.md" target="_blank" rel="noopener" class="help-link">Как создать анимацию ↗</a></div>
   <div class="workspace">
@@ -9,7 +9,7 @@
       <div class="panel-head"><div><h2>Клавиатура</h2><p id="sourceLabel">Образец сердца · считай Layer 1, чтобы загрузить свой рисунок</p></div><div class="layer-tags"><span>Layer 1 · только чтение</span><strong>Layer 2 · анимация</strong></div></div>
       <div class="keyboard-scroll"><div id="keyboard" class="keyboard" aria-label="Выбор клавиш CIDOO C80"></div></div>
       <div class="selection-bar"><span id="selectionCount">Выбрано 21 клавиша</span><button id="selectHeart">Сердце</button><button id="selectAll">Все</button><button id="selectNone">Снять выбор</button><button id="selectColor">По цвету</button><input id="selectionColor" type="color" value="#ff0000" aria-label="Цвет для выбора клавиш"><button id="readSource" class="source-button">Считать Layer 1</button></div>
-      <div class="preview-bar"><div><button id="preview" class="preview-button">▶ Предпросмотр</button><span id="previewTime">0:00</span></div><p>Предпросмотр меняет только экран. «Запустить на C80» включает клавиатуру.</p></div>
+      <div class="preview-bar"><div><button id="preview" class="preview-button">▶ Предпросмотр</button><span id="previewTime">0:00</span></div><p>Предпросмотр меняет только экран. «Запустить на клавиатуре» включает клавиатуру.</p></div>
       <section id="timelinePanel" class="timeline-panel" hidden>
         <div class="section-head"><h3>Кадры</h3><div><button id="addFrame">+ Кадр</button><button id="duplicateFrame">Дублировать</button><button id="removeFrame">Удалить кадр</button></div></div>
         <div id="timeline" class="timeline" aria-label="Кадры анимации"></div>
@@ -20,6 +20,7 @@
     </section>
     <aside class="settings panel">
       <h2>Настройки анимации</h2>
+      <label>Готовые анимации<select id="preset"><option value="flag">Флаг России · мигание</option><option value="flowers">Цветы · распускаются</option><option value="aurora">Северное сияние</option><option value="comet">Комета</option><option value="fireflies">Светлячки</option></select></label><button id="loadPreset">Открыть шаблон</button><p class="hint">Шаблон выбирает всю клавиатуру. Можно менять его кадры и цвета.</p>
       <label>Название<input id="projectName" value="Бьющееся сердце" maxlength="80"></label>
       <label>Эффект<select id="effect"><option value="heartbeat">Биение · тук-тук</option><option value="breathe">Мягкое дыхание</option><option value="shimmer">Переливание</option><option value="heartbeat-shimmer">Биение + переливание</option><option value="timeline">Свои кадры</option></select></label>
       <div id="effectSettings"><label>Темп <output id="bpmValue">65 уд/мин</output><input id="bpm" type="range" min="35" max="140" value="65"></label><div class="two"><label>Нижняя яркость, %<input id="min" type="number" min="0" max="80" value="15"></label><label>Пик, %<input id="max" type="number" min="20" max="100" value="100"></label></div></div>
@@ -27,15 +28,15 @@
       <label>Частота кадров<select id="fps"><option value="4">4 · экономно</option><option value="8" selected>8 · рекомендовано</option><option value="12">12 · плавнее</option><option value="20">20 · максимум</option></select></label>
       <label>Автовыключение<select id="autoOff"><option value="never">Никогда</option><option value="timer">По таймеру</option></select></label>
       <div id="timerFields" class="three" hidden><label>Часы<input id="hours" type="number" min="0" value="0"></label><label>Минуты<input id="minutes" type="number" min="0" max="59" value="15"></label><label>Секунды<input id="seconds" type="number" min="0" max="59" value="0"></label></div>
-      <div class="run-controls"><button id="start" class="primary">▶ Запустить на C80</button><button id="stop">Остановить и вернуть рисунок</button></div>
+      <div class="run-controls"><button id="start" class="primary">▶ Запустить на клавиатуре</button><button id="stop">Остановить и вернуть рисунок</button></div>
       <p id="runStatus" role="status" aria-live="polite">Сначала подключи клавиатуру. Предпросмотр доступен без подключения.</p>
       <div class="background-note"><span class="small-dot"></span><div><b>Работает в фоне</b><p>После запуска можно свернуть или закрыть редактор. Chrome должен оставаться запущенным.</p></div></div>
-      <details><summary>Подключение за 3 шага</summary><ol><li>На <a href="https://cidoo.illumipc.com/#/" target="_blank" rel="noopener">сайте CIDOO</a> подключи C80 и включи «Пользовательский → Layer 2».</li><li>Нажми «Подключить C80» и выбери устройство в окне Chrome.</li><li>Нажми «Считать Layer 1». Теперь редактор показывает твой исходник.</li></ol><p>Управление перейдёт расширению; сайт покажет отключение. Пока анимация работает, не подключай клавиатуру обратно к сайту.</p></details>
+      <details><summary>Подключение за 3 шага</summary><ol><li>На <a href="https://cidoo.illumipc.com/#/" target="_blank" rel="noopener">сайте CIDOO</a> подключи C80 и включи «Пользовательский → Layer 2».</li><li>Нажми «Подключить клавиатуру» и выбери устройство в окне Chrome.</li><li>Нажми «Считать Layer 1». Теперь редактор показывает твой исходник.</li></ol><p>Управление перейдёт расширению; сайт покажет отключение. Пока анимация работает, не подключай клавиатуру обратно к сайту.</p></details>
       <button id="undo" class="subtle">↶ Отменить последнее изменение</button>
     </aside>
   </div>
   <p id="toast" class="toast" role="status" aria-live="polite"></p>
   <footer>Только CIDOO C80 · исходник Layer 1 · запись Layer 2 · HiKei1337</footer>
 </main>
-<script src="i18n.js"></script><script src="animation.js"></script><script src="project.js"></script><script src="layout.js"></script><script src="studio.js"></script>
+<script src="i18n.js"></script><script src="animation.js"></script><script src="project.js"></script><script src="layout.js"></script><script src="presets.js"></script><script src="studio.js"></script>
 </body></html>

@@ -76,7 +76,7 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
   assert.equal(messageListener({type:'cidoo-heart',action:'start'},{id:'other'},()=>{}),undefined);
   assert.equal((await message('invalid')).ok,false);
   for(const file of ['animation.js','hid.js','worker.js','bridge.js','popup.js'])new vm.Script(fs.readFileSync(path.join(dir,file),'utf8'),{filename:file});
-  const manifest=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json')));assert.equal(manifest.version,'1.2.0');assert.equal(manifest.background.service_worker,'worker.js');
+  const manifest=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json')));assert.equal(manifest.version,'1.3.0');assert.equal(manifest.background.service_worker,'worker.js');
   console.log('PASS: direct WebHID packet format; 8 reordered pages and duplicates; exact copy/backup; no Layer 1 writes; typed-buffer effect parity; never beyond 2 hours; optional timer restore; duplicate skipping; idle handle closes; incomplete/timeout guards; USB failure restore; serialized slow transport; background routing without ANY page calls after handoff; hotkeys; sender validation; manifest/syntax.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
 

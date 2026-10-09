@@ -68,3 +68,7 @@ The file includes selected keys, frames, timing and a source snapshot for previe
 - **Wrong frame changed:** select the intended frame in the timeline before editing.
 
 You can close the editor and CIDOO tab after starting. Keep Chrome running and the computer awake. USB disconnection or computer sleep interrupts the animation. Press **Stop** before quitting Chrome. Do not reconnect the website or another RGB controller while the extension is animating.
+
+## Ready-made full-keyboard animations
+
+Choose **Ready-made animations → Russian flag / Flowers / Northern lights / Comet / Fireflies → Open preset**. Press **Preview** to watch it on screen, then connect the keyboard and run. All frames are editable. The flag alternates between white-blue-red horizontal bands (800 ms) and lights off (500 ms). Adjust the two frame durations to change the blink rate.

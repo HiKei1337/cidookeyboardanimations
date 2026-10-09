@@ -60,6 +60,7 @@ for(const id of ['projectName','effect','bpm','fps','min','max','interpolation',
 $('selectHeart').addEventListener('click',()=>change(()=>project.keys=[...CidooHeartMath.heart]));
 $('selectAll').addEventListener('click',()=>change(()=>project.keys=CidooLayout.keys.map(key=>key.index)));
 $('selectNone').addEventListener('click',()=>change(()=>project.keys=[]));
+$('loadPreset').addEventListener('click',()=>{checkpoint();project=CidooPresets.build($('preset').value,document.documentElement.lang);activeFrame=0;playing=false;form();render();saveDraft();notice('Открыто: '+project.name);});
 $('selectColor').addEventListener('click',()=>{const color=rgb($('selectionColor').value);change(()=>{project.keys=CidooLayout.keys.filter(key=>color.every((channel,i)=>project.sourceColors[key.index*3+i]===channel)).map(key=>key.index);});});
 $('preview').addEventListener('click',()=>{
   if(!project.keys.length){notice('Выбери хотя бы одну клавишу.',true);return;}
@@ -82,8 +83,8 @@ function state(state){
   $('runStatus').textContent=state.error||(state.running?`Layer 2 · ${state.config.projectName||'Анимация'} · ${state.config.duration>0?'осталось '+clock(state.config.duration-state.elapsed):'без таймера'}`:state.ready?'Готово. Исходник Layer 1 будет прочитан перед запуском.':'Подключи C80. Предпросмотр работает без подключения.');
 }
 $('connect').addEventListener('click',()=>action(async()=>{
-  const {identity}=await send('describe');const devices=await navigator.hid.requestDevice({filters:[{vendorId:identity.vendorId,productId:identity.productId}]});
-  if(!devices.length)throw Error('Подключение отменено.');state(await send('connect',undefined,identity));await loadSource();notice('Подключено. Рисунок Layer 1 загружен.');
+  if(!extension)throw Error('Загрузи папку как расширение Chrome.');
+  await chrome.tabs.create({url:chrome.runtime.getURL('connect.html')});notice('Подключение открыто в отдельной вкладке. Вернись сюда после подключения.');
 }));
 $('readSource').addEventListener('click',()=>action(async()=>{await loadSource();notice('Layer 1 прочитан. Изменений в нём нет.');}));
 $('start').addEventListener('click',()=>action(async()=>{
@@ -110,6 +111,7 @@ function animate(now){
   previewHandle=requestAnimationFrame(animate);
 }
 buildKeyboard();form();render();
+document.addEventListener('visibilitychange',async()=>{if(!extension||document.hidden||busy)return;try{state(await send('status'));}catch(error){notice(error.message,true);}});
 (async()=>{
   try{const draft=await storage.get('studioDraft');if(draft){project=CidooProject.validate(draft);form();render();}library=(await storage.get('studioLibrary')||[]).map(CidooProject.validate);renderLibrary();if(extension)state(await send('status'));else notice('Режим предпросмотра: устройство не подключается. Для C80 загрузи расширение в Chrome.');}
   catch(error){notice(error.message,true);}

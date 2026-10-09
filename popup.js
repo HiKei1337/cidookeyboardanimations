@@ -24,10 +24,8 @@ async function command(action){
     if(action==='start'&&$('autoOff').value==='timer'&&config.duration===0)throw Error('Укажите время таймера больше нуля или выберите «Никогда».');
     if(action!=='status')await chrome.storage.local.set({settings:{...config,schema:2}});
     if(action==='connect'){
-      const {identity}=await send('describe');
-      const devices=await navigator.hid.requestDevice({filters:[{vendorId:identity.vendorId,productId:identity.productId}]});
-      if(!devices.length)throw Error('Подключение отменено.');
-      report(await send('connect',config,identity));
+      await chrome.tabs.create({url:chrome.runtime.getURL('connect.html')});
+      $('status').textContent='Подключение открыто в отдельной вкладке. Вернись сюда после подключения.';
     }else report(await send(action,config));
   }catch(error){$('status').className='error';$('status').textContent=error.message;}
   finally{busy=false;for(const id of buttons)$(id).disabled=false;}
