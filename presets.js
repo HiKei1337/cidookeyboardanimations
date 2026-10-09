@@ -7,15 +7,15 @@
     const project=CidooProject.demo();project.name=names[id][language==='en'?'en':'ru'];project.effect='timeline';project.keys=positions.map(p=>p.index);project.frames=[];project.duration=0;project.interpolation=id==='flag'?'step':'smooth';
     const add=(color,durationMs=150)=>{const colors=[...project.sourceColors];for(const pos of positions)colors.splice(pos.index*3,3,...color(pos).map(v=>Math.round(Math.max(0,Math.min(255,v)))));project.frames.push({durationMs,colors});};
     if(id==='flag'){
-      const bands=[[255,255,255],[0,57,166],[213,43,30]];
+      const bands=[[255,255,255],[0,0,255],[255,0,0]];
       add(p=>bands[Math.floor(p.y/2)],800);add(()=>[0,0,0],500);
     }else for(let frame=0;frame<32;frame++){
       const phase=frame/32;
       if(id==='flowers')add(p=>{
-        const centers=[{x:3,y:2,t:0},{x:8,y:3,t:.3},{x:12,y:2,t:.6}];let result=[3,7,10];
-        for(let n=0;n<centers.length;n++){const c=centers[n],age=(phase-c.t+1)%1,life=Math.sin(Math.PI*Math.min(1,age/.6));if(age>.6)continue;
+        const centers=[{x:3,y:2,t:0},{x:8,y:3,t:.3},{x:12,y:2,t:.6}];let result=[0,0,0];
+        for(let n=0;n<centers.length;n++){const c=centers[n],age=(phase-c.t+1)%1,life=age<.12?age/.12:age<.48?1:Math.max(0,(.6-age)/.12);if(age>.6)continue;
           const dx=Math.abs(p.x-c.x),dy=Math.abs(p.y-c.y),distance=dx+dy,radius=Math.min(1.8,age*12);let rgb=null;
-          if(distance<.7)rgb=[255,215,50];else if(distance<radius+.5&&((dx<.9)||(dy<.6)))rgb=n===1?[180,70,255]:[255,65+40*n,145];
+          if(distance<.7)rgb=[255,255,0];else if(distance<radius+.5&&((dx<.9)||(dy<.6)))rgb=[[255,0,255],[0,255,255],[255,0,0]][n];
           if(rgb)result=rgb.map(v=>v*life);
         }return result;
       },180);

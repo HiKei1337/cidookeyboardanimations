@@ -18,8 +18,8 @@ function paint(){
     let rgb;
     if(effect==='shimmer'){const hue=330+38*Math.sin(t*1.5+column*.35+row*.2);key.style.background=`hsl(${hue} 65% 35%)`;key.style.boxShadow=`inset 0 -3px #0003,0 0 12px hsl(${hue} 80% 60% / .25)`;continue;}
     if(effect==='flowers'){
-      rgb=[12,20,18];const centers=[{x:3,y:2,offset:0},{x:8,y:3,offset:1.7},{x:11,y:2,offset:3.5}];
-      centers.forEach((c,n)=>{const age=((t-c.offset)%5.76+5.76)%5.76/5.76;if(age>.6)return;const dx=Math.abs(column-c.x),dy=Math.abs(row-c.y),distance=dx+dy,radius=Math.min(1.8,age*12),life=Math.sin(Math.PI*age/.6);if(distance<.7)rgb=[255,215,50].map(v=>v*life);else if(distance<radius+.5&&(dx<.9||dy<.6))rgb=(n===1?[180,70,255]:[255,65+40*n,145]).map(v=>v*life);});
+      rgb=[0,0,0];const centers=[{x:3,y:2,offset:0},{x:8,y:3,offset:1.7},{x:11,y:2,offset:3.5}];
+      centers.forEach((c,n)=>{const age=((t-c.offset)%5.76+5.76)%5.76/5.76;if(age>.6)return;const dx=Math.abs(column-c.x),dy=Math.abs(row-c.y),distance=dx+dy,radius=Math.min(1.8,age*12),life=age<.12?age/.12:age<.48?1:Math.max(0,(.6-age)/.12);if(distance<.7)rgb=[255,255,0].map(v=>v*life);else if(distance<radius+.5&&(dx<.9||dy<.6))rgb=([[255,0,255],[0,255,255],[255,0,0]][n]).map(v=>v*life);});
     }else if(effect==='aurora'){const a=(1+Math.sin(column*.45+row*.6+t*1.3))/2,b=(1+Math.cos(column*.3-t*1.3))/2;rgb=[15+65*b,15+175*a,50+155*(1-a)];}
     else if(effect==='comet'){const d=((t*5-column)%19+19)%19,l=d<5?(1-d/5)**2:0;rgb=[8+70*l,10+185*l,18+237*l];}
     else if(effect==='fireflies'){const seed=((row*22+column)*37%97)/97,l=Math.max(0,Math.cos((t/5.76-seed)*Math.PI*2))**14;rgb=[4+180*l,7+248*l,8+35*l];}
