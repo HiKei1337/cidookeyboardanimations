@@ -10,7 +10,7 @@
     'Остановлено. Вернулась подсветка до запуска.':'Stopped. Lighting from before playback restored.','Остановлено. Последний кадр остался на клавиатуре.':'Stopped. The last frame stays on the keyboard.',
     'Использую сохранённое разрешение USB…':'Using the saved USB permission…',
     'Подключить клавиатуру':'Connect keyboard','▶ Запустить на клавиатуре':'▶ Run on keyboard','Предпросмотр меняет только экран. «Запустить на клавиатуре» включает клавиатуру.':'Preview changes the screen only. “Run on keyboard” controls the keyboard.',
-    'Готовые анимации':'Ready-made animations','Флаг России · мигание':'Russian flag · blink','Цветы · распускаются':'Flowers · blooming','Северное сияние':'Northern lights','Комета':'Comet','Светлячки':'Fireflies','Открыть шаблон':'Open preset',
+    'Готовые анимации':'Ready-made animations','Цветы · распускаются':'Flowers · blooming','Северное сияние':'Northern lights','Комета':'Comet','Светлячки':'Fireflies','Открыть шаблон':'Open preset',
     'Шаблон выбирает всю клавиатуру. Можно менять его кадры и цвета.':'The preset selects the whole keyboard. You can edit its frames and colours.',
     'Подключение открыто в отдельной вкладке. Вернись сюда после подключения.':'Connection opened in a separate tab. Return here after connecting.',
     'Подключение клавиатуры':'Keyboard connection','Эта вкладка остаётся открытой во время выбора USB-устройства.':'This tab stays open while you select the USB device.',

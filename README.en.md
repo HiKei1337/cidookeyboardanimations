@@ -9,7 +9,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 ## Features
 
 - Heartbeat, breathing, colour shimmer and combined effects.
-- Full-keyboard presets: blinking Russian flag, blooming flowers, northern lights, comet and fireflies.
+- Full-keyboard presets: blooming flowers, northern lights, comet and fireflies.
 - Visual keyboard editor with key selection, colour editing, custom frames and smooth or instant transitions.
 - Animation library, draft autosave, JSON import and export.
 - **Never** mode or an optional hours/minutes/seconds timer.
@@ -69,7 +69,7 @@ Permissions: `storage` for local settings and projects; `scripting` and access t
 
 ## Status
 
-This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.4 has not yet passed a full physical-keyboard test in Chrome.
+This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.4.1 has not yet passed a full physical-keyboard test in Chrome.
 
 The manufacturer does not document whether each custom colour frame is stored in flash. Endurance under long continuous playback is unconfirmed.
 
