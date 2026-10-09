@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const names={flowers:{ru:'Цветы · распускаются',en:'Flowers · blooming'},aurora:{ru:'Северное сияние',en:'Northern lights'},comet:{ru:'Комета',en:'Comet'},fireflies:{ru:'Светлячки',en:'Fireflies'}};
+  const names={flowers:{ru:'Цветы · распускаются',en:'Flowers · blooming'},aurora:{ru:'Северное сияние',en:'Northern lights'},comet:{ru:'Комета',en:'Comet'},fireflies:{ru:'Светлячки',en:'Fireflies'},wave:{ru:'Радужная волна',en:'Rainbow wave'},rain:{ru:'Неоновый дождь',en:'Neon rain'},sparkles:{ru:'Искры',en:'Sparkles'}};
   const positions=CidooLayout.rows.flatMap((row,y)=>{let x=0;return row.map(key=>{const pos={index:key.index,x:x+key.width/2,y};x+=key.width;return pos;});});
   function cometColor(p,phase){
     const headX=-2+phase*23,headY=Math.round(2+Math.sin(phase*Math.PI*2)*.7),dx=headX-p.x;
@@ -12,6 +12,7 @@
     const tail=dx<1.4?0:(dx-1.4)/5.6,level=dx<1.4?1:(1-tail)**1.5;
     return head.map((v,i)=>(v+(cold[i]-v)*tail)*level*width);
   }
+  function hsv(h,s=1,v=1){const i=Math.floor(h*6),f=h*6-i,p=v*(1-s),q=v*(1-f*s),t=v*(1-(1-f)*s);return [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i%6].map(x=>x*255);}
   function build(id,language='ru'){
     if(!names[id])throw Error('Неизвестный шаблон.');
     const project=CidooProject.demo();project.name=names[id][language==='en'?'en':'ru'];project.effect='timeline';project.keys=positions.map(p=>p.index);project.frames=[];project.duration=0;project.interpolation='smooth';
@@ -28,6 +29,9 @@
       },180);
       else if(id==='aurora')add(p=>{const a=(1+Math.sin(p.x*.45+p.y*.6+phase*Math.PI*2))/2,b=(1+Math.cos(p.x*.3-phase*Math.PI*2))/2;return [15+65*b,15+175*a,50+155*(1-a)];},130);
       else if(id==='comet')add(p=>cometColor(p,phase),140);
+      else if(id==='wave')add(p=>hsv((p.x/18+phase)%1,.9,.25+.75*(.5+.5*Math.sin((p.x*.7-phase*18+p.y)*.7))),130);
+      else if(id==='rain')add(p=>{const seed=((p.index*17)%31)/31,drop=(phase*6+seed*6)%6,dist=Math.abs(p.y-drop),level=Math.max(0,1-dist*1.8);return [0,80*level,180*level+75*level*level];},150);
+      else if(id==='sparkles')add(p=>{const seed=((p.index*37)%101)/101,life=Math.max(0,Math.cos((phase-seed)*Math.PI*2))**18;return [255*life,70*life+8,180*life+25*life];},170);
       else add(p=>{const seed=((p.index*37)%97)/97,life=Math.max(0,Math.cos((phase-seed)*Math.PI*2))**14;return [4+180*life,7+248*life,8+35*life];},180);
     }
     return CidooProject.validate(project);

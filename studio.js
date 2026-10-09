@@ -134,9 +134,11 @@ function animate(now){
   previewHandle=requestAnimationFrame(animate);
 }
 buildKeyboard();form();render();
+const presetSearch=globalThis.location?.search||'';
+const presetQuery=decodeURIComponent((presetSearch.match(/[?&]preset=([^&]+)/)||[])[1]||'');
 document.addEventListener('visibilitychange',async()=>{if(!extension||document.hidden||busy)return;try{state(await send('status'));}catch(error){notice(error.message,true);}});
 (async()=>{
-  try{const draft=await storage.get('studioDraft');if(draft){project=CidooProject.validate(draft);editingKeys=[...project.keys];const view=await storage.get('studioView');if(view?.name===project.name){if(Array.isArray(view.editingKeys))editingKeys=view.editingKeys.filter(n=>Number.isInteger(n)&&n>=0&&n<132);activeFrame=Math.max(0,Math.min(project.frames.length-1,Number(view.activeFrame)||0));previewElapsed=Math.max(0,Number(view.previewElapsed)||0);pausedPreview=!!view.pausedPreview;if(pausedPreview)CidooHeartMath.paint(previewBytes,new Uint8Array(project.sourceColors),previewElapsed/1000,project);}form();render();}library=(await storage.get('studioLibrary')||[]).map(CidooProject.validate);renderLibrary();if(extension)state(await send('status'));else notice('Режим предпросмотра: устройство не подключается. Загрузи расширение в Chrome для управления клавиатурой.');}
+  try{const draft=await storage.get('studioDraft');if(draft&&!presetQuery){project=CidooProject.validate(draft);editingKeys=[...project.keys];const view=await storage.get('studioView');if(view?.name===project.name){if(Array.isArray(view.editingKeys))editingKeys=view.editingKeys.filter(n=>Number.isInteger(n)&&n>=0&&n<132);activeFrame=Math.max(0,Math.min(project.frames.length-1,Number(view.activeFrame)||0));previewElapsed=Math.max(0,Number(view.previewElapsed)||0);pausedPreview=!!view.pausedPreview;if(pausedPreview)CidooHeartMath.paint(previewBytes,new Uint8Array(project.sourceColors),previewElapsed/1000,project);}form();render();}if(presetQuery&&Object.prototype.hasOwnProperty.call(CidooPresets.names,presetQuery)){$('preset').value=presetQuery;loadPreset();}library=(await storage.get('studioLibrary')||[]).map(CidooProject.validate);renderLibrary();if(extension)state(await send('status'));else notice('Режим предпросмотра: устройство не подключается. Загрузи расширение в Chrome для управления клавиатурой.');}
   catch(error){notice(error.message,true);}
 })();
 setInterval(async()=>{if(!extension||busy||!live||document.hidden)return;try{state(await send('status'));}catch(error){notice(error.message,true);}},1000);

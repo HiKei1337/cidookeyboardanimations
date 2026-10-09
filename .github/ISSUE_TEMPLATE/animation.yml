@@ -1,0 +1,43 @@
+name: Submit an animation
+description: Share a CIDOO RGB Studio animation for the Workshop Lite collection.
+title: "[Workshop] "
+labels:
+  - workshop
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing! Export the project as JSON from the editor and attach the file below.
+        Do not include personal data, USB information or Layer 1 screenshots.
+  - type: input
+    id: name
+    attributes:
+      label: Animation name
+      description: A short name shown in the workshop.
+      placeholder: Neon tide
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What does the animation look like and how fast does it move?
+      placeholder: Blue light rolls from left to right...
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author name
+      description: Your GitHub name or nickname.
+      placeholder: your-name
+    validations:
+      required: true
+  - type: textarea
+    id: file
+    attributes:
+      label: JSON file
+      description: Drag the exported .json file into this field so GitHub attaches it.
+      placeholder: Drag animation.json here
+    validations:
+      required: true

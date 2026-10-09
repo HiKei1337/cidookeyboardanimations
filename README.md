@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Язык / Language: **Русский** · [English](README.en.md)<br>
-[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.4.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip)
+[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.5.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.0/cidoo-rgb-studio-v1.5.0.zip)
 
 На лендинге язык выбирается автоматически по языку браузера: русский для `ru-*`, английский для остальных.
 
@@ -28,7 +28,7 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 Нужны CIDOO, USB-подключение и Chrome 117 или новее. Другие модели не проверены.
 
-1. [Скачай ZIP релиза v1.4.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.4.1/cidoo-rgb-studio-v1.4.1.zip) и распакуй его.
+1. [Скачай ZIP релиза v1.5.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.0/cidoo-rgb-studio-v1.5.0.zip) и распакуй его.
 2. Открой `chrome://extensions`, включи **Режим разработчика**.
 3. Нажми **Загрузить распакованное расширение** и выбери папку с `manifest.json`.
 4. На [сайте CIDOO](https://cidoo.illumipc.com/#/) подключи клавиатуру, включи подсветку и выбери **Пользовательский → Layer 2**.
@@ -46,6 +46,10 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 Простой пример: **Свои кадры → Кадр 1 с яркостью 15% → Дублировать → Кадр 2 с розовым цветом → Плавные переходы → Предпросмотр**.
 
 Подробный пошаговый гайд с 6 скриншотами, примером WASD и разбором остановки: [Своя анимация без программирования](docs/CUSTOM_ANIMATION.md). Готовые проекты лежат в [examples](examples): скачай JSON и открой его в конструкторе.
+
+## Workshop Lite
+
+На [странице Workshop](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) лежит небольшая коллекция готовых JSON-анимаций. Нажми **Открыть в конструкторе**, чтобы сразу загрузить шаблон, или скачай JSON отдельно. Свою анимацию можно предложить через кнопку отправки — она открывает GitHub Issue для ручной проверки.
 
 **Предпросмотр** меняет только экран. **Запустить на клавиатуре** включает настоящую подсветку. Перед запуском читаются реальные цвета Layer 1; файл проекта не перезаписывает этот слой.
 
@@ -74,7 +78,7 @@ Chrome должен оставаться запущенным, компьюте�
 
 ## Статус
 
-Проект экспериментальный и независимый от CIDOO. Совместимость зависит от протокола и раскладки; работа на всех моделях CIDOO не подтверждена. Редактор проверен в браузере; фоновые команды, таймер, кадры и защита Layer 1 — на имитаторе HID. Версия 1.4.1 ещё не прошла полный тест на физической клавиатуре в Chrome.
+Проект экспериментальный и независимый от CIDOO. Совместимость зависит от протокола и раскладки; работа на всех моделях CIDOO не подтверждена. Редактор проверен в браузере; фоновые команды, таймер, кадры и защита Layer 1 — на имитаторе HID. Версия 1.5.0 ещё не прошла полный тест на физической клавиатуре в Chrome.
 
 Производитель не документирует, сохраняет ли прошивка каждый пользовательский кадр во flash-память. Ресурс при длительном непрерывном использовании не подтверждён.
 
