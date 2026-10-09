@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Language / Язык: [Русский](README.md) · **English**<br>
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.5.0 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.0/cidoo-rgb-studio-v1.5.0.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.5.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.1/cidoo-rgb-studio-v1.5.1.zip)
 
 The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
@@ -26,7 +26,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download the v1.5.0 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.0/cidoo-rgb-studio-v1.5.0.zip) and extract it.
+1. [Download the v1.5.1 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.1/cidoo-rgb-studio-v1.5.1.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
@@ -76,7 +76,7 @@ Permissions: `storage` for local settings and projects; `scripting` and access t
 
 ## Status
 
-This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.5.0 has not yet passed a full physical-keyboard test in Chrome.
+This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.5.1 has not yet passed a full physical-keyboard test in Chrome.
 
 The manufacturer does not document whether each custom colour frame is stored in flash. Endurance under long continuous playback is unconfirmed.
 
