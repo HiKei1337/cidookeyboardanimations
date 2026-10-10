@@ -4,3 +4,4 @@ node_modules/
 Thumbs.db
 work/
 *.log
+.cidoo-update.lock

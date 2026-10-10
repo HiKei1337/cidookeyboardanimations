@@ -19,6 +19,10 @@ No framework, bundler, build step or runtime dependency. Load the repository roo
 
 Run `npm test` using Node.js 18+. The tests have no external dependencies and do not contact a keyboard.
 
+Windows updater checks: `powershell.exe -NoProfile -File tests/updater.test.ps1`. These use mocked GitHub requests and temporary installations to verify updates, no-op checks, failed downloads, checksums, archive path rejection and rollback. They do not update the installed extension or contact GitHub.
+
+Package a release: `powershell.exe -NoProfile -File scripts/package.ps1`. It includes only runtime files, translations, licence, README files and the Windows updater. Upload the generated `cidoo-rgb-studio-v<VERSION>.zip` to a stable release with tag `v<VERSION>` matching the manifest. The updater accepts only known files; when adding runtime assets, update both packaging and updater allowlists. GitHub release asset SHA-256 digests are checked when supplied; release ownership and HTTPS remain the trust boundary.
+
 ## Layer contract
 
 The UI source is Layer 1, whose protocol index is `0`. It is read-only. The output is Layer 2, whose protocol index is `1`. `hid.js` creates write packets with a fixed `LAYER = 1`; the JSON project cannot change this.

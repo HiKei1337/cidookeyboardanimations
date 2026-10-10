@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Language / Язык: [Русский](README.md) · **English**<br>
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.6.0 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.0/cidoo-rgb-studio-v1.6.0.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.6.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.1/cidoo-rgb-studio-v1.6.1.zip)
 
 The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
@@ -26,7 +26,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download the v1.6.0 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.0/cidoo-rgb-studio-v1.6.0.zip) and extract it.
+1. [Download the v1.6.1 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.1/cidoo-rgb-studio-v1.6.1.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
@@ -35,7 +35,18 @@ Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are 
 
 The website will show the device as disconnected after step 5. This is expected: the extension takes over USB control. Do not reconnect the website or another RGB controller while an animation is running.
 
-To update, stop the animation, replace the files and reload the extension on `chrome://extensions`. When upgrading from version 1.0, also reload the CIDOO tab to remove its old animation script.
+## Update without downloading again (Windows)
+
+1. Stop playback and close the editor.
+2. Run **update.cmd** inside the installed extension folder. Press **Y**, then Enter to continue.
+3. The script downloads the latest stable release from this repository, validates the archive and replaces files in the same folder. If you already have the latest version, it changes nothing.
+4. Open `chrome://extensions` and click **Reload** on the CIDOO RGB Studio card. Do not remove or reinstall the extension: keeping the same installation preserves your settings and library.
+
+For an older installation, download a release containing `update.cmd` once and extract it over your existing folder. Subsequent updates need no manual ZIP download. Requires Windows PowerShell 5.1 and GitHub access. Administrator privileges are not needed when the folder is writable. Other operating systems still require manual file updates.
+
+Updates run when requested, not in the background. Chrome cannot automatically reload an unpacked extension. The script keeps a backup at the path printed in its window, leaves your own JSON files untouched and restores previous files if copying fails. It does not access Chrome's stored settings or projects.
+
+When upgrading from version 1.0, also reload the CIDOO tab to remove its old animation script.
 
 ## Custom animations
 

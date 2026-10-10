@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Язык / Language: **Русский** · [English](README.en.md)<br>
-[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.6.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.0/cidoo-rgb-studio-v1.6.0.zip)
+[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.6.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.1/cidoo-rgb-studio-v1.6.1.zip)
 
 На лендинге язык выбирается автоматически по языку браузера: русский для `ru-*`, английский для остальных.
 
@@ -28,7 +28,7 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 Нужны CIDOO, USB-подключение и Chrome 117 или новее. Другие модели не проверены.
 
-1. [Скачай ZIP релиза v1.6.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.0/cidoo-rgb-studio-v1.6.0.zip) и распакуй его.
+1. [Скачай ZIP релиза v1.6.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.1/cidoo-rgb-studio-v1.6.1.zip) и распакуй его.
 2. Открой `chrome://extensions`, включи **Режим разработчика**.
 3. Нажми **Загрузить распакованное расширение** и выбери папку с `manifest.json`.
 4. На [сайте CIDOO](https://cidoo.illumipc.com/#/) подключи клавиатуру, включи подсветку и выбери **Пользовательский → Layer 2**.
@@ -37,7 +37,18 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 Сайт покажет отключение клавиатуры после шага 5. Это нормально: USB-управление передано расширению. Пока анимация работает, не подключай устройство обратно к сайту или другому RGB-контроллеру.
 
-Для обновления останови анимацию, замени файлы расширения и нажми кнопку обновления на его карточке в `chrome://extensions`. После перехода с версии 1.0 обнови также вкладку CIDOO, чтобы удалить старый скрипт.
+## Обновление без повторного скачивания (Windows)
+
+1. Останови анимацию и закрой конструктор.
+2. В папке установленного расширения запусти **update.cmd**. Подтверди обновление клавишей **Y**, затем Enter.
+3. Скрипт скачает последний стабильный релиз из этого репозитория, проверит архив и заменит файлы в той же папке. Если новая версия ещё не вышла, ничего менять не будет.
+4. Открой `chrome://extensions` и нажми **Обновить** на карточке CIDOO RGB Studio. Не удаляй расширение и не загружай его как новое: так сохранятся настройки и библиотека.
+
+Для перехода со старой версии один раз скачай релиз с `update.cmd` и распакуй поверх прежней папки. Дальше скачивать ZIP вручную не нужно. Нужны Windows PowerShell 5.1 и доступ к GitHub; права администратора не требуются, если папка доступна для записи. В других ОС файлы пока нужно обновлять вручную.
+
+Это обновление по запросу, а не фоновое автообновление. Распакованное расширение Chrome само не перезагружает. Скрипт оставляет резервную копию в папке, указанной в окне, и не меняет собственные JSON-файлы в папке установки. При ошибке записи возвращает прежние файлы. Настройки и проекты в хранилище Chrome не затрагиваются.
+
+После перехода с версии 1.0 обнови также вкладку CIDOO, чтобы удалить старый скрипт.
 
 ## Своя анимация
 
