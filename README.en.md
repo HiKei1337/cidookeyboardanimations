@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Language / Язык: [Русский](README.md) · **English**<br>
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.5.2 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.2/cidoo-rgb-studio-v1.5.2.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.6.0 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.0/cidoo-rgb-studio-v1.6.0.zip)
 
 The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
@@ -26,7 +26,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download the v1.5.2 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.5.2/cidoo-rgb-studio-v1.5.2.zip) and extract it.
+1. [Download the v1.6.0 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.0/cidoo-rgb-studio-v1.6.0.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
@@ -45,9 +45,13 @@ Example: **Custom frames → Frame 1 at 15% brightness → Duplicate → paint F
 
 See the illustrated step-by-step [no-code animation guide](docs/CUSTOM_ANIMATION.en.md). Ready-to-import JSON projects are in [examples](examples).
 
+## Playback speed
+
+The Workshop and editor have a **0.25x–4x** speed slider. It changes animation timing independently of frame rate and is preserved in exported JSON. Update to extension 1.6.0 to use it on the keyboard.
+
 ## Workshop Lite
 
-The [Workshop page](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) contains a small collection of ready-made JSON animations. Click **Open in editor** to load a preset immediately, or download the JSON file. You can submit your own animation through the button on that page; submissions arrive as GitHub Issues for manual review.
+The [Workshop page](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) contains a small collection of ready-made JSON animations. Click **Open in editor** to load a preset immediately, or download the JSON file. Submit your animation on the website: enter a name, author and description, then attach its JSON file. Submissions are stored in Supabase and appear after approval by the owner.
 
 **Preview** affects the screen only. **Run on keyboard** controls the device. The keyboard's real Layer 1 colours are read before each start; imported projects cannot overwrite Layer 1.
 
@@ -70,7 +74,7 @@ Change shortcuts on `chrome://extensions/shortcuts`.
 
 ## Data and permissions
 
-Settings, projects and the Layer 2 backup stay in local extension storage. No analytics, external libraries or project uploads. Imported JSON is data, never executable code.
+Settings, projects and the Layer 2 backup stay in local extension storage. The extension does not upload projects automatically or use external libraries. Submitting through the website sends your selected JSON, name, description and nickname to Supabase. Admin sign-in uses Supabase Auth. Imported JSON is data, never executable code.
 
 Permissions: `storage` for local settings and projects; `scripting` and access to `cidoo.illumipc.com` to identify the keyboard and release the website's connection. Chrome separately asks for USB device permission.
 
