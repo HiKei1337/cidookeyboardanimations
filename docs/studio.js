@@ -11,6 +11,8 @@ function selectedKeys(){return project.effect==='timeline'?editingKeys:project.k
 function setSelection(keys){if(project.effect==='timeline')editingKeys=keys;else project.keys=keys;}
 const brightnessBases=new WeakMap();
 let sourceBytes=new Uint8Array(project.sourceColors);
+const previewReactions=new CidooHeartMath.Reactions();
+function triggerReaction(index){if(project.reactiveMode==='off')return;if(!playing)$('preview').click();previewReactions.press(index,(performance.now()-previewStarted)/1000);if(live&&extension)chrome.runtime.sendMessage({type:'cidoo-react',index}).catch(()=>{});}
 const keyButtons=new Map(),previewBytes=new Uint8Array(396);
 function notice(text,error=false){$('toast').textContent=text;$('toast').className='toast'+(error?' error':'');}
 async function send(action,config,identity){
@@ -28,7 +30,7 @@ function pausePreview(){
   if(previewHandle!==null)cancelAnimationFrame(previewHandle);previewHandle=null;
 }
 function frameStart(){return project.effect==='timeline'?project.frames.slice(0,activeFrame).reduce((ms,f)=>ms+f.durationMs,0)/(project.playbackSpeed||1):0;}
-function resetPreview(){pausePreview();playing=false;pausedPreview=false;previewElapsed=frameStart();}
+function resetPreview(){pausePreview();playing=false;pausedPreview=false;previewElapsed=frameStart();previewReactions.clear();}
 function change(task){pausePreview();checkpoint();pausedPreview=false;task();previewElapsed=frameStart();saveDraft();render();}
 function selectFrame(index){resetPreview();activeFrame=index;previewElapsed=frameStart();render();saveDraft();}
 function duration(){if($('autoOff').value==='never')return 0;const number=(id,max=Number.MAX_SAFE_INTEGER)=>Math.min(max,Math.max(0,Math.floor(Number($(id).value)||0)));return number('hours')*3600+number('minutes',59)*60+number('seconds',59);}
@@ -36,6 +38,7 @@ function clock(seconds){const n=Math.max(0,Math.ceil(seconds));return `${Math.fl
 function applyForm(){
   project.name=$('projectName').value.trim()||'Моя анимация';project.effect=$('effect').value;
   Object.assign(project,CidooHeartMath.options({...project,playbackSpeed:$('playbackSpeed').value,bpm:$('bpm').value,fps:$('fps').value,min:$('min').value,max:$('max').value,duration:duration(),restoreMode:$('restoreMode').value,interpolation:$('interpolation').value}));
+  Object.assign(project,CidooHeartMath.options({...project,reactiveMode:$('reactiveMode').value,reactiveColor:rgb($('reactiveColor').value),reactiveDecay:$('reactiveDecay').value,reactiveStrength:$('reactiveStrength').value}));
   if(project.effect==='timeline'&&!project.frames.length)project.frames.push({durationMs:400,colors:[...project.sourceColors]});
 }
 function form(){
@@ -43,6 +46,7 @@ function form(){
   $('projectName').value=project.name;for(const id of ['effect','bpm','fps','min','max','interpolation','restoreMode','playbackSpeed'])$(id).value=String(project[id]);
   $('autoOff').value=project.duration===0?'never':'timer';
   $('speedValue').textContent=(project.playbackSpeed||1)+'×';
+  $('reactiveMode').value=project.reactiveMode;$('reactiveColor').value='#'+project.reactiveColor.map(n=>n.toString(16).padStart(2,'0')).join('');$('reactiveDecay').value=project.reactiveDecay;$('reactiveStrength').value=project.reactiveStrength;
   if(project.duration>0){$('hours').value=Math.floor(project.duration/3600);$('minutes').value=Math.floor(project.duration%3600/60);$('seconds').value=Math.floor(project.duration%60);}
   panels();
 }
@@ -50,7 +54,7 @@ function panels(){const timeline=project.effect==='timeline';$('timelinePanel').
 function buildKeyboard(){
   for(const row of CidooLayout.rows){const holder=document.createElement('div');holder.className='keyboard-row';
     for(const key of row){const button=document.createElement('button');button.type='button';button.className='key';button.textContent=key.label;button.style.flexGrow=key.width;button.dataset.index=String(key.index);button.setAttribute('aria-label',key.label+' · выбрать для анимации');button.title=key.label;
-      button.addEventListener('click',()=>change(()=>{playing=false;const keys=selectedKeys();setSelection(keys.includes(key.index)?keys.filter(index=>index!==key.index):[...keys,key.index]);}));holder.append(button);keyButtons.set(key.index,button);}
+      button.addEventListener('click',()=>{if($('reactiveTest').checked){triggerReaction(key.index);return;}change(()=>{playing=false;const keys=selectedKeys();setSelection(keys.includes(key.index)?keys.filter(index=>index!==key.index):[...keys,key.index]);});});holder.append(button);keyButtons.set(key.index,button);}
     $('keyboard').append(holder);
   }
 }
@@ -73,7 +77,7 @@ function render(){
 }
 function frameEdit(task){if(!selectedKeys().length){notice('Сначала выбери клавиши на схеме.',true);return;}change(()=>{playing=false;task(project.frames[activeFrame]);});}
 function rgb(hex){return [parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];}
-for(const id of ['projectName','effect','bpm','fps','min','max','interpolation','restoreMode','autoOff','hours','minutes','seconds'])$(id).addEventListener('input',()=>{
+for(const id of ['projectName','effect','bpm','fps','min','max','interpolation','restoreMode','autoOff','hours','minutes','seconds','reactiveMode','reactiveColor','reactiveDecay','reactiveStrength'])$(id).addEventListener('input',()=>{
   if(id==='effect')change(applyForm);else{checkpoint();applyForm();saveDraft();render();}
 });
 $('selectHeart').addEventListener('click',()=>change(()=>setSelection([...CidooHeartMath.heart])));
@@ -131,7 +135,7 @@ $('importFile').addEventListener('change',async event=>{const file=event.target.
 let lastDraw=-Infinity;
 function animate(now){
   if(!playing){previewHandle=null;return;}
-  if(playing&&!document.hidden&&now-lastDraw>=1000/20){lastDraw=now;const seconds=(now-previewStarted)/1000;CidooHeartMath.paint(previewBytes,sourceBytes,seconds,project);showColors(previewBytes);$('previewTime').textContent=clock(seconds);}
+  if(playing&&!document.hidden&&now-lastDraw>=1000/20){lastDraw=now;const seconds=(now-previewStarted)/1000;CidooHeartMath.paint(previewBytes,sourceBytes,seconds,project);previewReactions.paint(previewBytes,seconds,project);showColors(previewBytes);$('previewTime').textContent=clock(seconds);}
   previewHandle=requestAnimationFrame(animate);
 }
 buildKeyboard();form();render();
@@ -145,3 +149,4 @@ document.addEventListener('visibilitychange',async()=>{if(!extension||document.h
 setInterval(async()=>{if(!extension||busy||!live||document.hidden)return;try{state(await send('status'));}catch(error){notice(error.message,true);}},1000);
 
 $('playbackSpeed').addEventListener('input',()=>{change(()=>project.playbackSpeed=Number($('playbackSpeed').value));$('speedValue').textContent=project.playbackSpeed+'×';});
+document.addEventListener('keydown',event=>{if(event.repeat||event.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;const index=CidooLayout.codeIndex(event.code);if(index!==undefined&&project.reactiveMode!=='off'&&($('reactiveTest').checked||playing||live))triggerReaction(index);});

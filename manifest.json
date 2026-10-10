@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "minimum_chrome_version": "117",
   "permissions": [
     "scripting",
+    "activeTab",
     "storage"
   ],
   "host_permissions": [

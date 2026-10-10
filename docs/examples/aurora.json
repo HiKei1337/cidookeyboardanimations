@@ -6,6 +6,15 @@
   "name": "Northern lights",
   "effect": "timeline",
   "bpm": 65,
+  "playbackSpeed": 1,
+  "reactiveMode": "off",
+  "reactiveColor": [
+    0,
+    220,
+    255
+  ],
+  "reactiveDecay": 1,
+  "reactiveStrength": 100,
   "fps": 8,
   "min": 15,
   "max": 100,

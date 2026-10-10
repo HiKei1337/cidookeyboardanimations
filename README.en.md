@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Language / Язык: [Русский](README.md) · **English**<br>
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.6.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.1/cidoo-rgb-studio-v1.6.1.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.7.0 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.0/cidoo-rgb-studio-v1.7.0.zip)
 
 The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
@@ -26,7 +26,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download the v1.6.1 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.6.1/cidoo-rgb-studio-v1.6.1.zip) and extract it.
+1. [Download the v1.7.0 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.0/cidoo-rgb-studio-v1.7.0.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
@@ -60,6 +60,20 @@ See the illustrated step-by-step [no-code animation guide](docs/CUSTOM_ANIMATION
 
 The Workshop and editor have a **0.25x–4x** speed slider. It changes animation timing independently of frame rate and is preserved in exported JSON. Update to extension 1.6.0 to use it on the keyboard.
 
+## Key reactions
+
+Open **Key reactions** in the editor: a single-key flash, expanding ripple or heat trail. Choose the RGB colour, fade time and strength. Add reactions over any drawing or preset; settings are preserved in JSON.
+
+Enable **Test keys on the diagram** and click diagram keys or press your keyboard. In the Workshop, **Key ripple** and **Fire keys** play simulated key presses; their previews are also clickable.
+
+For real lighting, run the project in the extension. On a normal website tab, open the extension popup and click **Connect key presses from this tab**. The tab can then trigger reactions; multiple tabs can be connected. Click **Disconnect website key presses** to stop capture. Reconnect after navigating to another website or refreshing the page.
+
+Reactions work in the editor and connected Chrome tabs. Windows games, other applications, `chrome://` pages and the built-in PDF viewer are unsupported. Only the key's diagram index is forwarded, without text or input values; no key history is stored. Password fields, auto-repeat and synthetic events are ignored. Access uses `activeTab`, without permanent access to every website.
+
+## New presets and favorites
+
+The Workshop has 16 presets, including **Ocean, Lava, Green code, Sunset, Radar and Candy neon**, plus two interactive templates. Click ☆ on a card and select **Favorites** to find it later. Favorites stay in your browser. Offscreen and hidden-tab previews do not redraw.
+
 ## Workshop Lite
 
 The [Workshop page](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) contains a small collection of ready-made JSON animations. Click **Open in editor** to load a preset immediately, or download the JSON file. Submit your animation on the website: enter a name, author and description, then attach its JSON file. Submissions are stored in Supabase and appear after approval by the owner.
@@ -91,7 +105,7 @@ Permissions: `storage` for local settings and projects; `scripting` and access t
 
 ## Status
 
-This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.5.2 has not yet passed a full physical-keyboard test in Chrome.
+This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.7.0 has not yet passed a full physical-keyboard test in Chrome.
 
 The manufacturer does not document whether each custom colour frame is stored in flash. Endurance under long continuous playback is unconfirmed.
 

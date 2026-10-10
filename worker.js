@@ -1,7 +1,9 @@
 'use strict';
-importScripts('animation.js','project.js','hid.js','i18n.js');
+importScripts('layout.js','animation.js','project.js','hid.js','i18n.js');
 const engine=new CidooHid(navigator.hid,chrome.storage.local);
 let actions=Promise.resolve();
+const reactiveTabs=new Set();
+function syncReactiveTabs(){for(const tabId of reactiveTabs)chrome.tabs.sendMessage(tabId,{type:'cidoo-react-state',enabled:engine.running&&engine.config.reactiveMode!=='off'}).catch(()=>reactiveTabs.delete(tabId));}
 const hydrated=(async()=>{const {device}=await chrome.storage.local.get('device');if(device){try{await engine.select(device);}catch{}}})();
 async function siteAction(action){
   const tabs=await chrome.tabs.query({url:'https://cidoo.illumipc.com/*'});
@@ -16,6 +18,12 @@ async function siteAction(action){
 async function execute(action,config,identity){
   await hydrated;
   if(action==='status')return engine.state();
+  if(action==='attachReactive'){
+    const [tab]=await chrome.tabs.query({active:true,lastFocusedWindow:true});
+    if(!tab||!/^https?:\/\//.test(tab.url||''))throw Error('Открой обычную вкладку сайта и нажми кнопку из окна расширения.');
+    reactiveTabs.add(tab.id);try{await chrome.scripting.executeScript({target:{tabId:tab.id},files:['layout.js'],world:'ISOLATED'});}catch(error){reactiveTabs.delete(tab.id);throw error;}syncReactiveTabs();return {attached:true};
+  }
+  if(action==='detachReactive'){for(const tabId of reactiveTabs)chrome.tabs.sendMessage(tabId,{type:'cidoo-react-state',enabled:false}).catch(()=>{});reactiveTabs.clear();return {attached:false};}
   if(action==='describe')return {identity:await siteAction('describe')};
   if(action==='connect'){
     await engine.stop();
@@ -38,11 +46,17 @@ function dispatch(action,config,identity){
   const result=actions.then(()=>execute(action,config,identity));actions=result.catch(()=>{});return result;
 }
 chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{
+  if(sender.id===chrome.runtime.id&&message?.type==='cidoo-react'){
+    if(sender.tab&&!sender.url?.startsWith('chrome-extension://'+chrome.runtime.id+'/')&&!reactiveTabs.has(sender.tab.id)){sendResponse({enabled:false});return;}
+    const enabled=engine.running&&engine.config.reactiveMode!=='off';
+    if(!message.status&&enabled)engine.react(message.index);sendResponse({enabled});return;
+  }
   if(sender.id!==chrome.runtime.id||message?.type!=='cidoo-heart')return;
-  dispatch(message.action,message.config,message.identity).then(state=>sendResponse({ok:true,state}),error=>sendResponse({ok:false,error:error.message}));return true;
+  if(sender.tab&&!sender.url?.startsWith('chrome-extension://'+chrome.runtime.id+'/'))return;
+  dispatch(message.action,message.config,message.identity).then(state=>{syncReactiveTabs();sendResponse({ok:true,state});},error=>sendResponse({ok:false,error:error.message}));return true;
 });
 chrome.commands.onCommand.addListener(async command=>{
-  try{const {settings}=await chrome.storage.local.get('settings');const config=settings?.schema===2?settings:{...settings,duration:0,fps:8};const state=await dispatch(command==='stop-heart'?'stop':'toggle',config);await chrome.action.setBadgeText({text:state.running?'ON':''});await chrome.action.setTitle({title:await localizedTitle(state.error||'CIDOO RGB Studio — Layer 2')});}
+  try{const {settings}=await chrome.storage.local.get('settings');const config=settings?.schema===2?settings:{...settings,duration:0,fps:8};const state=await dispatch(command==='stop-heart'?'stop':'toggle',config);syncReactiveTabs();await chrome.action.setBadgeText({text:state.running?'ON':''});await chrome.action.setTitle({title:await localizedTitle(state.error||'CIDOO RGB Studio — Layer 2')});}
   catch(error){await chrome.action.setBadgeText({text:'!'});await chrome.action.setTitle({title:await localizedTitle(error.message)});}
 });
 async function localizedTitle(text){const {language}=await chrome.storage.local.get('language');return (language||navigator.language||'en').toLowerCase().startsWith('ru')?text:CidooI18n.translate(text);}

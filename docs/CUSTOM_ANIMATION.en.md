@@ -132,3 +132,13 @@ Click **Save to library**. Your project appears as a button with its name. Savin
 6. Reload the extension on `chrome://extensions`, then reload the editor tab. An open editor uses its old code until refreshed.
 
 Physical compatibility depends on the device and protocol. Editor and HID simulator checks do not replace testing your keyboard. When reporting a problem in [GitHub Issues](https://github.com/HiKei1337/cidookeyboardanimations/issues), include extension version, model, message and reproduction steps.
+
+## Key reactions (1.7.0)
+
+1. Open **Key ripple** or any other animation.
+2. Under **Key reactions**, choose flash, ripple or heat trail. Pick an RGB colour, a fade time from 0.2 to 3 seconds and strength from 10 to 100%.
+3. Enable **Test keys on the diagram**. Clicking a key now triggers the effect without changing your selection. Physical keys work too, while focus is outside a settings input.
+4. Run the project on the keyboard. For reactions on a website, open the extension popup from that tab and click **Connect key presses from this tab**. Connect each tab individually.
+5. Click **Disconnect website key presses** in the popup to stop capture. Stopping playback also disables processing.
+
+Reaction settings are saved in the project JSON. The selected colour temporarily blends over the base animation, then fades away. Layer 1 stays untouched. This feature does not capture input from other Windows applications.

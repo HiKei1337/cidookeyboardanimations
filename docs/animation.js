@@ -13,6 +13,10 @@
       effect: ['heartbeat','breathe','shimmer','heartbeat-shimmer','timeline'].includes(raw.effect) ? raw.effect : 'heartbeat',
       bpm: range(raw.bpm,35,140,65),
       playbackSpeed: range(raw.playbackSpeed,.25,4,1),
+      reactiveMode: ['flash','ripple','heat'].includes(raw.reactiveMode)?raw.reactiveMode:'off',
+      reactiveColor: Array.isArray(raw.reactiveColor)&&raw.reactiveColor.length===3&&raw.reactiveColor.every(n=>Number.isInteger(n)&&n>=0&&n<=255)?[...raw.reactiveColor]:[0,220,255],
+      reactiveDecay: range(raw.reactiveDecay,.2,3,1),
+      reactiveStrength: range(raw.reactiveStrength,10,100,100),
       fps: range(raw.fps,4,20,8),
       min: range(raw.min,0,80,15),
       max: range(raw.max,20,100,100),
@@ -78,5 +82,24 @@
     while(index<frames.length-1&&time>=frames[index].durationMs){time-=frames[index].durationMs;index++;}
     return {index,time};
   }
-  globalThis.CidooHeartMath=Object.freeze({heart,options,pulse,frame,paint,timelinePosition});
+  class Reactions {
+    constructor(){this.hits=[];this.positions=new Map();const rows=globalThis.CidooLayout?.rows;if(rows)rows.forEach((row,y)=>{let x=0;for(const k of row){this.positions.set(k.index,{x:x+k.width/2,y});x+=k.width;}});else for(let i=0;i<132;i++)this.positions.set(i,{x:i%22,y:Math.floor(i/22)});}
+    clear(){this.hits.length=0;}
+    press(index,seconds){if(!Number.isInteger(index)||!this.positions.has(index)||!Number.isFinite(seconds))return false;this.hits.push({index,time:seconds});if(this.hits.length>32)this.hits.shift();return true;}
+    paint(target,seconds,raw){
+      if(!raw.reactiveMode||raw.reactiveMode==='off'){this.clear();return target;}
+      const decay=raw.reactiveDecay||1;this.hits=this.hits.filter(hit=>seconds-hit.time>=0&&seconds-hit.time<decay);
+      const color=raw.reactiveColor||[0,220,255],strength=(raw.reactiveStrength||100)/100;
+      for(const index of raw.keys||[]){const p=this.positions.get(index);if(!p)continue;let level=0;
+        for(const hit of this.hits){const age=(seconds-hit.time)/decay,origin=this.positions.get(hit.index),distance=Math.hypot(p.x-origin.x,(p.y-origin.y)*1.4);let glow;
+          if(raw.reactiveMode==='flash')glow=index===hit.index?(1-age)**2:0;
+          else if(raw.reactiveMode==='heat')glow=Math.max(0,1-distance/2)*(1-age)**2;
+          else glow=Math.max(0,1-Math.abs(distance-age*12)/1.4)*(1-age);
+          level=Math.min(1,level+glow);
+        }
+        for(let c=0;c<3;c++){const o=index*3+c;target[o]=byte(target[o]+(color[c]-target[o])*level*strength);}
+      }return target;
+    }
+  }
+  globalThis.CidooHeartMath=Object.freeze({heart,options,pulse,frame,paint,timelinePosition,Reactions});
 })();

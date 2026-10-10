@@ -8,5 +8,19 @@
     row([88,90,91,92,93,94,95,96,97,98,99,101,102,103],['Shift','Z','X','C','V','B','N','M',',','.','/','Shift','↑','PgDn'],{88:2.25,101:1.75}),
     row([110,111,112,116,120,121,123,124,125],['Ctrl','Win','Alt','Space','Alt','Fn','←','↓','→'],{110:1.25,111:1.25,112:1.25,116:6.25,120:1.25,121:1.25})
   ];
-  globalThis.CidooLayout=Object.freeze({rows,keys:rows.flat()});
+  const codeRows=[['Escape',...Array.from({length:12},(_,i)=>'F'+(i+1)),'Delete'],['Backquote',...Array.from({length:9},(_,i)=>'Digit'+(i+1)),'Digit0','Minus','Equal','Backspace','Home'],['Tab','KeyQ','KeyW','KeyE','KeyR','KeyT','KeyY','KeyU','KeyI','KeyO','KeyP','BracketLeft','BracketRight','Backslash','End'],['CapsLock','KeyA','KeyS','KeyD','KeyF','KeyG','KeyH','KeyJ','KeyK','KeyL','Semicolon','Quote','Enter','PageUp'],['ShiftLeft','KeyZ','KeyX','KeyC','KeyV','KeyB','KeyN','KeyM','Comma','Period','Slash','ShiftRight','ArrowUp','PageDown'],['ControlLeft','MetaLeft','AltLeft','Space','AltRight','Fn','ArrowLeft','ArrowDown','ArrowRight']];
+  const codes=Object.fromEntries(rows.flatMap((row,r)=>row.map((key,c)=>[codeRows[r][c],key.index])));
+  globalThis.CidooLayout=Object.freeze({rows,keys:rows.flat(),codeIndex:code=>codes[code]});
+  // Installed only on a tab explicitly chosen through the extension popup.
+  if(globalThis.chrome?.runtime?.id&&typeof document!=='undefined'&&/^https?:$/.test(globalThis.location?.protocol||'')&&!globalThis.__cidooReactiveListener){
+    globalThis.__cidooReactiveListener=true;let enabled=false,last=-Infinity;
+    chrome.runtime.onMessage.addListener(message=>{if(message?.type==='cidoo-react-state')enabled=message.enabled===true;});
+    chrome.runtime.sendMessage({type:'cidoo-react',status:true}).then(result=>enabled=result?.enabled===true).catch(()=>{});
+    document.addEventListener('keydown',event=>{
+      if(!enabled||!event.isTrusted||event.repeat||document.hidden||event.target?.closest?.('input[type="password"]')||event.composedPath?.().some(node=>node.matches?.('input[type="password"]')))return;
+      const index=codes[event.code],now=performance.now();if(index===undefined||now-last<16)return;last=now;
+      // No text, key character, URL, input value or key history is sent or stored.
+      chrome.runtime.sendMessage({type:'cidoo-react',index}).then(result=>{if(result?.enabled===false)enabled=false;}).catch(()=>{enabled=false;});
+    },true);
+  }
 })();

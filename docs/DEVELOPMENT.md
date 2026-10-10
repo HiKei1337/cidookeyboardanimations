@@ -2,6 +2,12 @@
 
 No framework, bundler, build step or runtime dependency. Load the repository root as an unpacked Chrome extension.
 
+Refresh editor assets and preset JSONs with `node scripts/refresh-assets.cjs`. It keeps extension and Pages implementations aligned. The Workshop catalog adds bilingual descriptions separately in `docs/workshop.js`.
+
+Reaction parameters are part of project version 1: `reactiveMode` (`off`, `flash`, `ripple`, `heat`), `reactiveColor` (three RGB bytes), `reactiveDecay` (0.2–3 seconds), `reactiveStrength` (10–100%). Missing values default to off. Reactions overlay the normal frame without modifying its source. `CidooHeartMath.Reactions` holds at most 32 transient hits; HID output still uses the configured FPS and Layer 2-only write path.
+
+`activeTab` is used only when the popup's “Connect key presses from this tab” action injects `layout.js` into the chosen HTTP(S) tab. The isolated listener forwards a matrix index, never text or field values. The worker accepts these events only from attached tabs or its own extension pages; website content scripts cannot invoke controller actions. Capture stops when detached or when playback stops. Browser refresh/navigation requires reattachment; it is not a global Windows keyboard hook.
+
 ## Files
 
 | File | Purpose |

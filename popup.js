@@ -36,6 +36,7 @@ for(const id of [...fields,'autoOff','hours','minutes','seconds'])$(id).addEvent
 for(const action of buttons)$(action).addEventListener('click',()=>command(action));
 $('open').addEventListener('click',()=>chrome.tabs.create({url:'https://cidoo.illumipc.com/#/'}));
 $('studio').addEventListener('click',()=>chrome.tabs.create({url:chrome.runtime.getURL('studio.html')}));
+for(const id of ['attachReactive','detachReactive'])$(id).addEventListener('click',async()=>{try{await send(id);$('status').textContent=id==='attachReactive'?'Нажатия вкладки подключены. В конструкторе включи реакцию и запусти анимацию.':'Нажатия сайтов отключены.';}catch(error){$('status').textContent=error.message;}});
 const ctx=$('preview').getContext('2d'),bytes=new Uint8Array(396),base=new Uint8Array(396);
 for(let index=0;index<132;index++)base.set(CidooHeartMath.heart.includes(index)?[255,0,0]:index===66?[126,249,2]:[150,150,150],index*3);
 let lastDraw=-Infinity;

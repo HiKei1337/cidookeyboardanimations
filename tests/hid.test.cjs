@@ -36,6 +36,8 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
 }
 (async()=>{
   const f=fixture();await f.engine.connect(f.identity);assert.equal(f.device.opened,false,'idle connection closes so worker may suspend');
+  await f.engine.start({effect:'timeline',keys:[68],frames:[{durationMs:1000,colors:Array(396).fill(0)}],reactiveMode:'flash',reactiveColor:[255,80,0],reactiveDecay:1});
+  assert.equal(f.engine.react(68),true);f.setClock(100);await f.engine.enqueue(()=>f.engine.tick());assert.ok(f.layer1[68*3]>0,'key response reaches Layer 2');assert.deepEqual(f.layer0,f.base,'key response never changes Layer 1');await f.engine.stop();assert.equal(f.engine.react(68),false);f.setClock(0);
   assert.deepEqual(await f.engine.read(0),f.base);await f.engine.close();assert.equal(f.listeners.size,0,'no leaked response listeners');
   f.layer1.fill(10);const previous=new Uint8Array(f.layer1);await f.engine.copy();assert.deepEqual(f.layer1,f.layer0);assert.equal(f.device.opened,false);
   await f.engine.restoreBackup();assert.deepEqual(f.layer1,previous);await f.engine.copy();
@@ -65,7 +67,7 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
   const slow=fixture({delay:8});await slow.engine.connect(slow.identity);await slow.engine.start({duration:0,fps:20});await pause(150);await Promise.all([slow.engine.stop(),slow.engine.copy()]);assert.equal(slow.maxActive,1);assert.deepEqual(slow.layer0,slow.base);
   // Real worker routing, with site access allowed only during handoff.
   const workerFixture=fixture();let messageListener,commandListener,siteCalls=0,siteAllowed=true;
-  const chrome={storage:{local:workerFixture.storage},runtime:{id:'test',onMessage:{addListener(fn){messageListener=fn;}}},commands:{onCommand:{addListener(fn){commandListener=fn;}}},action:{setBadgeText:async()=>{},setTitle:async()=>{}},tabs:{query:async()=>{assert.ok(siteAllowed,'animation must not touch a hidden or closed tab');siteCalls++;return[{id:42,active:true}];}},scripting:{executeScript:async req=>req.files?[]:[{result:{ok:true,identity:workerFixture.identity}}]}};
+  const chrome={storage:{local:workerFixture.storage},runtime:{id:'test',onMessage:{addListener(fn){messageListener=fn;}}},commands:{onCommand:{addListener(fn){commandListener=fn;}}},action:{setBadgeText:async()=>{},setTitle:async()=>{}},tabs:{sendMessage:async()=>{},query:async request=>{if(request.active)return[{id:42,active:true,url:"https://example.com/"}];assert.ok(siteAllowed,'animation must not touch a hidden or closed tab');siteCalls++;return[{id:42,active:true}];}},scripting:{executeScript:async req=>req.files?[]:[{result:{ok:true,identity:workerFixture.identity}}]}};
   workerFixture.context.chrome=chrome;workerFixture.context.importScripts=(...files)=>{for(const file of files)vm.runInContext(fs.readFileSync(path.join(dir,file),'utf8'),workerFixture.context);};
   vm.runInContext(fs.readFileSync(path.join(dir,'worker.js'),'utf8'),workerFixture.context);
   const message=(action,config,identity)=>new Promise(resolve=>messageListener({type:'cidoo-heart',action,config,identity},{id:'test'},resolve));
@@ -83,6 +85,14 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
   await commandListener('toggle-heart');assert.equal((await message('status')).state.config.duration,0);await commandListener('stop-heart');
   assert.equal(messageListener({type:'cidoo-heart',action:'start'},{id:'other'},()=>{}),undefined);
   assert.equal((await message('invalid')).ok,false);
+  const reactionProject=workerFixture.context.CidooProject.demo();reactionProject.reactiveMode='flash';reactionProject.keys=[68];reactionProject.reactiveColor=[255,0,0];
+  await message('startProject',reactionProject);
+  let response;messageListener({type:'cidoo-react',index:68},{id:'test',tab:{id:42},url:'https://example.com/'},value=>response=value);assert.equal(response.enabled,false,'unattached pages cannot trigger reactions');
+  assert.equal((await message('attachReactive')).state.attached,true);
+  messageListener({type:'cidoo-react',index:68},{id:'test',tab:{id:42},url:'https://example.com/'},value=>response=value);assert.equal(response.enabled,true);
+  assert.equal(messageListener({type:'cidoo-heart',action:'stop'},{id:'test',tab:{id:42},url:'https://example.com/'},()=>{}),undefined,'content scripts cannot control the HID engine');
+  assert.equal((await message('status')).state.running,true);
+  await message('detachReactive');messageListener({type:'cidoo-react',status:true},{id:'test',tab:{id:42},url:'https://example.com/'},value=>response=value);assert.equal(response.enabled,false);await message('stop');
   for(const file of ['animation.js','hid.js','worker.js','bridge.js','popup.js'])new vm.Script(fs.readFileSync(path.join(dir,file),'utf8'),{filename:file});
   const manifest=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json')));assert.equal(manifest.version,JSON.parse(fs.readFileSync(path.join(dir,'package.json'))).version);assert.equal(manifest.background.service_worker,'worker.js');
   console.log('PASS: direct WebHID packet format; 8 reordered pages and duplicates; exact copy/backup; no Layer 1 writes; typed-buffer effect parity; never beyond 2 hours; optional timer restore; duplicate skipping; idle handle closes; incomplete/timeout guards; USB failure restore; serialized slow transport; background routing without ANY page calls after handoff; hotkeys; sender validation; manifest/syntax.');

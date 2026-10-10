@@ -4,11 +4,13 @@ const config = window.CIDOO_SUPABASE_CONFIG || {};
 const supabase = config.url && config.publishableKey ? createClient(config.url, config.publishableKey) : null;
 const $ = selector => document.querySelector(selector);
 const previewAnimations = new Map();
+const reactionPreviews=new WeakMap();
 setInterval(()=>{
   if(document.hidden)return;
   for(const [canvas,project] of previewAnimations){
     const colors=new Uint8Array(396);
     CidooHeartMath.paint(colors,new Uint8Array(project.sourceColors),performance.now()/1000,project);
+    if(project.reactiveMode&&project.reactiveMode!=='off'){let demo=reactionPreviews.get(canvas);if(!demo){demo={engine:new CidooHeartMath.Reactions(),next:0,index:0};reactionPreviews.set(canvas,demo);}const now=performance.now()/1000;if(now>=demo.next){demo.engine.press([45,73,95,116][demo.index++%4],now);demo.next=now+1.8;}demo.engine.paint(colors,now,project);}
     CidooKeyboardPreview.draw(canvas,Array.from(colors));
   }
 },125);
