@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Language / Язык: [Русский](README.md) · **English**<br>
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.7.0 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.0/cidoo-rgb-studio-v1.7.0.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.7.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.1/cidoo-rgb-studio-v1.7.1.zip)
 
 The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
@@ -26,7 +26,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download the v1.7.0 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.0/cidoo-rgb-studio-v1.7.0.zip) and extract it.
+1. [Download the v1.7.1 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.1/cidoo-rgb-studio-v1.7.1.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
@@ -105,7 +105,7 @@ Permissions: `storage` for local settings and projects; `scripting` and access t
 
 ## Status
 
-This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.7.0 has not yet passed a full physical-keyboard test in Chrome.
+This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.7.1 has not yet passed a full physical-keyboard test in Chrome.
 
 The manufacturer does not document whether each custom colour frame is stored in flash. Endurance under long continuous playback is unconfirmed.
 
@@ -145,3 +145,7 @@ Original author: [HiKei1337](https://github.com/HiKei1337).
 ## GitHub Pages
 
 The landing page is `docs/index.html`. Open repository **Settings → Pages → Deploy from a branch → main → /docs → Save**. Once published, the site will be available [here](https://hikei1337.github.io/cidookeyboardanimations/).
+
+### A heartbeat driven by typing
+
+Open Red heartbeat and select Beat on key press under Key reactions. The heart rests at minimum brightness until a key press triggers one double beat. Rapid presses add intensity. Adjust minimum/maximum brightness, beat duration with Fade and intensity with Strength. Source RGB colours and background are preserved. Enable Test keys on the diagram to preview; explicitly connect a Chrome tab from the extension popup for typing there. Games and other applications are not captured.

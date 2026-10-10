@@ -50,7 +50,7 @@ function form(){
   if(project.duration>0){$('hours').value=Math.floor(project.duration/3600);$('minutes').value=Math.floor(project.duration%3600/60);$('seconds').value=Math.floor(project.duration%60);}
   panels();
 }
-function panels(){const timeline=project.effect==='timeline';$('timelinePanel').hidden=!timeline;$('effectSettings').hidden=timeline;$('transitionField').hidden=!timeline;$('timerFields').hidden=$('autoOff').value==='never';$('animateSelected').hidden=!timeline;$('animateAll').hidden=!timeline;$('bpmValue').textContent=`${project.bpm} уд/мин`;}
+function panels(){const timeline=project.effect==='timeline';$('timelinePanel').hidden=!timeline;$('effectSettings').hidden=timeline&&project.reactiveMode!=='beat';$('reactiveColor').disabled=project.reactiveMode==='beat';$('bpm').disabled=project.reactiveMode==='beat';$('playbackSpeed').disabled=project.reactiveMode==='beat';$('transitionField').hidden=!timeline;$('timerFields').hidden=$('autoOff').value==='never';$('animateSelected').hidden=!timeline;$('animateAll').hidden=!timeline;$('bpmValue').textContent=`${project.bpm} уд/мин`;}
 function buildKeyboard(){
   for(const row of CidooLayout.rows){const holder=document.createElement('div');holder.className='keyboard-row';
     for(const key of row){const button=document.createElement('button');button.type='button';button.className='key';button.textContent=key.label;button.style.flexGrow=key.width;button.dataset.index=String(key.index);button.setAttribute('aria-label',key.label+' · выбрать для анимации');button.title=key.label;
@@ -135,7 +135,7 @@ $('importFile').addEventListener('change',async event=>{const file=event.target.
 let lastDraw=-Infinity;
 function animate(now){
   if(!playing){previewHandle=null;return;}
-  if(playing&&!document.hidden&&now-lastDraw>=1000/20){lastDraw=now;const seconds=(now-previewStarted)/1000;CidooHeartMath.paint(previewBytes,sourceBytes,seconds,project);previewReactions.paint(previewBytes,seconds,project);showColors(previewBytes);$('previewTime').textContent=clock(seconds);}
+  if(playing&&!document.hidden&&now-lastDraw>=1000/20){lastDraw=now;const seconds=(now-previewStarted)/1000;CidooHeartMath.paint(previewBytes,sourceBytes,seconds,project);previewReactions.paint(previewBytes,seconds,project,sourceBytes);showColors(previewBytes);$('previewTime').textContent=clock(seconds);}
   previewHandle=requestAnimationFrame(animate);
 }
 buildKeyboard();form();render();

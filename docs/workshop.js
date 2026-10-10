@@ -86,6 +86,6 @@ document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('clic
 setLanguage(language);window.CIDOO_WORKSHOP={addCloudEntries(items){cloudEntries.splice(0,cloudEntries.length,...items);render();},render};
 function animatePreviews(now){if(document.hidden)return;const seconds=now/1000;for(const[id,canvas]of canvases){const state=previewStates.get(id);if(!state?.visible)continue;const {project,source,colors,reaction}=state;
  if(project.reactiveMode!=='off'&&seconds>=state.demoAt){const demo=[45,73,95,116,54,68];reaction.press(demo[state.demoIndex++%demo.length],seconds);state.demoAt=seconds+1.8;}
- CidooHeartMath.paint(colors,source,seconds,project);reaction.paint(colors,seconds,project);draw(canvas,colors);
+ CidooHeartMath.paint(colors,source,seconds,project);reaction.paint(colors,seconds,project,source);draw(canvas,colors);
 }}
 setInterval(()=>animatePreviews(performance.now()),125);

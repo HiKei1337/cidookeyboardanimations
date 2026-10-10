@@ -1,6 +1,16 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const ctx=vm.createContext({Uint8Array});for(const file of ['layout.js','animation.js','project.js','presets.js'])vm.runInContext(fs.readFileSync(file,'utf8'),ctx);
 const {CidooHeartMath:math,CidooProject:projects,CidooLayout:layout}=ctx;
+const beatProject=projects.validate({...projects.demo(),reactiveMode:'beat',min:15,max:100,reactiveDecay:1,reactiveStrength:100});
+const beatBase=new Uint8Array(beatProject.sourceColors),beatOut=new Uint8Array(396),beatEngine=new math.Reactions();
+math.paint(beatOut,beatBase,8,beatProject);
+assert.deepEqual(Array.from(beatOut.slice(15,18)),[38,0,0],'idle heart keeps exact source hue at minimum brightness');
+assert.deepEqual(Array.from(beatOut.slice(0,3)),[150,150,150],'background stays unchanged');
+beatEngine.paint(beatOut,8,beatProject,beatBase);assert.equal(beatOut[15],38,'no spontaneous beats');
+beatEngine.press(116,8);beatEngine.paint(beatOut,8.14,beatProject,beatBase);assert.ok(beatOut[15]>=250,'a press anywhere triggers the selected drawing');assert.equal(beatOut[16],0);assert.equal(beatOut[17],0);
+beatEngine.paint(beatOut,8.39,beatProject,beatBase);assert.ok(beatOut[15]>170,'double beat');
+beatEngine.paint(beatOut,9.1,beatProject,beatBase);assert.equal(beatOut[15],38,'returns to rest after one finite beat');
+assert.deepEqual(Array.from(beatBase),Array.from(beatProject.sourceColors),'source is read only');
 assert.equal(layout.codeIndex('KeyA'),68);assert.equal(layout.codeIndex('Digit4'),26);assert.equal(layout.codeIndex('Space'),116);assert.equal(layout.codeIndex('Unknown'),undefined);
 const reactions=new math.Reactions(),source=new Uint8Array(396),out=new Uint8Array(396),opts={...projects.demo(),keys:[68,69,70],reactiveMode:'flash',reactiveColor:[255,0,0],reactiveDecay:1,reactiveStrength:100};
 assert.equal(reactions.press(999,0),false);reactions.press(68,0);reactions.paint(out,0,opts);assert.deepEqual(Array.from(out.slice(204,207)),[255,0,0]);assert.deepEqual(Array.from(out.slice(207,210)),[0,0,0]);

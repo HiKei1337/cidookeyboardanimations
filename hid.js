@@ -18,7 +18,7 @@
     enqueue(task){const result=this.queue.then(task);this.queue=result.catch(()=>{});return result;}
     cancel(){this.running=false;this.reactions.clear();if(this.timer!==null)clearTimeout(this.timer);this.timer=null;}
     react(index){const now=performance.now();if(!this.running||this.config.reactiveMode==='off'||now-this.lastPress<16)return false;this.lastPress=now;return this.reactions.press(index,(now-this.started)/1000);}
-    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.7.0',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
+    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.7.1',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
     async select(identity){
       if(!Number.isInteger(identity?.vendorId)||!Number.isInteger(identity?.productId))throw Error('Не определена клавиатура. Подключите её к расширению.');
       const devices=(await this.hid.getDevices()).filter(d=>d.vendorId===identity.vendorId&&d.productId===identity.productId&&hasReport(d));
@@ -94,7 +94,7 @@
       try{
         this.elapsed=(performance.now()-this.started)/1000;
         if(this.config.duration>0&&this.elapsed>=this.config.duration){await this.stopInternal();return;}
-        const before=performance.now();CidooHeartMath.paint(this.bytes,this.base,this.elapsed,this.config);this.reactions.paint(this.bytes,this.elapsed,this.config);
+        const before=performance.now();CidooHeartMath.paint(this.bytes,this.base,this.elapsed,this.config);this.reactions.paint(this.bytes,this.elapsed,this.config,this.base);
         if(!this.hasLast||this.bytes.some((byte,index)=>byte!==this.last[index])){await this.write(this.bytes);this.last.set(this.bytes);this.hasLast=true;this.frames++;}
         if(this.running)this.timer=setTimeout(()=>this.enqueue(()=>this.tick()),Math.max(0,1000/this.config.fps-(performance.now()-before)));
       }catch(error){this.error=error.message;this.cancel();try{await this.stopInternal();}catch(restoreError){this.error+=' Возврат цветов не подтверждён: '+restoreError.message;}}
