@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Language / Язык: [Русский](README.md) · **English**<br>
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.7.2 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.2/cidoo-rgb-studio-v1.7.2.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.8.0 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.0/cidoo-rgb-studio-v1.8.0.zip)
 
 The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
@@ -26,7 +26,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download the v1.7.2 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.2/cidoo-rgb-studio-v1.7.2.zip) and extract it.
+1. [Download the v1.8.0 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.0/cidoo-rgb-studio-v1.8.0.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
@@ -72,7 +72,7 @@ Reactions work in the editor and connected Chrome tabs. Windows games, other app
 
 ## New presets and favorites
 
-The Workshop has 16 presets, including **Ocean, Lava, Green code, Sunset, Radar and Candy neon**, plus two interactive templates. Click ☆ on a card and select **Favorites** to find it later. Favorites stay in your browser. Offscreen and hidden-tab previews do not redraw.
+The Workshop has 36 presets (22 interactive), including **Ocean, Lava, Green code, Sunset, Radar and Candy neon**, with snakes, directional waves, a cross and custom sequences triggered by keys. Click ☆ on a card and select **Favorites** to find it later. Favorites stay in your browser. Offscreen and hidden-tab previews do not redraw.
 
 ## Workshop Lite
 
@@ -105,7 +105,7 @@ Permissions: `storage` for local settings and projects; `scripting` and access t
 
 ## Status
 
-This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.7.2 has not yet passed a full physical-keyboard test in Chrome.
+This is an experimental, independent project, not an official CIDOO product. Compatibility depends on the device protocol and layout; support for every CIDOO model is unconfirmed. The editor has been browser-tested; background routing, timers, frames and Layer 1 protection have been tested with an HID simulator. Version 1.8.0 has not yet passed a full physical-keyboard test in Chrome.
 
 The manufacturer does not document whether each custom colour frame is stored in flash. Endurance under long continuous playback is unconfirmed.
 
@@ -151,3 +151,40 @@ The landing page is `docs/index.html`. Open repository **Settings → Pages → 
 Open Red heartbeat and select Beat on key press under Key reactions. The heart rests at minimum brightness until a key press triggers one double beat. Rapid presses add intensity. Adjust minimum/maximum brightness, beat duration with Fade and intensity with Strength. Source RGB colours and background are preserved. Enable Test keys on the diagram to preview; explicitly connect a Chrome tab from the extension popup for typing there. Games and other applications are not captured.
 
 [Illustrated guide: frames, colours, transitions and key reactions](https://hikei1337.github.io/cidookeyboardanimations/workshop.html#guide). With Custom frames, Beat on key press uses frame one as the drawing.
+
+### Motion on key press
+
+Select Directional wave, Key cross or Snake trail. Adjust direction, motion speed (1–30), trail length (1–12), lifetime (0.2–15 seconds), RGB colour and strength. Snake travels through rows (Right/Left) or columns (Up/Down); Both ways is supported by Wave and means forward for Snake.
+
+For a custom sequence, draw frames and select My frames on key press. Frame one is rest, a press plays the sequence once, then returns to frame one. Choose Restart or Wait until finished. Frame duration, transitions and speed control playback; reaction fade, colour and strength are unused. All settings persist in JSON. Explicitly connect a Chrome tab; input from games and other apps is not captured.
+
+
+### Cycling flowers, bursts at the pressed key and rules
+
+- Typing flowers cycles through one flower per press. To build your own, select the first flower → Add selected as a group; repeat for the others, enable Cycle through groups and Beat on key press. Minimum brightness 0 turns flowers off at rest. Quick presses may overlap flashes from different groups.
+- Cross, Wave and Snake always start at the pressed key. For custom frames, select From the pressed key and choose Drawing centre, the key you drew your burst around. The drawing moves to the pressed key and clips at layout edges. Existing black and background colours are preserved. Start with a black resting frame for this mode.
+- Advanced · keys and combos is off by default. Enter a key (Q) or sequence (E E W), choose matching order and a response preset → Add rule → Enable key rules. Current project binds a copy of your own frames and settings. Delete and recreate a rule to replace that copy. Keep or disable the normal reaction for unmatched presses.
+- Combo window: 0.2–5 seconds; up to 4 keys and 12 rules. Longest matching rule wins, with list order breaking ties. The latest match replaces the previous effect. Duplicate letters count. Any order means consecutive input in any order, not simultaneous held keys.
+- Invoker · combos: EEW falling/rolling meteor, WWQ cold upward wave, QQQ icy cross, QWE split wave. These are RGB demos in the editor and connected Chrome tabs. The extension cannot receive input from Dota 2 or other Windows programs.
+
+
+
+### All Invoker spells
+
+10 effects and all 27 input variations, including orb permutations. The Workshop has a combined rules preset and one editable preset per spell. These are stylised RGB animations, not a Dota 2 integration. Input is Chrome-only in this version. Three orbs trigger the effect directly; R is not required.
+
+
+| Q/W/E | Spell |
+|---|---|
+| QQQ | Cold Snap |
+| QQW | Ghost Walk |
+| QQE | Ice Wall |
+| WWW | E.M.P. |
+| WWQ | Tornado |
+| WWE | Alacrity |
+| EEE | Sun Strike |
+| EEQ | Forge Spirit |
+| EEW | Chaos Meteor |
+| QWE | Deafening Blast |
+
+[Official Dota 2 Invoker](https://www.dota2.com/hero/invoker) · [Recipe reference](https://dota2.tools/tools/invoker-game)

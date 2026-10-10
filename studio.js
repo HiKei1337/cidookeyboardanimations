@@ -12,7 +12,7 @@ function setSelection(keys){if(project.effect==='timeline')editingKeys=keys;else
 const brightnessBases=new WeakMap();
 let sourceBytes=new Uint8Array(project.sourceColors);
 const previewReactions=new CidooHeartMath.Reactions();
-function triggerReaction(index){if(project.reactiveMode==='off')return;if(!playing)$('preview').click();previewReactions.press(index,(performance.now()-previewStarted)/1000);if(live&&extension)chrome.runtime.sendMessage({type:'cidoo-react',index}).catch(()=>{});}
+function triggerReaction(index){if(project.reactiveMode==='off'&&!project.reactiveRulesEnabled)return;if(!playing)$('preview').click();previewReactions.press(index,(performance.now()-previewStarted)/1000,project);if(live&&extension)chrome.runtime.sendMessage({type:'cidoo-react',index}).catch(()=>{});}
 const keyButtons=new Map(),previewBytes=new Uint8Array(396);
 function notice(text,error=false){$('toast').textContent=text;$('toast').className='toast'+(error?' error':'');}
 async function send(action,config,identity){
@@ -26,6 +26,7 @@ function pausePreview(){
   if(!playing)return;
   previewElapsed=performance.now()-previewStarted;playing=false;pausedPreview=true;
   CidooHeartMath.paint(previewBytes,sourceBytes,previewElapsed/1000,project);
+  previewReactions.paint(previewBytes,previewElapsed/1000,project,sourceBytes);
   if(project.effect==='timeline')activeFrame=CidooHeartMath.timelinePosition(project.frames,previewElapsed/1000*(project.playbackSpeed||1)).index;
   if(previewHandle!==null)cancelAnimationFrame(previewHandle);previewHandle=null;
 }
@@ -38,7 +39,8 @@ function clock(seconds){const n=Math.max(0,Math.ceil(seconds));return `${Math.fl
 function applyForm(){
   project.name=$('projectName').value.trim()||'Моя анимация';project.effect=$('effect').value;
   Object.assign(project,CidooHeartMath.options({...project,playbackSpeed:$('playbackSpeed').value,bpm:$('bpm').value,fps:$('fps').value,min:$('min').value,max:$('max').value,duration:duration(),restoreMode:$('restoreMode').value,interpolation:$('interpolation').value}));
-  Object.assign(project,CidooHeartMath.options({...project,reactiveMode:$('reactiveMode').value,reactiveColor:rgb($('reactiveColor').value),reactiveDecay:$('reactiveDecay').value,reactiveStrength:$('reactiveStrength').value}));
+  Object.assign(project,CidooHeartMath.options({...project,reactiveMode:$('reactiveMode').value,reactiveColor:rgb($('reactiveColor').value),reactiveDecay:$('reactiveDecay').value,reactiveStrength:$('reactiveStrength').value,reactiveDirection:$('reactiveDirection').value,reactiveSpeed:$('reactiveSpeed').value,reactiveTrail:$('reactiveTrail').value,reactiveRepeat:$('reactiveRepeat').value,reactiveOrigin:$('reactiveOrigin').value,reactiveAnchor:Number($('reactiveAnchor').value),reactiveCycle:$('reactiveCycle').checked,reactiveRulesEnabled:$('reactiveRulesEnabled').checked,reactiveFallback:$('reactiveFallback').checked,reactiveRuleWindow:$('reactiveRuleWindow').value}));
+  if(project.reactiveMode==='frames'){project.effect='timeline';$('effect').value='timeline';}
   if(project.effect==='timeline'&&!project.frames.length)project.frames.push({durationMs:400,colors:[...project.sourceColors]});
 }
 function form(){
@@ -46,11 +48,27 @@ function form(){
   $('projectName').value=project.name;for(const id of ['effect','bpm','fps','min','max','interpolation','restoreMode','playbackSpeed'])$(id).value=String(project[id]);
   $('autoOff').value=project.duration===0?'never':'timer';
   $('speedValue').textContent=(project.playbackSpeed||1)+'×';
-  $('reactiveMode').value=project.reactiveMode;$('reactiveColor').value='#'+project.reactiveColor.map(n=>n.toString(16).padStart(2,'0')).join('');$('reactiveDecay').value=project.reactiveDecay;$('reactiveStrength').value=project.reactiveStrength;
+  $('reactiveMode').value=project.reactiveMode;$('reactiveColor').value='#'+project.reactiveColor.map(n=>n.toString(16).padStart(2,'0')).join('');$('reactiveDecay').value=project.reactiveDecay;$('reactiveStrength').value=project.reactiveStrength;for(const id of ['reactiveDirection','reactiveSpeed','reactiveTrail','reactiveRepeat','reactiveOrigin','reactiveAnchor','reactiveRuleWindow'])$(id).value=project[id];
   if(project.duration>0){$('hours').value=Math.floor(project.duration/3600);$('minutes').value=Math.floor(project.duration%3600/60);$('seconds').value=Math.floor(project.duration%60);}
+  for(const id of ['reactiveCycle','reactiveRulesEnabled','reactiveFallback'])$(id).checked=project[id];
   panels();
 }
-function panels(){const timeline=project.effect==='timeline';$('timelinePanel').hidden=!timeline;$('effectSettings').hidden=timeline&&project.reactiveMode!=='beat';$('reactiveColor').disabled=project.reactiveMode==='beat';$('bpm').disabled=project.reactiveMode==='beat';$('playbackSpeed').disabled=project.reactiveMode==='beat';$('transitionField').hidden=!timeline;$('timerFields').hidden=$('autoOff').value==='never';$('animateSelected').hidden=!timeline;$('animateAll').hidden=!timeline;$('bpmValue').textContent=`${project.bpm} уд/мин`;}
+function panels(){ $('originFields').hidden=project.reactiveMode!=='frames';renderBindings();const timeline=project.effect==='timeline';$('timelinePanel').hidden=!timeline;$('effectSettings').hidden=timeline&&project.reactiveMode!=='beat';$('framesHint').hidden=!['frames','snake'].includes(project.reactiveMode);$('beatHint').hidden=project.reactiveMode!=='beat';$('motionFields').hidden=!['wave','cross','snake'].includes(project.reactiveMode);$('reactiveDirection').disabled=project.reactiveMode==='cross';$('repeatField').hidden=project.reactiveMode!=='frames';$('reactiveColor').disabled=['beat','frames'].includes(project.reactiveMode);$('reactiveDecay').disabled=project.reactiveMode==='frames';$('reactiveStrength').disabled=project.reactiveMode==='frames';$('bpm').disabled=project.reactiveMode==='beat';$('playbackSpeed').disabled=project.reactiveMode==='beat';$('transitionField').hidden=!timeline;$('timerFields').hidden=$('autoOff').value==='never';$('animateSelected').hidden=!timeline;$('animateAll').hidden=!timeline;$('bpmValue').textContent=`${project.bpm} уд/мин`;}
+function renderBindings(){
+  $('groupList').replaceChildren();(project.reactiveGroups||[]).forEach((group,n)=>{const row=document.createElement('div'),b=document.createElement('button'),del=document.createElement('button');row.className='binding-row';b.type='button';b.textContent=(document.documentElement.lang==='en'?'Group ':'Группа ')+(n+1)+' · '+group.length;b.onclick=()=>change(()=>setSelection([...group]));del.type='button';del.textContent='×';del.setAttribute('aria-label',(document.documentElement.lang==='en'?'Delete group ':'Удалить группу ')+(n+1));del.onclick=()=>change(()=>project.reactiveGroups.splice(n,1));row.append(b,del);$('groupList').append(row);});
+  $('ruleList').replaceChildren();(project.reactiveRules||[]).forEach((rule,n)=>{const div=document.createElement('div'),b=document.createElement('button');div.textContent=rule.keys.map(i=>CidooLayout.keys.find(k=>k.index===i)?.label||i).join(' ')+' → '+rule.name+' ';b.type='button';b.textContent='×';b.setAttribute('aria-label',document.documentElement.lang==='en'?'Delete rule':'Удалить правило');b.onclick=()=>change(()=>project.reactiveRules.splice(n,1));div.append(b);$('ruleList').append(div);});
+}
+for(const key of CidooLayout.keys){const option=document.createElement('option');option.value=key.index;option.textContent=key.label;$('reactiveAnchor').append(option);}
+const currentOption=document.createElement('option');currentOption.value='current';currentOption.textContent='Текущий проект';$('rulePreset').append(currentOption);
+for(const [id,names] of Object.entries(CidooPresets.names)){if(id==='invoker-demo')continue;const option=document.createElement('option');option.value=id;option.textContent=names.ru;$('rulePreset').append(option);}
+$('addGroup').onclick=()=>{if(!selectedKeys().length||project.reactiveGroups.length>=12){notice('Выбери клавиши. Не более 12 групп.',true);return;}change(()=>{project.reactiveGroups.push([...selectedKeys()]);project.keys=[...new Set([...project.keys,...selectedKeys()])];});};
+$('addRule').onclick=()=>{try{
+  applyForm();const tokens=$('ruleKeys').value.trim().split(/[ ,+]+/).filter(Boolean);if(!tokens.length||tokens.length>4)throw Error('Правило: от 1 до 4 клавиш.');
+  const keys=tokens.map(t=>{const key=CidooLayout.keys.find(k=>k.label.toLowerCase()===t.toLowerCase());if(!key)throw Error('Неизвестная клавиша: '+t);return key.index;});
+  let response=$('rulePreset').value==='current'?JSON.parse(JSON.stringify(project)):CidooPresets.build($('rulePreset').value,document.documentElement.lang);response.reactiveRules=[];response.reactiveRulesEnabled=false;
+  if(response.reactiveMode==='off')response.reactiveMode=response.effect==='timeline'?'frames':'beat';
+  const rule={name:response.name,match:$('ruleMatch').value,keys,project:response};const candidate=CidooProject.validate({...project,reactiveRules:[...project.reactiveRules,rule]});change(()=>project=candidate);notice('Правило добавлено. Включи правила для проверки.');
+}catch(error){notice(error.message,true);}};
 function buildKeyboard(){
   for(const row of CidooLayout.rows){const holder=document.createElement('div');holder.className='keyboard-row';
     for(const key of row){const button=document.createElement('button');button.type='button';button.className='key';button.textContent=key.label;button.style.flexGrow=key.width;button.dataset.index=String(key.index);button.setAttribute('aria-label',key.label+' · выбрать для анимации');button.title=key.label;
@@ -77,7 +95,7 @@ function render(){
 }
 function frameEdit(task){if(!selectedKeys().length){notice('Сначала выбери клавиши на схеме.',true);return;}change(()=>{playing=false;task(project.frames[activeFrame]);});}
 function rgb(hex){return [parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];}
-for(const id of ['projectName','effect','bpm','fps','min','max','interpolation','restoreMode','autoOff','hours','minutes','seconds','reactiveMode','reactiveColor','reactiveDecay','reactiveStrength'])$(id).addEventListener('input',()=>{
+for(const id of ['projectName','effect','bpm','fps','min','max','interpolation','restoreMode','autoOff','hours','minutes','seconds','reactiveMode','reactiveColor','reactiveDecay','reactiveStrength','reactiveDirection','reactiveSpeed','reactiveTrail','reactiveRepeat','reactiveOrigin','reactiveAnchor','reactiveCycle','reactiveRulesEnabled','reactiveFallback','reactiveRuleWindow'])$(id).addEventListener('input',()=>{
   if(id==='effect')change(applyForm);else{checkpoint();applyForm();saveDraft();render();}
 });
 $('selectHeart').addEventListener('click',()=>change(()=>setSelection([...CidooHeartMath.heart])));
@@ -91,6 +109,7 @@ $('animateAll').addEventListener('click',()=>change(()=>project.keys=CidooLayout
 $('selectColor').addEventListener('click',()=>{const color=rgb($('selectionColor').value);change(()=>{const colors=project.effect==='timeline'?project.frames[activeFrame].colors:project.sourceColors;setSelection(CidooLayout.keys.filter(key=>color.every((channel,i)=>colors[key.index*3+i]===channel)).map(key=>key.index));});});
 $('preview').addEventListener('click',()=>{
   if(!project.keys.length){notice('Выбери хотя бы одну клавишу.',true);return;}
+  if(project.reactiveMode==='frames'){project.effect='timeline';$('effect').value='timeline';}
   if(project.effect==='timeline'&&!project.frames.length){notice('Добавь кадр.',true);return;}
   if(playing)pausePreview();else{playing=true;pausedPreview=false;previewStarted=performance.now()-previewElapsed;if(previewHandle===null)previewHandle=requestAnimationFrame(animate);}render();saveDraft();
 });
@@ -129,7 +148,7 @@ function renderLibrary(){
   });
 }
 $('saveProject').addEventListener('click',async()=>{try{applyForm();const valid=CidooProject.validate(project);const index=library.findIndex(entry=>entry.name===valid.name);if(index>=0)library[index]=valid;else library.push(valid);await storage.set('studioLibrary',library);renderLibrary();notice('Сохранено: '+valid.name);}catch(error){notice(error.message,true);}});
-$('exportProject').addEventListener('click',()=>{try{applyForm();const valid=CidooProject.validate(project);const blob=new Blob([JSON.stringify(valid,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=(valid.name.replace(/[^\p{L}\p{N}_-]+/gu,'-')||'animation')+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notice('JSON скачан. Его можно открыть в этом редакторе или поделиться файлом.');}catch(error){notice(error.message,true);}});
+$('exportProject').addEventListener('click',()=>{try{applyForm();const valid=CidooProject.validate(project);const blob=new Blob([JSON.stringify(valid,null,valid.reactiveRules.length?0:2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=(valid.name.replace(/[^\p{L}\p{N}_-]+/gu,'-')||'animation')+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notice('JSON скачан. Его можно открыть в этом редакторе или поделиться файлом.');}catch(error){notice(error.message,true);}});
 $('importProject').addEventListener('click',()=>$('importFile').click());
 $('importFile').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{if(file.size>1000000)throw Error('Файл слишком большой: максимум 1 МБ.');const valid=CidooProject.validate(JSON.parse(await file.text()));resetPreview();checkpoint();project=valid;editingKeys=[...project.keys];activeFrame=0;previewElapsed=0;form();render();saveDraft();$('sourceLabel').textContent='Исходник из JSON · перед запуском читается Layer 1';notice('Открыто: '+project.name);}catch(error){notice(error.message,true);}finally{event.target.value='';}});
 let lastDraw=-Infinity;
@@ -149,4 +168,4 @@ document.addEventListener('visibilitychange',async()=>{if(!extension||document.h
 setInterval(async()=>{if(!extension||busy||!live||document.hidden)return;try{state(await send('status'));}catch(error){notice(error.message,true);}},1000);
 
 $('playbackSpeed').addEventListener('input',()=>{change(()=>project.playbackSpeed=Number($('playbackSpeed').value));$('speedValue').textContent=project.playbackSpeed+'×';});
-document.addEventListener('keydown',event=>{if(event.repeat||event.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;const index=CidooLayout.codeIndex(event.code);if(index!==undefined&&project.reactiveMode!=='off'&&($('reactiveTest').checked||playing||live))triggerReaction(index);});
+document.addEventListener('keydown',event=>{if(event.repeat||event.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;const index=CidooLayout.codeIndex(event.code);if(index!==undefined&&(project.reactiveMode!=='off'||project.reactiveRulesEnabled)&&($('reactiveTest').checked||playing||live))triggerReaction(index);});

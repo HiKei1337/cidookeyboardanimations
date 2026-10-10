@@ -11,6 +11,6 @@ fs.writeFileSync(path.join(root,'studio.html'),html);
 fs.writeFileSync(path.join(root,'docs/studio.html'),html.replace(/(src|href)="([^"?]+\.(?:js|css))"/g,`$1="$2?v=${version}"`));
 for(const id of Object.keys(names)){
  const project=context.CidooPresets.build(id,'en');
- for(const dir of ['examples','docs/examples']){fs.mkdirSync(path.join(root,dir),{recursive:true});fs.writeFileSync(path.join(root,dir,id+'.json'),JSON.stringify(project,null,2)+'\n');}
+ for(const dir of ['examples','docs/examples']){fs.mkdirSync(path.join(root,dir),{recursive:true});fs.writeFileSync(path.join(root,dir,id+'.json'),JSON.stringify(project,null,project.reactiveRules.length?0:2)+'\n');}
 }
 console.log('Synced editor, translations and '+Object.keys(names).length+' presets for '+version);

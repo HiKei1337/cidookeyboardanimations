@@ -3,7 +3,7 @@ importScripts('layout.js','animation.js','project.js','hid.js','i18n.js');
 const engine=new CidooHid(navigator.hid,chrome.storage.local);
 let actions=Promise.resolve();
 const reactiveTabs=new Set();
-function syncReactiveTabs(){for(const tabId of reactiveTabs)chrome.tabs.sendMessage(tabId,{type:'cidoo-react-state',enabled:engine.running&&engine.config.reactiveMode!=='off'}).catch(()=>reactiveTabs.delete(tabId));}
+function syncReactiveTabs(){for(const tabId of reactiveTabs)chrome.tabs.sendMessage(tabId,{type:'cidoo-react-state',enabled:engine.running&&(engine.config.reactiveMode!=='off'||engine.config.reactiveRulesEnabled)}).catch(()=>reactiveTabs.delete(tabId));}
 const hydrated=(async()=>{const {device}=await chrome.storage.local.get('device');if(device){try{await engine.select(device);}catch{}}})();
 async function siteAction(action){
   const tabs=await chrome.tabs.query({url:'https://cidoo.illumipc.com/*'});
@@ -48,7 +48,7 @@ function dispatch(action,config,identity){
 chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{
   if(sender.id===chrome.runtime.id&&message?.type==='cidoo-react'){
     if(sender.tab&&!sender.url?.startsWith('chrome-extension://'+chrome.runtime.id+'/')&&!reactiveTabs.has(sender.tab.id)){sendResponse({enabled:false});return;}
-    const enabled=engine.running&&engine.config.reactiveMode!=='off';
+    const enabled=engine.running&&(engine.config.reactiveMode!=='off'||engine.config.reactiveRulesEnabled);
     if(!message.status&&enabled)engine.react(message.index);sendResponse({enabled});return;
   }
   if(sender.id!==chrome.runtime.id||message?.type!=='cidoo-heart')return;

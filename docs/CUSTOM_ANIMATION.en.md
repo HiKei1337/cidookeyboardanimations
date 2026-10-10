@@ -143,3 +143,40 @@ Physical compatibility depends on the device and protocol. Editor and HID simula
 
 Reaction settings are saved in the project JSON. The selected colour temporarily blends over the base animation, then fades away. Layer 1 stays untouched. This feature does not capture input from other Windows applications.
 [Illustrated guide: frames, colours, transitions and key reactions](https://hikei1337.github.io/cidookeyboardanimations/workshop.html#guide). With Custom frames, Beat on key press uses frame one as the drawing.
+
+### Motion on key press
+
+Select Directional wave, Key cross or Snake trail. Adjust direction, motion speed (1–30), trail length (1–12), lifetime (0.2–15 seconds), RGB colour and strength. Snake travels through rows (Right/Left) or columns (Up/Down); Both ways is supported by Wave and means forward for Snake.
+
+For a custom sequence, draw frames and select My frames on key press. Frame one is rest, a press plays the sequence once, then returns to frame one. Choose Restart or Wait until finished. Frame duration, transitions and speed control playback; reaction fade, colour and strength are unused. All settings persist in JSON. Explicitly connect a Chrome tab; input from games and other apps is not captured.
+
+
+### Cycling flowers, bursts at the pressed key and rules
+
+- Typing flowers cycles through one flower per press. To build your own, select the first flower → Add selected as a group; repeat for the others, enable Cycle through groups and Beat on key press. Minimum brightness 0 turns flowers off at rest. Quick presses may overlap flashes from different groups.
+- Cross, Wave and Snake always start at the pressed key. For custom frames, select From the pressed key and choose Drawing centre, the key you drew your burst around. The drawing moves to the pressed key and clips at layout edges. Existing black and background colours are preserved. Start with a black resting frame for this mode.
+- Advanced · keys and combos is off by default. Enter a key (Q) or sequence (E E W), choose matching order and a response preset → Add rule → Enable key rules. Current project binds a copy of your own frames and settings. Delete and recreate a rule to replace that copy. Keep or disable the normal reaction for unmatched presses.
+- Combo window: 0.2–5 seconds; up to 4 keys and 12 rules. Longest matching rule wins, with list order breaking ties. The latest match replaces the previous effect. Duplicate letters count. Any order means consecutive input in any order, not simultaneous held keys.
+- Invoker · combos: EEW falling/rolling meteor, WWQ cold upward wave, QQQ icy cross, QWE split wave. These are RGB demos in the editor and connected Chrome tabs. The extension cannot receive input from Dota 2 or other Windows programs.
+
+
+
+### All Invoker spells
+
+10 effects and all 27 input variations, including orb permutations. The Workshop has a combined rules preset and one editable preset per spell. These are stylised RGB animations, not a Dota 2 integration. Input is Chrome-only in this version. Three orbs trigger the effect directly; R is not required.
+
+
+| Q/W/E | Spell |
+|---|---|
+| QQQ | Cold Snap |
+| QQW | Ghost Walk |
+| QQE | Ice Wall |
+| WWW | E.M.P. |
+| WWQ | Tornado |
+| WWE | Alacrity |
+| EEE | Sun Strike |
+| EEQ | Forge Spirit |
+| EEW | Chaos Meteor |
+| QWE | Deafening Blast |
+
+[Official Dota 2 Invoker](https://www.dota2.com/hero/invoker) · [Recipe reference](https://dota2.tools/tools/invoker-game)

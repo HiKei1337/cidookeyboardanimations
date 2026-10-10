@@ -17,8 +17,8 @@
     }
     enqueue(task){const result=this.queue.then(task);this.queue=result.catch(()=>{});return result;}
     cancel(){this.running=false;this.reactions.clear();if(this.timer!==null)clearTimeout(this.timer);this.timer=null;}
-    react(index){const now=performance.now();if(!this.running||this.config.reactiveMode==='off'||now-this.lastPress<16)return false;this.lastPress=now;return this.reactions.press(index,(now-this.started)/1000);}
-    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.7.2',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
+    react(index){const now=performance.now();if(!this.running||(this.config.reactiveMode==='off'&&!this.config.reactiveRulesEnabled)||now-this.lastPress<16)return false;this.lastPress=now;return this.reactions.press(index,(now-this.started)/1000,this.config);}
+    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.8.0',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
     async select(identity){
       if(!Number.isInteger(identity?.vendorId)||!Number.isInteger(identity?.productId))throw Error('Не определена клавиатура. Подключите её к расширению.');
       const devices=(await this.hid.getDevices()).filter(d=>d.vendorId===identity.vendorId&&d.productId===identity.productId&&hasReport(d));
@@ -82,8 +82,8 @@
       await this.stopInternal();this.error='';this.config=CidooHeartMath.options(raw);
       try{
         await this.open();await this.checkConfig();const base=await this.read(0),previous=await this.read(LAYER);
-        if(this.config.effect==='timeline'){
-          CidooProject.validate({format:'cidoo-rgb-studio',version:1,sourceLayer:1,targetLayer:2,name:this.config.projectName,...this.config,sourceColors:Array.from(base)});
+        if(this.config.effect==='timeline'||this.config.reactiveRulesEnabled){
+          const checked=CidooProject.validate({format:'cidoo-rgb-studio',version:1,sourceLayer:1,targetLayer:2,name:this.config.projectName,...this.config,sourceColors:Array.from(base)});this.config=CidooProject.config(checked);
         }
         this.base=base;this.previous=previous;this.hasLast=false;this.frames=0;this.elapsed=0;this.started=performance.now();this.running=true;
         await this.tick();return this.state();
