@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Язык / Language: **Русский** · [English](README.en.md)<br>
-[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.7.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.1/cidoo-rgb-studio-v1.7.1.zip)
+[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.7.2](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.2/cidoo-rgb-studio-v1.7.2.zip)
 
 На лендинге язык выбирается автоматически по языку браузера: русский для `ru-*`, английский для остальных.
 
@@ -28,7 +28,7 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 Нужны CIDOO, USB-подключение и Chrome 117 или новее. Другие модели не проверены.
 
-1. [Скачай ZIP релиза v1.7.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.1/cidoo-rgb-studio-v1.7.1.zip) и распакуй его.
+1. [Скачай ZIP релиза v1.7.2](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.7.2/cidoo-rgb-studio-v1.7.2.zip) и распакуй его.
 2. Открой `chrome://extensions`, включи **Режим разработчика**.
 3. Нажми **Загрузить распакованное расширение** и выбери папку с `manifest.json`.
 4. На [сайте CIDOO](https://cidoo.illumipc.com/#/) подключи клавиатуру, включи подсветку и выбери **Пользовательский → Layer 2**.
@@ -107,7 +107,7 @@ Chrome должен оставаться запущенным, компьюте�
 
 ## Статус
 
-Проект экспериментальный и независимый от CIDOO. Совместимость зависит от протокола и раскладки; работа на всех моделях CIDOO не подтверждена. Редактор проверен в браузере; фоновые команды, таймер, кадры и защита Layer 1 — на имитаторе HID. Версия 1.7.1 ещё не прошла полный тест на физической клавиатуре в Chrome.
+Проект экспериментальный и независимый от CIDOO. Совместимость зависит от протокола и раскладки; работа на всех моделях CIDOO не подтверждена. Редактор проверен в браузере; фоновые команды, таймер, кадры и защита Layer 1 — на имитаторе HID. Версия 1.7.2 ещё не прошла полный тест на физической клавиатуре в Chrome.
 
 Производитель не документирует, сохраняет ли прошивка каждый пользовательский кадр во flash-память. Ресурс при длительном непрерывном использовании не подтверждён.
 
@@ -153,3 +153,5 @@ npm test
 ### Сердце от нажатий
 
 Открой шаблон «Красное сердце», в «Реакция на нажатия» выбери «Биение от нажатия». Без ввода сердце остаётся на минимальной яркости. Нажатие запускает один двойной удар, частые нажатия складываются. Настрой минимальную/максимальную яркость, длительность через «Затухание» и интенсивность через «Сила». Исходный RGB и фон сохраняются. Для проверки включи «Проверять нажатия на схеме»; для обычной вкладки Chrome подключи нажатия через окно расширения. Игры и другие приложения не захватываются.
+
+[Пошаговый гайд с картинками: кадры, цвета, переходы и реакция на нажатия](https://hikei1337.github.io/cidookeyboardanimations/workshop.html#guide). В режиме «Свои кадры» реакция «Биение от нажатия» использует первый кадр как рисунок.

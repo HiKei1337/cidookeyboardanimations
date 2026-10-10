@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const names={heartbeat:{ru:'Красное сердце',en:'Red heartbeat'},flowers:{ru:'Цветы · распускаются',en:'Flowers · blooming'},aurora:{ru:'Северное сияние',en:'Northern lights'},comet:{ru:'Комета',en:'Comet'},fireflies:{ru:'Светлячки',en:'Fireflies'},wave:{ru:'Радужная волна',en:'Rainbow wave'},rain:{ru:'Неоновый дождь',en:'Neon rain'},sparkles:{ru:'Искры',en:'Sparkles'},ocean:{ru:'Океан',en:'Ocean'},lava:{ru:'Лава',en:'Lava'},matrix:{ru:'Зелёный код',en:'Green code'},sunset:{ru:'Закат',en:'Sunset'},radar:{ru:'Радар',en:'Radar'},candy:{ru:'Сахарный неон',en:'Candy neon'},'reactive-ripple':{ru:'Волна от нажатия',en:'Key ripple'},'reactive-fire':{ru:'Огненные клавиши',en:'Fire keys'}};
+  Object.assign(names,{'reactive-heart':{ru:'Сердце от нажатий',en:'Typing heartbeat'},'reactive-bloom':{ru:'Цветы от нажатий',en:'Typing flowers'},'reactive-neon':{ru:'Неоновая печать',en:'Neon typing'}});
   const positions=CidooLayout.rows.flatMap((row,y)=>{let x=0;return row.map(key=>{const pos={index:key.index,x:x+key.width/2,y};x+=key.width;return pos;});});
   function cometColor(p,phase){
     const headX=-2+phase*23,headY=Math.round(2+Math.sin(phase*Math.PI*2)*.7),dx=headX-p.x;
@@ -14,6 +15,28 @@
   }
   function hsv(h,s=1,v=1){const i=Math.floor(h*6),f=h*6-i,p=v*(1-s),q=v*(1-f*s),t=v*(1-(1-f)*s);return [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i%6].map(x=>x*255);}
   function build(id,language='ru'){
+    if(['reactive-heart','reactive-bloom','reactive-neon'].includes(id)){
+      const project=CidooProject.demo();project.name=names[id][language==='en'?'en':'ru'];
+      project.reactiveMode=id==='reactive-neon'?'flash':'beat';project.reactiveDecay=id==='reactive-bloom'?1.8:.8;
+      project.sourceColors=new Array(396).fill(0);project.min=10;project.max=100;
+      if(id==='reactive-heart'){for(const index of project.keys)project.sourceColors.splice(index*3,3,255,0,0);}
+      else if(id==='reactive-bloom'){
+        project.keys=[];project.effect='timeline';
+        for(const p of positions){let rgb;
+          for(const [x,y,color] of [[3,2,[255,0,255]],[8,3,[0,255,255]],[12,2,[255,64,0]]]){
+            const dx=Math.abs(p.x-x),dy=Math.abs(p.y-y);
+            if(dx<.65&&dy<.4)rgb=[255,255,0];else if(dx+dy<1.9&&(dx<.65||dy<.4))rgb=color;
+          }
+          if(rgb){project.keys.push(p.index);project.sourceColors.splice(p.index*3,3,...rgb);}
+        }
+        project.frames=[{durationMs:1000,colors:[...project.sourceColors]},{durationMs:1000,colors:[...project.sourceColors]}];
+      }else{
+        project.effect='timeline';project.keys=positions.map(p=>p.index);project.reactiveColor=[0,255,255];
+        for(const p of positions)project.sourceColors.splice(p.index*3,3,4,0,14);
+        project.frames=[{durationMs:1000,colors:[...project.sourceColors]},{durationMs:1000,colors:[...project.sourceColors]}];
+      }
+      return CidooProject.validate(project);
+    }
     if(id==='heartbeat'){const project=CidooProject.demo();project.name=names[id][language==='en'?'en':'ru'];return project;}
     if(!names[id])throw Error('Неизвестный шаблон.');
     const project=CidooProject.demo();project.name=names[id][language==='en'?'en':'ru'];project.effect='timeline';project.keys=positions.map(p=>p.index);project.frames=[];project.duration=0;project.interpolation='smooth';

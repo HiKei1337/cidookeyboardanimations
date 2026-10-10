@@ -11,6 +11,12 @@ beatEngine.press(116,8);beatEngine.paint(beatOut,8.14,beatProject,beatBase);asse
 beatEngine.paint(beatOut,8.39,beatProject,beatBase);assert.ok(beatOut[15]>170,'double beat');
 beatEngine.paint(beatOut,9.1,beatProject,beatBase);assert.equal(beatOut[15],38,'returns to rest after one finite beat');
 assert.deepEqual(Array.from(beatBase),Array.from(beatProject.sourceColors),'source is read only');
+const flower=ctx.CidooPresets.build('reactive-bloom'),flowerInput=new Uint8Array(396).fill(150),flowerOutput=new Uint8Array(396),flowerEngine=new math.Reactions();
+math.paint(flowerOutput,flowerInput,0,flower);flowerEngine.press(116,0);flowerEngine.paint(flowerOutput,.14*flower.reactiveDecay,flower,flowerInput);
+const flowerKey=flower.keys[0],flowerRgb=flower.frames[0].colors.slice(flowerKey*3,flowerKey*3+3);
+assert.ok(flowerRgb.some(n=>n>0));assert.equal(flowerOutput[flowerKey*3],flowerRgb[0],'custom drawing survives a different hardware source');
+const backgroundIndex=layout.keys.find(k=>!flower.keys.includes(k.index)).index;
+assert.equal(flowerOutput[backgroundIndex*3],150,'unselected source background is preserved');
 assert.equal(layout.codeIndex('KeyA'),68);assert.equal(layout.codeIndex('Digit4'),26);assert.equal(layout.codeIndex('Space'),116);assert.equal(layout.codeIndex('Unknown'),undefined);
 const reactions=new math.Reactions(),source=new Uint8Array(396),out=new Uint8Array(396),opts={...projects.demo(),keys:[68,69,70],reactiveMode:'flash',reactiveColor:[255,0,0],reactiveDecay:1,reactiveStrength:100};
 assert.equal(reactions.press(999,0),false);reactions.press(68,0);reactions.paint(out,0,opts);assert.deepEqual(Array.from(out.slice(204,207)),[255,0,0]);assert.deepEqual(Array.from(out.slice(207,210)),[0,0,0]);

@@ -142,3 +142,4 @@ Physical compatibility depends on the device and protocol. Editor and HID simula
 5. Click **Disconnect website key presses** in the popup to stop capture. Stopping playback also disables processing.
 
 Reaction settings are saved in the project JSON. The selected colour temporarily blends over the base animation, then fades away. Layer 1 stays untouched. This feature does not capture input from other Windows applications.
+[Illustrated guide: frames, colours, transitions and key reactions](https://hikei1337.github.io/cidookeyboardanimations/workshop.html#guide). With Custom frames, Beat on key press uses frame one as the drawing.

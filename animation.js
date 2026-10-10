@@ -51,7 +51,8 @@
     seconds *= Math.max(.25,Math.min(4,Number(opts.playbackSpeed)||1));
     target.set(base);
     if(opts.reactiveMode==='beat'){
-      for(const index of opts.keys||heart)for(let c=0;c<3;c++)target[index*3+c]=byte(base[index*3+c]*opts.min/100);
+      const drawing=opts.effect==='timeline'&&opts.frames?.length?opts.frames[0].colors:base;
+      for(const index of opts.keys||heart)for(let c=0;c<3;c++)target[index*3+c]=byte(drawing[index*3+c]*opts.min/100);
       return target;
     }
     if(opts.effect==='timeline'){
@@ -96,7 +97,7 @@
       const decay=raw.reactiveDecay||1;this.hits=this.hits.filter(hit=>seconds-hit.time>=0&&seconds-hit.time<decay);
       const color=raw.reactiveColor||[0,220,255],strength=(raw.reactiveStrength||100)/100;
       if(raw.reactiveMode==='beat'){
-        const base=source||raw.sourceColors;
+        const base=raw.effect==='timeline'&&raw.frames?.length?raw.frames[0].colors:source||raw.sourceColors;
         if(!base)return target;
         let level=0;
         // Each accepted press contributes one finite double beat, never an automatic loop.
