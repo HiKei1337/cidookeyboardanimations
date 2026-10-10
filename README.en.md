@@ -107,6 +107,21 @@ npm test
 
 See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for file roles and the project format.
 
+## Support publication — $5 goal
+
+![Goal: $5 for Chrome Web Store registration](docs/donation-goal.svg)
+
+The goal is **$5 for the one-time Chrome Web Store developer registration fee**. Once submitted and approved by Google, the extension can be installed from the store and receive automatic updates. Donations are optional; the GitHub version stays available.
+
+**USDT donations. Use the matching network below.** [Copy addresses on the website](https://hikei1337.github.io/cidookeyboardanimations/#support).
+
+| Network | USDT address |
+|---|---|
+| TRON · TRC20 | `TXcUdxdXRqYLf7PAe1KBvNF5vNEUe9oHiP` |
+| TON | `UQARt7J7YyXQvAXSkuW-E8C4KBUDIgi7ILoLRv87dNMcxQxm` |
+| Ethereum · ERC20 | `0xf393B0A1217fcA3d7C29973b4cA2d5e11E4465D3` |
+| Solana | `H1e9Qhza8BeWgCpimmRb6eF2ZRdCn8SptwKyKwFnn3ZW` |
+
 ## Author and licence
 
 Original author: [HiKei1337](https://github.com/HiKei1337).

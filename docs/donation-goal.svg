@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="210" viewBox="0 0 1100 210" role="img" aria-labelledby="title desc">
+  <title id="title">Support CIDOO RGB Studio: $5 Chrome Web Store registration goal</title>
+  <desc id="desc">Optional donations in USDT to help publish the extension with automatic updates.</desc>
+  <defs><linearGradient id="bg"><stop stop-color="#171d19"/><stop offset="1" stop-color="#111416"/></linearGradient></defs>
+  <rect x="1" y="1" width="1098" height="208" rx="18" fill="url(#bg)" stroke="#46523b"/>
+  <rect x="30" y="36" width="4" height="138" rx="2" fill="#e2ff85"/>
+  <text x="58" y="61" fill="#e2ff85" font-family="Arial,sans-serif" font-size="13" letter-spacing="3">CIDOO RGB STUDIO / SUPPORT</text>
+  <text x="58" y="111" fill="#f5f5ec" font-family="Arial,sans-serif" font-size="34" font-weight="700">Help bring it to the Chrome Web Store</text>
+  <text x="58" y="149" fill="#a7aca7" font-family="Arial,sans-serif" font-size="18">One-time registration fee. Automatic updates after publication.</text>
+  <text x="58" y="178" fill="#a7aca7" font-family="Arial,sans-serif" font-size="14">Optional support via USDT</text>
+  <rect x="903" y="37" width="158" height="136" rx="14" fill="#e2ff85"/>
+  <text x="982" y="68" text-anchor="middle" fill="#25301b" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">GOAL / ЦЕЛЬ</text>
+  <text x="982" y="131" text-anchor="middle" fill="#111416" font-family="Arial,sans-serif" font-size="62" font-weight="700">$5</text>
+</svg>

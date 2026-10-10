@@ -109,6 +109,21 @@ npm test
 
 Устройство записи жёстко использует второй слой. Формат проекта и устройство файлов описаны в [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
+## Поддержать публикацию — цель $5
+
+![Цель: $5 на регистрацию в Chrome Web Store](docs/donation-goal.svg)
+
+Собираю **$5 на разовую регистрацию разработчика Chrome Web Store**. После публикации и одобрения Google расширение можно будет устанавливать из магазина и получать обновления автоматически. Поддержка добровольная; версия на GitHub остаётся доступной.
+
+**Донаты в USDT. Выбирай именно указанную сеть.** На [сайте](https://hikei1337.github.io/cidookeyboardanimations/#support) есть кнопки копирования адресов.
+
+| Сеть | Адрес USDT |
+|---|---|
+| TRON · TRC20 | `TXcUdxdXRqYLf7PAe1KBvNF5vNEUe9oHiP` |
+| TON | `UQARt7J7YyXQvAXSkuW-E8C4KBUDIgi7ILoLRv87dNMcxQxm` |
+| Ethereum · ERC20 | `0xf393B0A1217fcA3d7C29973b4cA2d5e11E4465D3` |
+| Solana | `H1e9Qhza8BeWgCpimmRb6eF2ZRdCn8SptwKyKwFnn3ZW` |
+
 ## Автор и лицензия
 
 Исходный автор: [HiKei1337](https://github.com/HiKei1337).
