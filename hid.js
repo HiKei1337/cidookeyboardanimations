@@ -12,13 +12,13 @@
       this.running=false;this.timer=null;this.queue=Promise.resolve();this.base=null;this.previous=null;
       this.config=CidooHeartMath.options();this.frames=0;this.elapsed=0;this.writeMs=0;this.error='';
       this.bytes=new Uint8Array(SIZE);this.last=new Uint8Array(SIZE);this.hasLast=false;
-      this.reactions=new CidooHeartMath.Reactions();this.lastPress=-Infinity;
+      this.reactions=new CidooHeartMath.Reactions();this.lastPress=-Infinity;this.pressCount=0;this.triggerCount=0;
       this.packets=Array.from({length:8},(_,page)=>{const p=new Uint8Array(63);p[0]=9;p[1]=LAYER;p[3]=page;p[4]=Math.min(54,SIZE-page*54);return p;});
     }
     enqueue(task){const result=this.queue.then(task);this.queue=result.catch(()=>{});return result;}
     cancel(){this.running=false;this.reactions.clear();if(this.timer!==null)clearTimeout(this.timer);this.timer=null;}
-    react(index){const now=performance.now();if(!this.running||(this.config.reactiveMode==='off'&&!this.config.reactiveRulesEnabled)||now-this.lastPress<16)return false;this.lastPress=now;return this.reactions.press(index,(now-this.started)/1000,this.config);}
-    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode}=this.config;return {version:'1.8.0',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode},frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
+    react(index){const now=performance.now();if(!this.running||(this.config.reactiveMode==='off'&&!this.config.reactiveRulesEnabled)||!this.reactions.positions.has(index)||now-this.lastPress<16)return false;this.lastPress=now;this.pressCount++;const triggered=this.reactions.press(index,(now-this.started)/1000,this.config);if(triggered)this.triggerCount++;return triggered;}
+    state(){const {effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode,reactiveMode,reactiveRulesEnabled}=this.config;return {version:'1.8.1',running:this.running,ready:!!this.device,background:true,sourceLayer:1,layer:2,device:this.identity?.name||'CIDOO keyboard',config:{effect,bpm,fps,min,max,duration,interpolation,projectName,restoreMode,reactiveMode,reactiveRulesEnabled},pressCount:this.pressCount,triggerCount:this.triggerCount,frames:this.frames,elapsed:this.elapsed,writeMs:this.writeMs,error:this.error};}
     async select(identity){
       if(!Number.isInteger(identity?.vendorId)||!Number.isInteger(identity?.productId))throw Error('Не определена клавиатура. Подключите её к расширению.');
       const devices=(await this.hid.getDevices()).filter(d=>d.vendorId===identity.vendorId&&d.productId===identity.productId&&hasReport(d));
@@ -85,7 +85,7 @@
         if(this.config.effect==='timeline'||this.config.reactiveRulesEnabled){
           const checked=CidooProject.validate({format:'cidoo-rgb-studio',version:1,sourceLayer:1,targetLayer:2,name:this.config.projectName,...this.config,sourceColors:Array.from(base)});this.config=CidooProject.config(checked);
         }
-        this.base=base;this.previous=previous;this.hasLast=false;this.frames=0;this.elapsed=0;this.started=performance.now();this.running=true;
+        this.base=base;this.previous=previous;this.hasLast=false;this.frames=0;this.elapsed=0;this.pressCount=0;this.triggerCount=0;this.lastPress=-Infinity;this.started=performance.now();this.running=true;
         await this.tick();return this.state();
       }catch(error){this.cancel();this.error=error.message;await this.close();throw error;}
     });}

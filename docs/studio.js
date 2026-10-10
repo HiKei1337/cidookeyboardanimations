@@ -12,7 +12,7 @@ function setSelection(keys){if(project.effect==='timeline')editingKeys=keys;else
 const brightnessBases=new WeakMap();
 let sourceBytes=new Uint8Array(project.sourceColors);
 const previewReactions=new CidooHeartMath.Reactions();
-function triggerReaction(index){if(project.reactiveMode==='off'&&!project.reactiveRulesEnabled)return;if(!playing)$('preview').click();previewReactions.press(index,(performance.now()-previewStarted)/1000,project);if(live&&extension)chrome.runtime.sendMessage({type:'cidoo-react',index}).catch(()=>{});}
+function triggerReaction(index){if(project.reactiveMode==='off'&&!project.reactiveRulesEnabled)return;if(!playing)$('preview').click();const triggered=previewReactions.press(index,(performance.now()-previewStarted)/1000,project);$('reactionStatus').textContent=(document.documentElement.lang==='en'?'Key: ':'Клавиша: ')+(CidooLayout.keys.find(k=>k.index===index)?.label||index)+(triggered?(document.documentElement.lang==='en'?' · effect triggered':' · эффект запущен'):(document.documentElement.lang==='en'?' · waiting for combo':' · ожидание комбинации'));if(live&&extension)chrome.runtime.sendMessage({type:'cidoo-react',index}).then(result=>{if(!result?.enabled)notice('Контроллер не принимает нажатия. Запусти анимацию заново.',true);else $('inputStatus').textContent=(document.documentElement.lang==='en'?'Controller received: ':'Контроллер получил нажатий: ')+result.received;}).catch(error=>notice(error.message,true));}
 const keyButtons=new Map(),previewBytes=new Uint8Array(396);
 function notice(text,error=false){$('toast').textContent=text;$('toast').className='toast'+(error?' error':'');}
 async function send(action,config,identity){
@@ -51,6 +51,8 @@ function form(){
   $('reactiveMode').value=project.reactiveMode;$('reactiveColor').value='#'+project.reactiveColor.map(n=>n.toString(16).padStart(2,'0')).join('');$('reactiveDecay').value=project.reactiveDecay;$('reactiveStrength').value=project.reactiveStrength;for(const id of ['reactiveDirection','reactiveSpeed','reactiveTrail','reactiveRepeat','reactiveOrigin','reactiveAnchor','reactiveRuleWindow'])$(id).value=project[id];
   if(project.duration>0){$('hours').value=Math.floor(project.duration/3600);$('minutes').value=Math.floor(project.duration%3600/60);$('seconds').value=Math.floor(project.duration%60);}
   for(const id of ['reactiveCycle','reactiveRulesEnabled','reactiveFallback'])$(id).checked=project[id];
+  if(project.reactiveRulesEnabled)$('reactiveRulesEnabled').closest?.('details')?.setAttribute('open','');
+  $('reactionStatus').textContent=project.reactiveRulesEnabled?(document.documentElement.lang==='en'?'Key rules enabled. Enter the combo; for Invoker, try E E W.':'Правила клавиш включены. Набери комбинацию; для Invoker попробуй E E W.'):(project.reactiveMode!=='off'?(document.documentElement.lang==='en'?'Press a key on the diagram or keyboard.':'Нажми кнопку на схеме или клавиатуре.'):'');
   panels();
 }
 function panels(){ $('originFields').hidden=project.reactiveMode!=='frames';renderBindings();const timeline=project.effect==='timeline';$('timelinePanel').hidden=!timeline;$('effectSettings').hidden=timeline&&project.reactiveMode!=='beat';$('framesHint').hidden=!['frames','snake'].includes(project.reactiveMode);$('beatHint').hidden=project.reactiveMode!=='beat';$('motionFields').hidden=!['wave','cross','snake'].includes(project.reactiveMode);$('reactiveDirection').disabled=project.reactiveMode==='cross';$('repeatField').hidden=project.reactiveMode!=='frames';$('reactiveColor').disabled=['beat','frames'].includes(project.reactiveMode);$('reactiveDecay').disabled=project.reactiveMode==='frames';$('reactiveStrength').disabled=project.reactiveMode==='frames';$('bpm').disabled=project.reactiveMode==='beat';$('playbackSpeed').disabled=project.reactiveMode==='beat';$('transitionField').hidden=!timeline;$('timerFields').hidden=$('autoOff').value==='never';$('animateSelected').hidden=!timeline;$('animateAll').hidden=!timeline;$('bpmValue').textContent=`${project.bpm} уд/мин`;}
@@ -128,6 +130,7 @@ async function action(task){if(busy)return;busy=true;for(const id of ['connect',
 function state(state){
   live=state.running;$('connectionDot').className='dot'+(state.ready?' ready':'');$('connectionText').textContent=state.ready?'Клавиатура · управление расширением':'Клавиатура не подключена';
   $('runStatus').textContent=state.error||(state.running?`Layer 2 · ${state.config.projectName||'Анимация'} · ${state.config.duration>0?'осталось '+clock(state.config.duration-state.elapsed):'без таймера'}`:state.ready?'Готово. Исходник Layer 1 будет прочитан перед запуском.':'Подключи клавиатуру. Предпросмотр работает без подключения.');
+  $('inputStatus').textContent=(document.documentElement.lang==='en'?'Controller ':'Контроллер ')+(state.version||'')+(state.running&&(state.config.reactiveMode!=='off'||state.config.reactiveRulesEnabled)?(document.documentElement.lang==='en'?' · received: ':' · получено нажатий: ')+(state.pressCount||0)+(document.documentElement.lang==='en'?' · effects: ':' · эффектов: ')+(state.triggerCount||0):'');
 }
 $('connect').addEventListener('click',()=>action(async()=>{
   if(!extension)throw Error('Загрузи папку как расширение Chrome.');
@@ -140,6 +143,7 @@ $('start').addEventListener('click',()=>action(async()=>{
   await storage.set('settings',{...CidooProject.config(valid),schema:2});state(await send('startProject',valid));notice('Анимация запущена в Layer 2. Можно закрыть редактор.');
 }));
 $('stop').addEventListener('click',()=>action(async()=>{const stopped=await send('stop');state(stopped);notice(stopped.config?.restoreMode==='source'?'Остановлено. В Layer 2 возвращён рисунок из Layer 1.':stopped.config?.restoreMode==='previous'?'Остановлено. Вернулась подсветка до запуска.':'Остановлено. Последний кадр остался на клавиатуре.');}));
+$('attachCidooReactive').addEventListener('click',()=>action(async()=>{const result=await send('attachCidooReactive');notice(result.attached?'Нажатия сайта CIDOO подключены.':'Открой сайт CIDOO в Chrome и нажми ещё раз.',!result.attached);}));
 function renderLibrary(){
   $('library').replaceChildren();library.forEach((entry,index)=>{const item=document.createElement('div');item.className='library-item';const open=document.createElement('button');open.textContent=entry.name;
     open.addEventListener('click',()=>{resetPreview();checkpoint();project=CidooProject.validate(entry);editingKeys=[...project.keys];activeFrame=0;previewElapsed=0;form();render();saveDraft();$('sourceLabel').textContent='Исходник из сохранённого проекта · перед запуском читается Layer 1';notice('Анимация открыта: '+project.name);});
@@ -168,4 +172,4 @@ document.addEventListener('visibilitychange',async()=>{if(!extension||document.h
 setInterval(async()=>{if(!extension||busy||!live||document.hidden)return;try{state(await send('status'));}catch(error){notice(error.message,true);}},1000);
 
 $('playbackSpeed').addEventListener('input',()=>{change(()=>project.playbackSpeed=Number($('playbackSpeed').value));$('speedValue').textContent=project.playbackSpeed+'×';});
-document.addEventListener('keydown',event=>{if(event.repeat||event.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;const index=CidooLayout.codeIndex(event.code);if(index!==undefined&&(project.reactiveMode!=='off'||project.reactiveRulesEnabled)&&($('reactiveTest').checked||playing||live))triggerReaction(index);});
+document.addEventListener('keydown',event=>{if(event.repeat||event.target?.closest?.('input[type="password"]')||event.composedPath?.().some(node=>node.matches?.('input[type="password"]'))||(!live&&event.target?.closest?.('input,textarea,select,[contenteditable="true"]')))return;const index=CidooLayout.codeIndex(event.code);if(index!==undefined&&(project.reactiveMode!=='off'||project.reactiveRulesEnabled)&&($('reactiveTest').checked||playing||live))triggerReaction(index);},true);

@@ -93,6 +93,16 @@ function fixture({badPage=false,missingPage=false,failAt=-1,delay=0,paddedLast=f
   assert.equal(messageListener({type:'cidoo-heart',action:'stop'},{id:'test',tab:{id:42},url:'https://example.com/'},()=>{}),undefined,'content scripts cannot control the HID engine');
   assert.equal((await message('status')).state.running,true);
   await message('detachReactive');messageListener({type:'cidoo-react',status:true},{id:'test',tab:{id:42},url:'https://example.com/'},value=>response=value);assert.equal(response.enabled,false);await message('stop');
+  // Actual sender → worker → reaction → HID output, including a long idle gap.
+  const previousQuery=chrome.tabs.query;chrome.tabs.query=async request=>request.url?[{id:55,url:'https://cidoo.illumipc.com/#/'}]:previousQuery(request);
+  let platformCalls=0;chrome.runtime.getPlatformInfo=async()=>{platformCalls++;return {os:'win'};};
+  const idleReaction={...reactionProject,effect:'timeline',frames:[{durationMs:1000,colors:Array(396).fill(0)}]};
+  workerFixture.setClock(1000);await message('startProject',idleReaction);
+  assert.ok(vm.runInContext('reactiveTabs.has(55)',workerFixture.context),'reactive start automatically connects CIDOO tab');
+  const keepalive=vm.runInContext('activeSessionTimer',workerFixture.context);assert.ok(keepalive);const ping=keepalive._onTimeout;clearTimeout(keepalive);await ping();assert.equal(platformCalls,1,'idle session calls a Chrome API before the worker idle deadline');
+  workerFixture.setClock(61000);messageListener({type:'cidoo-react',index:68},{id:'test',tab:{id:55},url:'https://cidoo.illumipc.com/#/'},value=>response=value);assert.equal(response.triggered,true);assert.equal(response.received,1);
+  workerFixture.setClock(61100);await vm.runInContext('engine.enqueue(()=>engine.tick())',workerFixture.context);assert.ok(workerFixture.layer1[68*3]>180,'received key reaches physical Layer 2 buffer after idle');assert.equal((await message('status')).state.pressCount,1);
+  await message('stop');assert.equal(vm.runInContext('activeSessionTimer',workerFixture.context),null,'stopping releases the session heartbeat');
   for(const file of ['animation.js','hid.js','worker.js','bridge.js','popup.js'])new vm.Script(fs.readFileSync(path.join(dir,file),'utf8'),{filename:file});
   const manifest=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json')));assert.equal(manifest.version,JSON.parse(fs.readFileSync(path.join(dir,'package.json'))).version);assert.equal(manifest.background.service_worker,'worker.js');
   console.log('PASS: direct WebHID packet format; 8 reordered pages and duplicates; exact copy/backup; no Layer 1 writes; typed-buffer effect parity; never beyond 2 hours; optional timer restore; duplicate skipping; idle handle closes; incomplete/timeout guards; USB failure restore; serialized slow transport; background routing without ANY page calls after handoff; hotkeys; sender validation; manifest/syntax.');

@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Язык / Language: **Русский** · [English](README.en.md)<br>
-[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.8.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.0/cidoo-rgb-studio-v1.8.0.zip)
+[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.8.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.1/cidoo-rgb-studio-v1.8.1.zip)
 
 На лендинге язык выбирается автоматически по языку браузера: русский для `ru-*`, английский для остальных.
 
@@ -28,7 +28,7 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 Нужны CIDOO, USB-подключение и Chrome 117 или новее. Другие модели не проверены.
 
-1. [Скачай ZIP релиза v1.8.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.0/cidoo-rgb-studio-v1.8.0.zip) и распакуй его.
+1. [Скачай ZIP релиза v1.8.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.1/cidoo-rgb-studio-v1.8.1.zip) и распакуй его.
 2. Открой `chrome://extensions`, включи **Режим разработчика**.
 3. Нажми **Загрузить распакованное расширение** и выбери папку с `manifest.json`.
 4. На [сайте CIDOO](https://cidoo.illumipc.com/#/) подключи клавиатуру, включи подсветку и выбери **Пользовательский → Layer 2**.
@@ -107,7 +107,7 @@ Chrome должен оставаться запущенным, компьюте�
 
 ## Статус
 
-Проект экспериментальный и независимый от CIDOO. Совместимость зависит от протокола и раскладки; работа на всех моделях CIDOO не подтверждена. Редактор проверен в браузере; фоновые команды, таймер, кадры и защита Layer 1 — на имитаторе HID. Версия 1.8.0 ещё не прошла полный тест на физической клавиатуре в Chrome.
+Проект экспериментальный и независимый от CIDOO. Совместимость зависит от протокола и раскладки; работа на всех моделях CIDOO не подтверждена. Редактор проверен в браузере; фоновые команды, таймер, кадры и защита Layer 1 — на имитаторе HID. Версия 1.8.1 ещё не прошла полный тест на физической клавиатуре в Chrome.
 
 Производитель не документирует, сохраняет ли прошивка каждый пользовательский кадр во flash-память. Ресурс при длительном непрерывном использовании не подтверждён.
 
@@ -183,3 +183,7 @@ npm test
 | QWE | Deafening Blast |
 
 [Invoker на сайте Dota 2](https://www.dota2.com/hero/invoker) · [Список рецептов](https://dota2.tools/tools/invoker-game)
+
+### Исправление реакций 1.8.1
+
+При запуске реакции расширение подключает нажатия открытого сайта CIDOO автоматически. В конструкторе нажатия передаются на клавиатуру после запуска, в том числе когда фокус в настройках; парольные поля исключены. Другие сайты по-прежнему подключаются явно через окно расширения. На экране есть счётчики полученных нажатий и запущенных эффектов. Invoker ждёт комбинацию вроде EEW, а не любую кнопку. Активный сеанс не засыпает на чёрном кадре между нажатиями. После update.cmd обязательно нажми «Обновить» на chrome://extensions и заново открой конструктор.

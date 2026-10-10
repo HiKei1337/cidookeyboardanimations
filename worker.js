@@ -3,8 +3,22 @@ importScripts('layout.js','animation.js','project.js','hid.js','i18n.js');
 const engine=new CidooHid(navigator.hid,chrome.storage.local);
 let actions=Promise.resolve();
 const reactiveTabs=new Set();
-function syncReactiveTabs(){for(const tabId of reactiveTabs)chrome.tabs.sendMessage(tabId,{type:'cidoo-react-state',enabled:engine.running&&(engine.config.reactiveMode!=='off'||engine.config.reactiveRulesEnabled)}).catch(()=>reactiveTabs.delete(tabId));}
+let activeSessionTimer=null;
+function maintainSession(){
+  if(!engine.running){if(activeSessionTimer!==null)clearTimeout(activeSessionTimer);activeSessionTimer=null;return;}
+  if(activeSessionTimer!==null)return;
+  // An idle reactive drawing sends no HID reports. Keep the user-started session
+  // alive with a Chrome API call before the service worker's 30s idle deadline.
+  activeSessionTimer=setTimeout(async()=>{activeSessionTimer=null;if(engine.running){try{await chrome.runtime.getPlatformInfo?.();}catch{}maintainSession();}},20000);
+}
+function syncReactiveTabs(){maintainSession();for(const tabId of reactiveTabs)chrome.tabs.sendMessage(tabId,{type:'cidoo-react-state',enabled:engine.running&&(engine.config.reactiveMode!=='off'||engine.config.reactiveRulesEnabled)}).catch(()=>reactiveTabs.delete(tabId));}
 const hydrated=(async()=>{const {device}=await chrome.storage.local.get('device');if(device){try{await engine.select(device);}catch{}}})();
+async function attachCidooReactive(){
+  const tabs=await chrome.tabs.query({url:'https://cidoo.illumipc.com/*'});
+  for(const tab of tabs){if(!/^https:\/\/cidoo\.illumipc\.com\//.test(tab.url||''))continue;try{await chrome.scripting.executeScript({target:{tabId:tab.id},files:['layout.js'],world:'ISOLATED'});reactiveTabs.add(tab.id);}catch{}}
+  syncReactiveTabs();return {attached:reactiveTabs.size>0};
+}
+async function begin(config){const state=await engine.start(config);if(engine.config.reactiveMode!=='off'||engine.config.reactiveRulesEnabled)await attachCidooReactive().catch(()=>{});return state;}
 async function siteAction(action){
   const tabs=await chrome.tabs.query({url:'https://cidoo.illumipc.com/*'});
   const active=tabs.filter(t=>t.active),tab=tabs.length===1?tabs[0]:active.length===1?active[0]:null;
@@ -18,6 +32,7 @@ async function siteAction(action){
 async function execute(action,config,identity){
   await hydrated;
   if(action==='status')return engine.state();
+  if(action==='attachCidooReactive')return attachCidooReactive();
   if(action==='attachReactive'){
     const [tab]=await chrome.tabs.query({active:true,lastFocusedWindow:true});
     if(!tab||!/^https?:\/\//.test(tab.url||''))throw Error('Открой обычную вкладку сайта и нажми кнопку из окна расширения.');
@@ -32,12 +47,12 @@ async function execute(action,config,identity){
     if(actual.vendorId!==identity.vendorId||actual.productId!==identity.productId)throw Error('Клавиатура на сайте изменилась. Подключите её снова.');
     return engine.connect(actual);
   }
-  if(action==='start')return engine.start(config);
+  if(action==='start')return begin(config);
   if(action==='stop')return engine.stop();
-  if(action==='toggle')return engine.running?engine.stop():engine.start(config);
+  if(action==='toggle')return engine.running?engine.stop():begin(config);
   if(action==='copy')return engine.copy();
   if(action==='source')return engine.source();
-  if(action==='startProject')return engine.start(CidooProject.config(config));
+  if(action==='startProject')return begin(CidooProject.config(config));
   if(action==='restoreBackup')return engine.restoreBackup();
   throw Error('Неизвестная команда.');
 }
@@ -49,7 +64,7 @@ chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{
   if(sender.id===chrome.runtime.id&&message?.type==='cidoo-react'){
     if(sender.tab&&!sender.url?.startsWith('chrome-extension://'+chrome.runtime.id+'/')&&!reactiveTabs.has(sender.tab.id)){sendResponse({enabled:false});return;}
     const enabled=engine.running&&(engine.config.reactiveMode!=='off'||engine.config.reactiveRulesEnabled);
-    if(!message.status&&enabled)engine.react(message.index);sendResponse({enabled});return;
+    const triggered=!message.status&&enabled?engine.react(message.index):false;sendResponse({enabled,triggered,received:engine.pressCount||0});return;
   }
   if(sender.id!==chrome.runtime.id||message?.type!=='cidoo-heart')return;
   if(sender.tab&&!sender.url?.startsWith('chrome-extension://'+chrome.runtime.id+'/'))return;
@@ -63,4 +78,5 @@ async function localizedTitle(text){const {language}=await chrome.storage.local.
 navigator.hid.addEventListener('disconnect',event=>{
   if(event.device!==engine.device)return;
   engine.cancel();engine.base=null;engine.device=null;engine.error='Клавиатура отключена. Подключите её снова.';
+  syncReactiveTabs();
 });
