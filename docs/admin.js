@@ -3,6 +3,15 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const config = window.CIDOO_SUPABASE_CONFIG || {};
 const supabase = config.url && config.publishableKey ? createClient(config.url, config.publishableKey) : null;
 const $ = selector => document.querySelector(selector);
+const previewAnimations = new Map();
+setInterval(()=>{
+  if(document.hidden)return;
+  for(const [canvas,project] of previewAnimations){
+    const colors=new Uint8Array(396);
+    CidooHeartMath.paint(colors,new Uint8Array(project.sourceColors),performance.now()/1000,project);
+    CidooKeyboardPreview.draw(canvas,Array.from(colors));
+  }
+},125);
 const copy = {
   ru: { back: 'Воркшоп', supabase: 'Supabase ↗', kicker: 'ПАНЕЛЬ МОДЕРАЦИИ', title: 'Проверь новые анимации.', lead: 'Одобренные работы появятся в публичной коллекции. Черновики и отклонённые заявки остаются скрыты.', loginTitle: 'Вход владельца', loginCopy: 'Используй аккаунт Supabase Auth, который добавлен в список администраторов.', email: 'Email', password: 'Пароль', login: 'Войти', queueKicker: 'ОЧЕРЕДЬ', queueTitle: 'Заявки на проверку', logout: 'Выйти', footer: 'CIDOO Workshop · панель модерации', backToWorkshop: 'Открыть воркшоп ↗', approve: 'Одобрить', reject: 'Отклонить', note: 'Комментарий для автора (необязательно)', empty: 'Новых заявок пока нет.', needAdmin: 'Вход выполнен, но этот аккаунт не добавлен в администраторы.', config: 'Supabase ещё не настроен.', failed: 'Не удалось загрузить заявки.', approved: 'Одобрено', rejected: 'Отклонено', pending: 'На проверке' },
   en: { back: 'Workshop', supabase: 'Supabase ↗', kicker: 'MODERATION DESK', title: 'Review new animations.', lead: 'Approved work appears in the public collection. Drafts and rejected submissions stay hidden.', loginTitle: 'Owner sign in', loginCopy: 'Use a Supabase Auth account that was added to the admin list.', email: 'Email', password: 'Password', login: 'Sign in', queueKicker: 'QUEUE', queueTitle: 'Submissions to review', logout: 'Sign out', footer: 'CIDOO Workshop · moderation desk', backToWorkshop: 'Open workshop ↗', approve: 'Approve', reject: 'Reject', note: 'Note for the author (optional)', empty: 'No new submissions yet.', needAdmin: 'You are signed in, but this account is not an admin.', config: 'Supabase is not configured yet.', failed: 'Could not load submissions.', approved: 'Approved', rejected: 'Rejected', pending: 'Pending' }
@@ -56,6 +65,7 @@ function renderQueue(rows) {
   const holder = $('#submissions');
   if (!holder) return;
   holder.replaceChildren();
+  previewAnimations.clear();
   const pending = rows.filter(row => row.status === 'pending');
   if (!pending.length) { holder.innerHTML = `<p class="empty-queue">${t('empty')}</p>`; return; }
   pending.forEach(row => {
@@ -63,7 +73,11 @@ function renderQueue(rows) {
     const title = document.createElement('h3'); title.textContent = row.name;
     const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = `${row.author} · ${new Date(row.created_at).toLocaleString()}`;
     const desc = document.createElement('p'); desc.className = 'description'; desc.textContent = row.description;
-    const preview = document.createElement('code'); preview.textContent = `${row.animation?.frames?.length || 0} frames · ${row.animation?.fps || '—'} FPS`;
+    const preview = document.createElement('div');preview.className='submission-preview';
+    const canvas=document.createElement('canvas');canvas.width=760;canvas.height=240;canvas.setAttribute('aria-label',row.name);
+    const caption=document.createElement('div');caption.className='preview-meta';caption.textContent=`● LIVE PREVIEW · ${row.animation?.frames?.length || 0} frames · Layer 2`;
+    preview.append(canvas,caption);
+    try{const project=CidooProject.validate(row.animation);previewAnimations.set(canvas,project);CidooKeyboardPreview.draw(canvas,project.frames[0]?.colors||project.sourceColors);}catch{caption.textContent=language==='ru'?'Не удалось показать этот JSON. Проверь файл в конструкторе.':'Cannot preview this JSON. Check it in the editor.';}
     const note = document.createElement('textarea'); note.rows = 2; note.placeholder = t('note');
     const actions = document.createElement('div'); actions.className = 'actions';
     const download = document.createElement('a'); download.className = 'button'; download.download = `${row.name.replace(/[^\p{L}\p{N}_-]+/gu, '-') || 'animation'}.json`; download.href = URL.createObjectURL(new Blob([JSON.stringify(row.animation, null, 2)], { type: 'application/json' })); download.textContent = 'JSON';
