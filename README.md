@@ -11,6 +11,8 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 ![Конструктор анимации](docs/studio-ru.jpg)
 
+[Демо Invoker](https://hikei1337.github.io/cidookeyboardanimations/invoker.html): десять заклинаний через Q/W/E, без установки и подключения клавиатуры.
+
 ## Что умеет
 
 - Биение сердца, дыхание, переливание и их сочетание.

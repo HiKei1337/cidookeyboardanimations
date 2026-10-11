@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invoker — заклинания на клавиатуре · CIDOO RGB Studio</title>
+<meta name="description" content="Набери Q/W/E и призови одно из десяти заклинаний Invoker в RGB-подсветке. Бесплатная интерактивная демка без установки.">
+<link rel="stylesheet" href="invoker.css">
+<script defer src="layout.js"></script><script defer src="animation.js"></script><script defer src="keyboard-preview.js"></script><script defer src="invoker.js"></script>
+</head>
+<body>
+<header><a href="./">CIDOO <b>RGB STUDIO</b></a><a href="workshop.html">Мастерская ↗</a></header>
+<main>
+<section class="intro"><span class="eyebrow">ИНТЕРАКТИВНАЯ RGB-ДЕМКА</span><h1>Три сферы.<br><em>Десять заклинаний.</em></h1><p>Invoker, если бы его магия жила в подсветке клавиатуры.</p></section>
+<section class="arena" aria-label="Демонстрация заклинаний">
+<div class="arena-top"><span id="spell-name" aria-live="polite">Загружаем заклинания…</span><span class="badge">БЕЗ УСТАНОВКИ</span></div>
+<canvas id="keyboard" width="1100" height="360" aria-label="Анимированная подсветка клавиатуры"></canvas>
+<div class="cast-panel"><div id="orbs" aria-label="Набранные сферы"><span>·</span><span>·</span><span>·</span></div><button id="invoke" disabled>Призвать · R</button><button id="reset">Сбросить</button></div>
+<p class="hint" id="hint" aria-live="polite">Нажми Q, W, E на клавиатуре или кнопки ниже. Затем R — призвать.</p>
+<div class="controls"><div class="orb-buttons"><button data-orb="Q" class="quas" disabled>Q <small>QUAS · ХОЛОД</small></button><button data-orb="W" class="wex" disabled>W <small>WEX · ЭНЕРГИЯ</small></button><button data-orb="E" class="exort" disabled>E <small>EXORT · ОГОНЬ</small></button></div><label>Скорость <input id="speed" type="range" min="0.25" max="3" step="0.25" value="1"><output id="speed-value">1×</output></label></div>
+<div class="toggles"><label><input id="auto-invoke" type="checkbox" checked> Призывать сразу после трёх сфер</label><label><input id="autoplay" type="checkbox"> Показывать заклинания по очереди</label></div>
+</section>
+<section class="spell-section"><div class="section-title"><h2>Книга заклинаний</h2><p>Нажми карточку — эффект запустится сразу.</p></div><div id="spells" class="spells"></div></section>
+<section class="about"><h2>Теперь нарисуй свой прокаст.</h2><p>Эта демка использует те же покадровые анимации, что и наш конструктор. Можно менять цвета, кадры и правила нажатий, а потом сохранить свой вариант.</p><div><a class="primary" href="studio.html?preset=invoker-demo">Открыть в конструкторе ↗</a><a href="workshop.html#guide">Как создавать анимации</a></div></section>
+<p class="disclaimer">Фанатская визуализация, без связи с Valve и CIDOO. Здесь нет подключения к Dota 2 или устройству: нажатия работают только пока открыта эта вкладка. Порядок сфер не важен: EEW, EWE и WEE дают метеор. Реальный вывод на совместимые клавиатуры CIDOO доступен отдельно через экспериментальное расширение Chrome.</p>
+</main><footer>Сделано HiKei1337 с помощью ИИ · <a href="https://github.com/HiKei1337/cidookeyboardanimations">Код и загрузка</a></footer>
+</body></html>

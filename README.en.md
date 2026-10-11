@@ -9,6 +9,8 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 ![Animation editor](docs/studio-en.jpg)
 
+[Standalone Invoker demo](https://hikei1337.github.io/cidookeyboardanimations/invoker.html): ten Q/W/E lighting spells, no installation or keyboard connection required. The demo is in Russian.
+
 ## Features
 
 - Heartbeat, breathing, colour shimmer and combined effects.
