@@ -1,14 +1,16 @@
-const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..'),dir=path.join(root,'docs/gif-examples'),ctx=vm.createContext({Uint8Array});
-for(const f of ['animation.js','project.js','layout.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx);
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),dir=path.join(root,'docs/gif-examples');
 const items=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json'),'utf8'));
-assert.equal(items.length,60);assert.equal(new Set(items.map(i=>i.id)).size,60);
-let frames=0;for(const item of items){
- assert.match(item.gif,/^gifs\/[a-z0-9-]+\.gif$/);assert.match(item.project,/^projects\/[a-z0-9-]+\.json$/);
- const gif=fs.readFileSync(path.join(dir,item.gif));assert.match(gif.subarray(0,6).toString(),/^GIF8[79]a$/);assert.equal(gif.readUInt16LE(6),320);assert.equal(gif.readUInt16LE(8),96);assert.ok(item.frames>1);
- assert.equal(crypto.createHash('sha256').update(gif).digest('hex'),item.gifSha256);
- const bytes=fs.readFileSync(path.join(dir,item.project));assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),item.projectSha256);
- const p=ctx.CidooProject.validate(JSON.parse(bytes));assert.equal(p.effect,'timeline');assert.equal(p.reactiveMode,'off');assert.equal(p.keys.length,81);assert.equal(p.frames.length,32);assert.equal(p.frames.reduce((n,f)=>n+f.durationMs,0),4000);assert.ok(new Set(p.frames.map(f=>JSON.stringify(f.colors))).size>1);assert.deepEqual(JSON.stringify(p.sourceColors),JSON.stringify(ctx.CidooProject.demo().sourceColors));assert.ok(item.posterFrame>=0&&item.posterFrame<p.frames.length);frames+=p.frames.length;
+const report=JSON.parse(fs.readFileSync(path.join(dir,'verification.json'),'utf8'));
+const ctx=vm.createContext({});vm.runInContext(fs.readFileSync(path.join(dir,'catalog.js'),'utf8'),ctx);
+assert.equal(items.length,50);assert.equal(JSON.stringify(ctx.CidooGifExamples),JSON.stringify(items));
+for(const field of ['id','gif','gifSha256'])assert.equal(new Set(items.map(i=>i[field])).size,50,field);
+for(const item of items){
+ const url=new URL(item.gif);assert.equal(url.protocol,'https:');assert.ok(['developer.lametric.com','raw.githubusercontent.com'].includes(url.hostname));assert.ok(!url.pathname.includes('_icon_thumb'));
+ assert.equal(item.height,8);assert.ok([8,80].includes(item.width));assert.ok(item.frames>1&&item.frames<=600);assert.match(item.gifSha256,/^[a-f0-9]{64}$/);assert.ok(item.source&&item.creator&&item.originalTitle);
+ const checked=report.items.find(x=>x.id===item.id);assert.ok(checked);assert.equal(checked.originalSha256,item.gifSha256);assert.equal(checked.sourceFrames,item.frames);assert.ok(checked.distinctRgbFrames>1);assert.equal(checked.convertedFrames,item.verifiedFrames);assert.equal(checked.sourceLayer,1);assert.equal(checked.targetLayer,2);assert.equal(checked.keys,81);
 }
-for(const f of ['viewer-layout.js','viewer-engine.js','viewer-keyboard.js','gallery.js','catalog.js','gallery.css','LICENSE'])assert.ok(fs.statSync(path.join(dir,f)).size>0);
-console.log(`PASS: 60 GIF files and native JSON projects, file hashes, animated RGB frames, all 81 keys, untouched Layer 1, ${frames} frames and 4-second loops; offline gallery assets.`);
+for(const [viewer,original] of [['viewer-layout.js','layout.js'],['viewer-engine.js','animation.js'],['viewer-project.js','project.js'],['viewer-keyboard.js','docs/keyboard-preview.js']])assert.equal(fs.readFileSync(path.join(dir,viewer),'utf8'),fs.readFileSync(path.join(root,original),'utf8'),viewer);
+assert.equal(fs.readFileSync(path.join(dir,'internet-gif-links.csv'),'utf8').trim().split(/\r?\n/).length,51);
+assert.ok(!fs.existsSync(path.join(dir,'gifs')),'Generated artwork must not remain in this collection');
+console.log('PASS: 50 distinct real Internet GIF URLs, original hashes and creator provenance; all native RGB conversions animate on 81 visible keys and target Layer 2; identical studio importer and renderer.');

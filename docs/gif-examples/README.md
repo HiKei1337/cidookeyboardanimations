@@ -1,22 +1,19 @@
-# 60 GIF для CIDOO RGB Studio
+# GIFs from the Internet / GIF из интернета
 
-Каждый файл прошёл через настоящий импорт конструктора. В папке `projects` — JSON, полученный после импорта. Все примеры анимированы; это не статичные картинки. Проверено в предпросмотре, а не на физической клавиатуре.
+50 existing, unmodified animated GIFs, found through Exa and checked with the same CidooMedia importer used by the studio. This is a source-linked collection, not artwork created for this project.
 
-1. Открой `index.html` в Chrome: каталог работает и без сервера. На сайте: https://hikei1337.github.io/cidookeyboardanimations/gif-examples/
-2. Выбери пример и скачай GIF или готовый JSON.
-3. В конструкторе расширения нажми «Импорт GIF / картинки», выбери GIF и нажми «Создать кадры». Для JSON — «Открыть JSON».
-4. Подключи клавиатуру и нажми «Запустить на клавиатуре».
+50 существующих GIF, найденных через Exa. Исходные файлы не перерисованы. Проверка RGB выполнена импортёром CidooMedia из конструктора; физическая клавиатура не проверялась.
 
-Рекомендуемые настройки: 100%, «Вместить целиком», фон #000000, средний цвет клавиши, 8 кадров/с. Файлы подогнаны под изученную раскладку, на других моделях может понадобиться подгонка. На сайте доступен предпросмотр; для USB нужен конструктор установленного расширения.
+## Sources
 
-В `gifs` находятся 60 исходных GIF, в `projects` — 60 проектов. Каждый цикл длится 4 секунды. JSON содержит 32 кадра. Коллекция начинается с простых фигур: сердце, смайлик, глаза, привидение, инопланетянин, звезда. Для движения попробуй змейку, понг, стрелки, метеор и комету.
+- [LaMetric icon gallery](https://developer.lametric.com/icons): 49 original 8×8 animated GIFs. Each card includes the original name, creator ID from the gallery API, direct GIF link and SHA-256. The files stay on the original host; the site does not redistribute a ZIP of third-party artwork or claim that the project license covers them.
+- [bertrik/nyancat](https://github.com/bertrik/nyancat): the existing 80×8 fire animation, MIT license. This is the existing GIF from that repository, not a newly generated file.
+- [LaMetric official API documentation](https://docs.lametric.com/en/latest/reference-docs/cloud-icons.html) documents the original 8×8 GIF URLs. The 45×45 `_icon_thumb.gif` previews include a grid and are intentionally not used.
 
-Файлы специально подготовлены для проекта, не скачаны у чужих художников. Автор: HiKei1337. Условия использования — LICENSE и NOTICE. Код рисования — generate.py (нужен Pillow), геометрия клавиатуры — layout-geometry.json. Генератор делает исходные GIF; готовые JSON в этом наборе получены настоящим импортом браузерного конструктора.
+## Use
 
-## English
+Download a GIF from its card. In the studio use “Import GIF / image”, “Stretch”, 100% zoom, “Centre pixel”, a black background and 8 FPS. Each card shows the output of those settings. Shapes stretch across the wide keyboard and lose fine details. Preview before running on hardware. The optional JSON button creates an editable project in your browser from the original GIF; it is not a different, hand-drawn animation.
 
-60 purpose-made animated GIFs and 60 editable JSON projects. Each GIF was imported using the real editor, then exported as JSON. Checks cover the preview; physical LED output and other keyboard layouts are unverified.
+Скачай GIF → «Импорт GIF / картинки» → «Растянуть», масштаб 100%, «Пиксель в центре», чёрный фон, 8 кадров/с. На карточках показан результат этих настроек. Клавиатура широкая и имеет только шесть рядов, поэтому пропорции меняются, а мелкие детали теряются. JSON создаётся в браузере из того же оригинала.
 
-Open `index.html` in Chrome for the offline gallery. Download an example, then use **Import GIF / image → Create frames → Run on keyboard** in the extension. For JSON, use **Open JSON**. Defaults: 100%, Fit whole image, #000000 background, average key colour, 8 FPS. Each loop lasts four seconds with 32 output frames.
-
-Original artwork for CIDOO RGB Studio, author HiKei1337. See LICENSE and NOTICE. `generate.py` uses Pillow to draw the source GIFs; `layout-geometry.json` contains the keyboard geometry.
+All 50 direct links are in `internet-gif-links.csv`. `manifest.json` records source provenance and the exact downloaded file hash. External GIFs retain their authors’ rights. The repository license applies to the gallery code only.

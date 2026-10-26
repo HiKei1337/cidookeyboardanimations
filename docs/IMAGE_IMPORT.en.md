@@ -4,7 +4,7 @@
 
 From **1.9.0**, the editor converts images into RGB frames. A still image becomes static lighting; GIF, APNG and animated WebP become looping animations. PNG, JPG, AVIF and BMP are also supported when Chrome can decode them.
 
-Start with [60 purpose-made GIF examples](https://hikei1337.github.io/cidookeyboardanimations/gif-examples/), each with a keyboard preview, source GIF and ready-made JSON.
+Start with [50 existing Internet GIFs](https://hikei1337.github.io/cidookeyboardanimations/gif-examples/), each with the original link, source and keyboard preview. JSON is created from that same GIF. To match the cards, choose “Stretch”, 100%, “Centre pixel”, a black background and 8 FPS.
 
 ## 1. Choose a file
 
