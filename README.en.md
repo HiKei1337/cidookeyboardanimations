@@ -44,6 +44,8 @@ Click **Import GIF / image** in the editor, choose a file and fit it to the keys
 
 [Try image import in your browser](https://hikei1337.github.io/cidookeyboardanimations/studio.html#import-image) · [Illustrated guide](docs/IMAGE_IMPORT.en.md)
 
+[60 GIF examples with keyboard previews](https://hikei1337.github.io/cidookeyboardanimations/gif-examples/) · [Download the complete pack](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.9.0/cidoo-gif-examples-60.zip). Hearts, symbols, flowers, snake, meteor and colour effects, with GIF and ready-made JSON files. Checked after importing in the editor; physical device output remains unverified.
+
 Files are processed locally. Maximum 25 MB and 600 source frames; output is limited to 120 frames. Longer animations use a lower frame rate while preserving the selected clip duration. To control hardware, import in the installed extension's editor; the website provides a preview and JSON export.
 
 ## Update without downloading again (Windows)

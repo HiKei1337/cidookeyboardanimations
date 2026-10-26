@@ -46,6 +46,8 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 [Попробовать импорт в браузере](https://hikei1337.github.io/cidookeyboardanimations/studio.html#import-image) · [Инструкция с картинками](docs/IMAGE_IMPORT.md)
 
+[60 GIF-примеров с предпросмотром на клавиатуре](https://hikei1337.github.io/cidookeyboardanimations/gif-examples/) · [Скачать весь набор](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.9.0/cidoo-gif-examples-60.zip). Сердца, значки, цветы, змейка, метеор и цветовые эффекты. Внутри — GIF и готовые JSON. Проверены после импорта в конструктор; на физическом устройстве набор не проверялся.
+
 Файлы обрабатываются локально. До 25 МБ и 600 исходных кадров; результат — до 120 кадров. У длинной анимации уменьшается частота кадров, длительность выбранного участка сохраняется. Для физической клавиатуры открой импорт в конструкторе установленного расширения; сайт показывает предпросмотр и позволяет скачать JSON.
 
 ## Обновление без повторного скачивания (Windows)

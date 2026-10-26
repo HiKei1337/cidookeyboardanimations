@@ -4,6 +4,8 @@
 
 From **1.9.0**, the editor converts images into RGB frames. A still image becomes static lighting; GIF, APNG and animated WebP become looping animations. PNG, JPG, AVIF and BMP are also supported when Chrome can decode them.
 
+Start with [60 purpose-made GIF examples](https://hikei1337.github.io/cidookeyboardanimations/gif-examples/), each with a keyboard preview, source GIF and ready-made JSON.
+
 ## 1. Choose a file
 
 Click **Import GIF / image** below the keyboard. Choose a file or drag it onto the dashed area. Wait for decoding to finish. Processing stays in your browser; the image is never uploaded to a server.
