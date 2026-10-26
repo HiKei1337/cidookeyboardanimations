@@ -172,4 +172,82 @@ document.addEventListener('visibilitychange',async()=>{if(!extension||document.h
 setInterval(async()=>{if(!extension||busy||!live||document.hidden)return;try{state(await send('status'));}catch(error){notice(error.message,true);}},1000);
 
 $('playbackSpeed').addEventListener('input',()=>{change(()=>project.playbackSpeed=Number($('playbackSpeed').value));$('speedValue').textContent=project.playbackSpeed+'×';});
-document.addEventListener('keydown',event=>{if(event.repeat||event.target?.closest?.('input[type="password"]')||event.composedPath?.().some(node=>node.matches?.('input[type="password"]'))||(!live&&event.target?.closest?.('input,textarea,select,[contenteditable="true"]')))return;const index=CidooLayout.codeIndex(event.code);if(index!==undefined&&(project.reactiveMode!=='off'||project.reactiveRulesEnabled)&&($('reactiveTest').checked||playing||live))triggerReaction(index);},true);
+document.addEventListener('keydown',event=>{if($('mediaDialog').open||event.repeat||event.target?.closest?.('input[type="password"]')||event.composedPath?.().some(node=>node.matches?.('input[type="password"]'))||(!live&&event.target?.closest?.('input,textarea,select,[contenteditable="true"]')))return;const index=CidooLayout.codeIndex(event.code);if(index!==undefined&&(project.reactiveMode!=='off'||project.reactiveRulesEnabled)&&($('reactiveTest').checked||playing||live))triggerReaction(index);},true);
+
+// Import is an isolated draft: fitting and scrubbing never change the project or USB state.
+(() => {
+  const dialog=$('mediaDialog');let source=null,abort=null,decodeId=0,handle=null,started=0,position=0,drag=null;
+  const text=(ru,en)=>document.documentElement.lang==='en'?en:ru;
+  const status=(value,error=false)=>{$('mediaStatus').textContent=value;$('mediaStatus').className='media-status'+(error?' error':'');};
+  function settings(){return {fit:$('mediaFit').value,zoom:Number($('mediaZoom').value),x:Number($('mediaX').value),y:Number($('mediaY').value),sampling:$('mediaSampling').value,background:$('mediaBackground').value,brightness:Number($('mediaBrightness').value),contrast:Number($('mediaContrast').value),start:Number($('mediaStart').value),end:Number($('mediaEnd').value),fps:Number($('mediaFps').value)};}
+  function bounds(){
+    const max=source.durationMs/1000;
+    $('mediaStart').value=Math.min(Math.max(0,Number($('mediaStart').value)||0),Math.max(0,max-.05));
+    $('mediaEnd').value=Math.min(max,Math.max(Number($('mediaStart').value)+.05,Number($('mediaEnd').value)||max));
+    $('mediaScrub').min=$('mediaStart').value;$('mediaScrub').max=$('mediaEnd').value;
+    position=Math.max(Number($('mediaStart').value),Math.min(Number($('mediaEnd').value)-.001,position));
+  }
+  function stop(){if(handle!==null)cancelAnimationFrame(handle);handle=null;$('mediaPlay').textContent='▶ Воспроизвести';}
+  function release(){stop();abort?.abort();abort=null;decodeId++;source=null;drag=null;$('mediaWorkspace').hidden=true;$('applyMedia').disabled=true;$('mediaFile').value='';status('');}
+  function reset(){for(const [id,value]of Object.entries({mediaFit:'contain',mediaZoom:100,mediaX:0,mediaY:0,mediaSampling:'average',mediaBackground:'#000000',mediaBrightness:100,mediaContrast:100,mediaFps:8}))$(id).value=value;}
+  function draw(){
+    if(!source)return;
+    const opts=settings(),schedule=CidooMedia.plan(source,opts);let current=schedule[0];
+    for(const entry of schedule){if(entry.time>position*1000)break;current=entry;}
+    const frame=source.frames[current.index];
+    const input=$('mediaSource'),output=$('mediaKeyboard');
+    // Conversion and both previews use exactly the same pixel sampling.
+    const sampleCanvas=document.createElement('canvas');sampleCanvas.width=320;sampleCanvas.height=96;
+    const colors=CidooMedia.render(frame,sampleCanvas,opts);
+    CidooMedia.render(frame,input,opts);const ctx=input.getContext('2d');
+    ctx.strokeStyle='#e5caff88';ctx.lineWidth=1.5;
+    for(const box of CidooMedia.geometry(CidooLayout.rows)){ctx.strokeRect(box.x+1,box.y+1,box.width-2,box.height-2);}
+    const out=output.getContext('2d');out.fillStyle='#141318';out.fillRect(0,0,output.width,output.height);
+    for(const box of CidooMedia.geometry(CidooLayout.rows)){
+      const rgb=colors.slice(box.index*3,box.index*3+3);out.fillStyle=`rgb(${rgb.join(',')})`;out.fillRect(box.x+1,box.y+1,box.width-2,box.height-2);
+      out.strokeStyle='#dab2ff';out.lineWidth=1;out.strokeRect(box.x+1,box.y+1,box.width-2,box.height-2);out.fillStyle=rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722>150?'#17121e':'#fff';out.font='11px system-ui';out.textAlign='center';out.textBaseline='middle';out.fillText(box.label,box.x+box.width/2,box.y+box.height/2);
+    }
+    for(const key of ['Zoom','X','Y','Brightness','Contrast'])$('media'+key+'Value').textContent=$('media'+key).value+'%';
+    $('mediaScrub').value=position;$('mediaTime').textContent=position.toFixed(2)+' s';
+    const duration=schedule.reduce((n,f)=>n+f.durationMs,0)/1000,effective=(schedule.length/duration).toFixed(1);
+    const reduced=source.frames.length>1&&(opts.end-opts.start)*opts.fps>120;
+    $('mediaSummary').textContent=text(`Результат: ${schedule.length} кадр(ов) · ${duration.toFixed(2)} сек · ${effective} кадр/с. `,`Output: ${schedule.length} frame(s) · ${duration.toFixed(2)} s · ${effective} FPS. `)+(reduced?text('Достигнут лимит 120 кадров: длительность сохранена, частота снижена.','120-frame limit reached: duration is preserved, with a lower frame rate.'):'');
+  }
+  async function load(file){
+    stop();abort?.abort();const id=++decodeId;abort=new AbortController();source=null;$('applyMedia').disabled=true;$('mediaWorkspace').hidden=true;
+    if(!file)return;status(text('Читаю изображение…','Reading image…'));
+    try{
+      const decoded=await CidooMedia.decode(file,{signal:abort.signal,onProgress:(n,count)=>{if(id===decodeId)status(text(`Читаю кадры: ${n} / ${count}`,`Reading frames: ${n} / ${count}`));}});
+      if(id!==decodeId)return;source=decoded;reset();position=0;
+      $('mediaStart').value=0;$('mediaStart').max=Math.max(0,source.durationMs/1000-.05);$('mediaEnd').value=source.durationMs/1000;$('mediaEnd').max=source.durationMs/1000;
+      $('mediaClip').hidden=source.frames.length===1;$('mediaPlayback').hidden=source.frames.length===1;$('mediaWorkspace').hidden=false;$('applyMedia').disabled=false;bounds();draw();
+      status(file.name+' · '+source.width+' × '+source.height+' · '+source.frames.length+text(' исходных кадров',' source frames'));
+    }catch(error){if(id!==decodeId||error.name==='AbortError')return;status(text('Не удалось открыть файл. ','Could not open file. ')+(document.documentElement.lang==='en'?CidooI18n.translate(error.message):error.message),true);}
+  }
+  $('openMedia').addEventListener('click',()=>{pausePreview();render();saveDraft();release();dialog.showModal();});
+  $('closeMedia').addEventListener('click',()=>dialog.close());dialog.addEventListener('close',release);
+  $('mediaFile').addEventListener('change',event=>{load(event.target.files[0]);event.target.value='';});
+  for(const name of ['dragenter','dragover'])$('mediaDrop').addEventListener(name,event=>{event.preventDefault();$('mediaDrop').classList.add('dragover');});
+  for(const name of ['dragleave','drop'])$('mediaDrop').addEventListener(name,event=>{event.preventDefault();$('mediaDrop').classList.remove('dragover');if(name==='drop')load(event.dataTransfer.files[0]);});
+  for(const key of ['Fit','Zoom','X','Y','Sampling','Background','Brightness','Contrast','Fps'])$('media'+key).addEventListener('input',()=>{if(!source)return;stop();bounds();draw();});
+  // Normalise number fields on commit so typing a decimal is not interrupted.
+  for(const key of ['Start','End'])$('media'+key).addEventListener('change',()=>{if(!source)return;stop();bounds();draw();});
+  $('mediaReset').addEventListener('click',()=>{stop();reset();draw();});
+  $('mediaScrub').addEventListener('input',()=>{stop();position=Number($('mediaScrub').value);draw();});
+  $('mediaPlay').addEventListener('click',()=>{
+    if(handle!==null){stop();return;}if(!source)return;
+    const start=Number($('mediaStart').value),end=Number($('mediaEnd').value);started=performance.now()-(position-start)*1000;
+    let last=-Infinity;$('mediaPlay').textContent='❚❚ Пауза';
+    const tick=now=>{if(document.hidden||!dialog.open){stop();return;}if(now-last>=1000/Number($('mediaFps').value)){last=now;position=start+((now-started)/1000)%(end-start);draw();}handle=requestAnimationFrame(tick);};handle=requestAnimationFrame(tick);
+  });
+  const input=$('mediaSource');
+  input.addEventListener('pointerdown',event=>{if(!source)return;stop();drag={x:event.clientX,y:event.clientY,offsetX:Number($('mediaX').value),offsetY:Number($('mediaY').value)};input.setPointerCapture(event.pointerId);});
+  input.addEventListener('pointermove',event=>{if(!drag)return;const box=input.getBoundingClientRect();$('mediaX').value=Math.round(drag.offsetX+(event.clientX-drag.x)/box.width*100);$('mediaY').value=Math.round(drag.offsetY+(event.clientY-drag.y)/box.height*100);draw();});
+  for(const event of ['pointerup','pointercancel','lostpointercapture'])input.addEventListener(event,()=>drag=null);
+  $('applyMedia').addEventListener('click',()=>{
+    if(!source)return;
+    try{const imported=CidooMedia.project(source,settings(),project);resetPreview();checkpoint();project=imported;editingKeys=[...project.keys];activeFrame=0;previewElapsed=0;$('reactiveTest').checked=false;form();render();saveDraft();$('sourceLabel').textContent='Кадры из изображения · Layer 1 не изменяется';dialog.close();notice(text('Картинка импортирована. Проверь предпросмотр и нажми «Запустить на клавиатуре».','Image imported. Check Preview, then click “Run on keyboard”.'));}
+    catch(error){status(document.documentElement.lang==='en'?CidooI18n.translate(error.message):error.message,true);}
+  });
+  if(globalThis.location?.hash==='#import-image')$('openMedia').click();
+})();

@@ -120,6 +120,25 @@
     'Добавьте хотя бы один кадр.':'Add at least one frame.',
     'Длительность кадра должна быть от 50 до 60000 мс.':'Frame duration must be between 50 and 60000 ms.'
   };
+  Object.assign(en,{
+    'Картинка → клавиатура':'Image → keyboard',
+    'Загрузи GIF или обычную картинку. Подгони размер и преврати её в кадры подсветки.':'Import a GIF or still image, adjust its size, and turn it into lighting frames.',
+    'Импорт GIF / картинки':'Import GIF / image','Картинка на клавиатуре':'Image on your keyboard','Закрыть импорт':'Close image import',
+    'Всё обрабатывается в браузере. Файл никуда не загружается. Исходник Layer 1 не изменяется.':'Everything is processed in your browser. The file is never uploaded. Layer 1 is unchanged.',
+    'Выбрать или перетащить изображение':'Choose or drop an image','GIF, PNG / APNG, WebP, JPG, AVIF, BMP · до 25 МБ':'GIF, PNG / APNG, WebP, JPG, AVIF, BMP · up to 25 MB',
+    'Положение картинки':'Image position','Тяни картинку мышкой или меняй положение ползунками.':'Drag the image or use the position sliders.',
+    'Картинка и границы клавиш':'Image with key outlines','Так будет на клавиатуре':'Keyboard result','Результат импорта на клавиатуре':'Imported image on keyboard',
+    '▶ Воспроизвести':'▶ Play','❚❚ Пауза':'❚❚ Pause','Позиция анимации':'Animation position','Вписывание':'Image fit','Вместить целиком':'Fit whole image',
+    'Заполнить с обрезкой':'Fill and crop','Растянуть на клавиатуру':'Stretch to keyboard','Масштаб':'Scale','Сдвиг по горизонтали':'Horizontal position','Сдвиг по вертикали':'Vertical position',
+    'Считывание цвета':'Colour sampling','Средний цвет клавиши':'Average key colour','Пиксель в центре · пиксель-арт':'Centre pixel · pixel art','Фон и прозрачные участки':'Background and transparent areas',
+    'Яркость':'Brightness','Контраст':'Contrast','Начало, сек':'Start, seconds','Конец, сек':'End, seconds','Сбросить подгонку':'Reset fit',
+    'Импорт заменит текущий проект. Можно отменить кнопкой «Отменить последнее изменение». На устройство отправляются только RGB-кадры, после нажатия «Запустить на клавиатуре».':'Import replaces the current project. Use “Undo last change” to restore it. Only RGB frames are sent to the device, after you click “Run on keyboard”.',
+    'Создать кадры':'Create frames','Кадры из изображения · Layer 1 не изменяется':'Frames from image · Layer 1 is unchanged',
+    'Выбери изображение до 25 МБ.':'Choose an image up to 25 MB.','Не удалось прочитать кадры изображения.':'Could not read image frames.',
+    'Изображение слишком большое: максимум 20 мегапикселей.':'Image is too large: maximum 20 megapixels.',
+    'Слишком много кадров: максимум 600 в исходном файле.':'Too many frames: maximum 600 in the source file.',
+    'Для анимированных изображений нужен Chrome с ImageDecoder. Обнови Chrome.':'Animated images require Chrome with ImageDecoder. Update Chrome.'
+  });
   const nodes=new WeakMap(),attributes=new WeakMap();let language='ru';
   function translate(value){
     const clean=value.trim();let result=en[clean]||({'Правила клавиш включены. Набери комбинацию; для Invoker попробуй E E W.':'Key rules enabled. Enter a combo; for Invoker, try E E W.','Нажми кнопку на схеме или клавиатуре.':'Press a key on the diagram or keyboard.'})[clean]||Object.values(globalThis.CidooPresets?.names||{}).find(preset=>preset.ru===clean)?.en;

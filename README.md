@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Язык / Language: **Русский** · [English](README.en.md)<br>
-[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.8.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.1/cidoo-rgb-studio-v1.8.1.zip)
+[Лендинг](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Как создать свою анимацию](docs/CUSTOM_ANIMATION.md) · [Скачать релиз v1.9.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.9.0/cidoo-rgb-studio-v1.9.0.zip)
 
 На лендинге язык выбирается автоматически по языку браузера: русский для `ru-*`, английский для остальных.
 
@@ -18,6 +18,7 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 - Биение сердца, дыхание, переливание и их сочетание.
 - Готовые шаблоны на всю клавиатуру: цветы, северное сияние, комета и светлячки.
 - Конструктор со схемой клавиатуры: выбор клавиш, цвета, свои кадры, плавные или мгновенные переходы.
+- Импорт GIF, APNG, анимированного WebP и обычных картинок: масштаб, положение, обрезка, фон и предпросмотр на клавишах.
 - Библиотека анимаций, автоматическое сохранение черновика, импорт и экспорт JSON.
 - Режим **Никогда** или таймер с часами, минутами и секундами.
 - Фоновое управление через USB: редактор и вкладку сайта можно закрыть после запуска.
@@ -30,7 +31,7 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 
 Нужны CIDOO, USB-подключение и Chrome 117 или новее. Другие модели не проверены.
 
-1. [Скачай ZIP релиза v1.8.1](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.1/cidoo-rgb-studio-v1.8.1.zip) и распакуй его.
+1. [Скачай ZIP релиза v1.9.0](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.9.0/cidoo-rgb-studio-v1.9.0.zip) и распакуй его.
 2. Открой `chrome://extensions`, включи **Режим разработчика**.
 3. Нажми **Загрузить распакованное расширение** и выбери папку с `manifest.json`.
 4. На [сайте CIDOO](https://cidoo.illumipc.com/#/) подключи клавиатуру, включи подсветку и выбери **Пользовательский → Layer 2**.
@@ -38,6 +39,14 @@ CIDOO RGB animation editor / Chrome extension / WebHID / custom keyboard lightin
 6. Нажми **Считать Layer 1**, выбери клавиши и эффект, затем **Запустить на клавиатуре**.
 
 Сайт покажет отключение клавиатуры после шага 5. Это нормально: USB-управление передано расширению. Пока анимация работает, не подключай устройство обратно к сайту или другому RGB-контроллеру.
+
+## GIF или картинка на клавиатуре
+
+В конструкторе нажми **Импорт GIF / картинки**, выбери файл и подгони его по клавишам. **Создать кадры** превратит изображение в обычный проект: его можно исправить, сохранить, экспортировать в JSON и запустить на клавиатуре. Обычная картинка даёт один неподвижный кадр, GIF — зацикленную анимацию.
+
+[Попробовать импорт в браузере](https://hikei1337.github.io/cidookeyboardanimations/studio.html#import-image) · [Инструкция с картинками](docs/IMAGE_IMPORT.md)
+
+Файлы обрабатываются локально. До 25 МБ и 600 исходных кадров; результат — до 120 кадров. У длинной анимации уменьшается частота кадров, длительность выбранного участка сохраняется. Для физической клавиатуры открой импорт в конструкторе установленного расширения; сайт показывает предпросмотр и позволяет скачать JSON.
 
 ## Обновление без повторного скачивания (Windows)
 

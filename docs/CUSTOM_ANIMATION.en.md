@@ -6,6 +6,8 @@ For **version 1.4 and newer**. Screenshots use preview mode: you can draw withou
 
 ## 1. Know the editor
 
+To start from a GIF or still image, use **Import GIF / image** (1.9.0+) to fit it to the keyboard and create editable frames. [Image import guide](IMAGE_IMPORT.en.md).
+
 - **Left: keyboard.** It displays a frame or animation preview. The line below the heading tells you what is on screen.
 - **Below the keyboard:** key selection and preview controls.
 - **Frames:** each card shows a miniature of the whole keyboard and its duration.

@@ -1,7 +1,7 @@
 # CIDOO RGB Studio — Keyboard Animations
 
 Language / Язык: [Русский](README.md) · **English**<br>
-[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.8.1 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.1/cidoo-rgb-studio-v1.8.1.zip)
+[Landing page](https://hikei1337.github.io/cidookeyboardanimations/) · [Workshop Lite](https://hikei1337.github.io/cidookeyboardanimations/workshop.html) · [Create your own animation](docs/CUSTOM_ANIMATION.en.md) · [Download v1.9.0 release](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.9.0/cidoo-rgb-studio-v1.9.0.zip)
 
 The landing page chooses a language automatically: Russian for `ru-*` browsers and English for everyone else.
 
@@ -16,6 +16,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 - Heartbeat, breathing, colour shimmer and combined effects.
 - Full-keyboard presets: blooming flowers, northern lights, comet and fireflies.
 - Visual keyboard editor with key selection, colour editing, custom frames and smooth or instant transitions.
+- Import GIF, APNG, animated WebP and still images, with scale, position, crop, background and keyboard preview.
 - Animation library, draft autosave, JSON import and export.
 - **Never** mode or an optional hours/minutes/seconds timer.
 - Background USB control: close the editor and CIDOO tab after starting.
@@ -28,7 +29,7 @@ A Chrome extension for **CIDOO RGB keyboard animations**. It reads your design f
 
 Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are untested.
 
-1. [Download the v1.8.1 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.8.1/cidoo-rgb-studio-v1.8.1.zip) and extract it.
+1. [Download the v1.9.0 release ZIP](https://github.com/HiKei1337/cidookeyboardanimations/releases/download/v1.9.0/cidoo-rgb-studio-v1.9.0.zip) and extract it.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and choose the folder containing `manifest.json`.
 4. Connect the keyboard to the [CIDOO website](https://cidoo.illumipc.com/#/), enable lighting and select **Custom → Layer 2**.
@@ -36,6 +37,14 @@ Requirements: CIDOO, a USB connection and Chrome 117 or newer. Other models are 
 6. Click **Read Layer 1**, choose keys and an effect, then **Run on keyboard**.
 
 The website will show the device as disconnected after step 5. This is expected: the extension takes over USB control. Do not reconnect the website or another RGB controller while an animation is running.
+
+## GIF or image on your keyboard
+
+Click **Import GIF / image** in the editor, choose a file and fit it to the keys. **Create frames** turns it into a normal project that you can edit, save, export as JSON and play on the keyboard. A still image creates one static frame; an animated image becomes a looping sequence.
+
+[Try image import in your browser](https://hikei1337.github.io/cidookeyboardanimations/studio.html#import-image) · [Illustrated guide](docs/IMAGE_IMPORT.en.md)
+
+Files are processed locally. Maximum 25 MB and 600 source frames; output is limited to 120 frames. Longer animations use a lower frame rate while preserving the selected clip duration. To control hardware, import in the installed extension's editor; the website provides a preview and JSON export.
 
 ## Update without downloading again (Windows)
 
